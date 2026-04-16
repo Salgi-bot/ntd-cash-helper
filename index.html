@@ -303,9 +303,37 @@ body {
   white-space: normal;
   word-break: break-word;
 }
+.order-name-input {
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px 4px;
+  width: 100%;
+  border-radius: 4px;
+  font-family: inherit;
+}
+.order-name-input:focus {
+  background: #F0F0F0;
+  outline: none;
+}
 .order-price {
   font-size: 12px;
   color: var(--text-sub);
+}
+.order-price-input {
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  color: var(--text-sub);
+  width: 70px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: inherit;
+}
+.order-price-input:focus {
+  background: #F0F0F0;
+  outline: none;
 }
 .order-krw-sub {
   font-size: 11px;
@@ -1775,6 +1803,19 @@ function changeQty(id, delta) {
   renderOrders();
 }
 
+function updateItemName(id, newName) {
+  const item = orders.find(o => o.id === id);
+  if (item) { item.name = newName.trim() || '품목'; saveOrders(); }
+}
+
+function updateItemPrice(id, newPrice) {
+  const item = orders.find(o => o.id === id);
+  if (item) {
+    const p = parseFloat(newPrice) || 0;
+    if (p !== item.price) { item.price = p; saveOrders(); renderOrders(); }
+  }
+}
+
 function clearOrder() {
   if (!confirm('주문 목록을 전체 삭제하시겠습니까?')) return;
   orders = [];
@@ -1811,8 +1852,8 @@ function renderOrders() {
     html += `
       <div class="order-item">
         <div class="order-info">
-          <div class="order-name">${escHtml(o.name)}</div>
-          <div class="order-price">${fmt(o.price)} NTD <span class="order-krw-sub">${fmtKrw(o.price)}</span></div>
+          <div class="order-name"><input class="order-name-input" value="${escAttr(o.name)}" onchange="updateItemName(${o.id},this.value)" onblur="updateItemName(${o.id},this.value)"></div>
+          <div class="order-price"><input class="order-price-input" type="number" inputmode="decimal" value="${o.price}" onchange="updateItemPrice(${o.id},this.value)" onblur="updateItemPrice(${o.id},this.value)"> NTD <span class="order-krw-sub">${fmtKrw(o.price)}</span></div>
         </div>
         <div class="order-qty">
           <button onclick="changeQty(${o.id},-1)">-</button>
@@ -2131,20 +2172,51 @@ let ocrWorker = null;
 function parseMenuText(text) {
   const lines = text.split('\n').filter(l => l.trim());
   const items = [];
+
+  // Mark pattern: checkmarks, circles, x-marks, v/V, o/O
+  const markRe = /[✓✔☑√○◯⭕●◉✗✘×☒Vv]/g;
+
+  // Check if any line has marks (order-sheet vs plain menu)
+  const hasMarkedLines = lines.some(l => markRe.test(l));
+
   for (const line of lines) {
+    const marks = line.match(markRe);
+
+    // If sheet has marked lines, skip unmarked lines (not ordered)
+    if (hasMarkedLines && !marks) continue;
+
+    // Find price (2~5 digit number)
     const priceMatch = line.match(/(?:NT\$?|＄|\$)\s*(\d{2,5})\s*(?:元|$)/i)
       || line.match(/(\d{2,5})\s*(?:元)\s*$/i)
-      || line.match(/(\d{2,5})\s*$/);
+      || line.match(/(\d{2,5})/);
+
     if (priceMatch) {
       const price = parseInt(priceMatch[1]);
-      if (price >= 10 && price <= 9999) {
-        let name = line.replace(priceMatch[0], '').trim();
-        name = name.replace(/[.\-_=:：|/\\]+$/g, '').trim();
-        name = name.replace(/^[.\-_=:：|/\\]+/g, '').trim();
-        if (!name) name = '품목';
-        if (name.length > 15) name = name.substring(0, 15);
-        items.push({ name, price });
+      if (price < 10 || price > 9999) continue;
+
+      // Quantity: mark count or trailing number (1~20)
+      let qty = 1;
+      if (marks) qty = marks.length;
+
+      // Explicit trailing quantity after a mark: "✓ 2" or "○3"
+      const qtyMatch = line.match(/[✓✔☑√○◯⭕●◉✗✘×☒Vv]\s*(\d{1,2})\s*$/);
+      if (qtyMatch) {
+        const explicitQty = parseInt(qtyMatch[1]);
+        if (explicitQty >= 1 && explicitQty <= 20) qty = explicitQty;
       }
+
+      // Item name: remove marks, price, trailing qty digits, punctuation
+      let name = line
+        .replace(markRe, '')
+        .replace(priceMatch[0], '')
+        .replace(/\d{1,2}\s*$/, '')
+        .replace(/[.\-_=:：|/\\$＄元]+/g, '')
+        .trim();
+
+      if (!name) name = '품목';
+      if (name.length > 15) name = name.substring(0, 15);
+
+      items.push({ name, price, qty: Math.min(Math.max(qty, 1), 20) });
     }
   }
   return items;
@@ -2180,11 +2252,12 @@ document.getElementById('cameraInput').addEventListener('change', async function
     // Add parsed items to order list
     let addedCount = 0;
     for (const item of totalItems) {
+      const qty = item.qty || 1;
       const existing = orders.find(o => o.name === item.name && o.price === item.price);
       if (existing) {
-        existing.qty += 1;
+        existing.qty += qty;
       } else {
-        orders.push({ name: item.name, price: item.price, qty: 1, id: Date.now() + addedCount });
+        orders.push({ name: item.name, price: item.price, qty: qty, id: Date.now() + addedCount });
       }
       addedCount++;
     }
