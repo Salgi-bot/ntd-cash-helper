@@ -385,7 +385,7 @@ body {
   text-align: right;
 }
 
-/* -- CURRENCY BILLS/COINS (Realistic Design) -- */
+/* -- CURRENCY BILLS/COINS (Realistic NTD Design) -- */
 .bills-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -393,147 +393,286 @@ body {
   margin-top: 12px;
 }
 .bill-card {
-  border-radius: 8px;
-  padding: 14px 12px;
+  border-radius: 6px;
+  padding: 12px 10px 10px 18px;
   position: relative;
   overflow: hidden;
-  aspect-ratio: 2.5 / 1;
+  aspect-ratio: 2.4 / 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 65px;
+  min-height: 72px;
+  border: 1.5px solid rgba(0,0,0,0.12);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), inset 0 0 0 1px rgba(255,255,255,0.08);
 }
+/* 기요셰 무늬 (지폐 세밀 곡선 패턴) */
 .bill-card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: repeating-linear-gradient(
-    90deg,
-    transparent,
-    transparent 8px,
-    rgba(255,255,255,0.03) 8px,
-    rgba(255,255,255,0.03) 9px
-  );
+  background:
+    repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(255,255,255,0.03) 3px, rgba(255,255,255,0.03) 4px),
+    repeating-linear-gradient(0deg, transparent, transparent 5px, rgba(255,255,255,0.02) 5px, rgba(255,255,255,0.02) 6px),
+    repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(255,255,255,0.015) 8px, rgba(255,255,255,0.015) 9px),
+    repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(255,255,255,0.01) 10px, rgba(255,255,255,0.01) 11px),
+    radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 75% 40%, rgba(255,255,255,0.04) 0%, transparent 45%);
   pointer-events: none;
+  z-index: 1;
 }
+/* 초상 원형 프레임 */
 .bill-card::after {
   content: '';
   position: absolute;
   top: 50%;
-  right: 12px;
-  width: 28px;
-  height: 28px;
+  left: 14px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  border: 1.5px solid rgba(255,255,255,0.2);
+  border: 1.5px solid rgba(255,255,255,0.3);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.06), inset 0 0 6px rgba(255,255,255,0.08), inset 0 0 12px rgba(0,0,0,0.05);
   transform: translateY(-50%);
   pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 60%, transparent 100%);
+}
+/* 한자 인물 표현 (초상 원형 안) */
+.bill-card .bill-portrait-text {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  width: 34px;
+  height: 34px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  opacity: 0.25;
+  z-index: 2;
+  pointer-events: none;
+  line-height: 1;
+}
+/* 보안 홀로그램 스트라이프 (좌측 세로) */
+.bill-card .bill-security {
+  position: absolute;
+  left: 5px;
+  top: 6px;
+  bottom: 6px;
+  width: 4px;
+  background: linear-gradient(
+    180deg,
+    rgba(255,0,0,0.3) 0%,
+    rgba(255,165,0,0.3) 15%,
+    rgba(255,255,0,0.3) 30%,
+    rgba(0,255,0,0.3) 45%,
+    rgba(0,100,255,0.3) 60%,
+    rgba(128,0,255,0.3) 75%,
+    rgba(255,0,128,0.3) 90%,
+    rgba(255,0,0,0.3) 100%
+  );
+  border-radius: 2px;
+  z-index: 3;
+  opacity: 0.7;
+}
+/* 中央銀行 표시 */
+.bill-card .bill-bank {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 7px;
+  letter-spacing: 3px;
+  opacity: 0.4;
+  font-weight: 600;
+  z-index: 2;
+  white-space: nowrap;
+}
+/* 한자 금액 */
+.bill-card .bill-hanzi {
+  position: absolute;
+  bottom: 6px;
+  left: 52px;
+  font-size: 8px;
+  letter-spacing: 1px;
+  opacity: 0.5;
+  font-weight: 600;
+  z-index: 2;
+}
+/* 큰 숫자 워터마크 */
+.bill-card .bill-watermark {
+  position: absolute;
+  right: 6px;
+  bottom: 4px;
+  font-size: 36px;
+  font-weight: 900;
+  opacity: 0.07;
+  letter-spacing: -2px;
+  z-index: 0;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  line-height: 1;
+}
+/* 용지 질감 오버레이 */
+.bill-card .bill-texture {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image:
+    radial-gradient(circle at 20% 80%, rgba(0,0,0,0.02) 1px, transparent 1px),
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.02) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, rgba(0,0,0,0.01) 1px, transparent 1px);
+  background-size: 7px 7px, 11px 11px, 5px 5px;
+  pointer-events: none;
+  z-index: 1;
+}
+/* 테두리 장식 (내부 프레임) */
+.bill-card .bill-inner-frame {
+  position: absolute;
+  top: 3px; left: 10px; right: 3px; bottom: 3px;
+  border: 0.5px solid rgba(255,255,255,0.1);
+  border-radius: 3px;
+  pointer-events: none;
+  z-index: 1;
 }
 .bill-top-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: flex-start;
+  position: relative;
+  z-index: 2;
+}
+.bill-card .bill-denom-area {
+  text-align: right;
 }
 .bill-card .bill-denom {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 800;
   line-height: 1;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.15);
 }
 .bill-card .bill-ntd-mark {
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 600;
-  opacity: 0.7;
+  opacity: 0.6;
   letter-spacing: 0.5px;
+  text-align: right;
 }
 .bill-bottom-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: flex-end;
+  position: relative;
+  z-index: 2;
 }
 .bill-card .bill-figure {
-  font-size: 9px;
-  opacity: 0.75;
+  font-size: 8px;
+  opacity: 0.6;
   font-weight: 500;
-  max-width: 70%;
+  max-width: 50%;
   line-height: 1.2;
+  text-align: right;
 }
 .bill-card .bill-count-badge {
-  background: rgba(0,0,0,0.35);
+  background: rgba(0,0,0,0.4);
   color: white;
-  padding: 2px 7px;
+  padding: 2px 8px;
   border-radius: 10px;
   font-size: 12px;
   font-weight: 800;
   white-space: nowrap;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  z-index: 4;
 }
 .bill-card .bill-krw-tiny {
-  font-size: 8px;
-  opacity: 0.6;
+  font-size: 7px;
+  opacity: 0.5;
   margin-top: 1px;
 }
 .bill-card .bill-rare {
   position: absolute;
   top: 4px;
   right: 4px;
-  background: rgba(0,0,0,0.3);
+  background: rgba(0,0,0,0.35);
   padding: 1px 5px;
   border-radius: 4px;
-  font-size: 8px;
-  font-weight: 600;
+  font-size: 7px;
+  font-weight: 700;
+  z-index: 5;
+  letter-spacing: 0.5px;
 }
 
 /* Bill realistic colors */
 .bill-1000 {
-  background: linear-gradient(135deg, #1B4F8A 0%, #2968B0 50%, #1B4F8A 100%);
-  color: white;
-  border: 1px solid rgba(255,255,255,0.15);
+  background: linear-gradient(135deg, #1A3C7A 0%, #1B4F8A 25%, #2968B0 50%, #3B5998 75%, #1A3C7A 100%);
+  color: #E8EDFF;
+  border-color: rgba(27,79,138,0.4);
 }
 .bill-500 {
-  background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #8B4513 100%);
-  color: white;
-  border: 1px solid rgba(255,255,255,0.15);
+  background: linear-gradient(135deg, #6B3A10 0%, #7A4A1E 25%, #8B6914 50%, #A0522D 75%, #6B3A10 100%);
+  color: #FFF3E0;
+  border-color: rgba(107,58,16,0.4);
 }
 .bill-200 {
-  background: linear-gradient(135deg, #2E7D32 0%, #388E3C 50%, #2E7D32 100%);
-  color: white;
-  border: 1px solid rgba(255,255,255,0.15);
+  background: linear-gradient(135deg, #1B5E20 0%, #256D27 25%, #2E7D32 50%, #388E3C 75%, #1B5E20 100%);
+  color: #E8F5E9;
+  border-color: rgba(27,94,32,0.4);
 }
 .bill-100 {
-  background: linear-gradient(135deg, #C62828 0%, #D32F2F 50%, #C62828 100%);
-  color: white;
-  border: 1px solid rgba(255,255,255,0.15);
+  background: linear-gradient(135deg, #B71C1C 0%, #C62828 25%, #D32F2F 50%, #C62828 75%, #B71C1C 100%);
+  color: #FFEBEE;
+  border-color: rgba(183,28,28,0.4);
 }
 
 .coins-row {
   display: flex;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 12px;
+  margin-top: 12px;
   justify-content: center;
   flex-wrap: wrap;
+  padding-bottom: 16px;
 }
 .coin-card {
-  width: 60px;
-  height: 60px;
   border-radius: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
-  box-shadow: inset 0 1px 2px rgba(255,255,255,0.4), 0 2px 4px rgba(0,0,0,0.2);
+}
+/* 동전 메탈 광택 */
+.coin-card::before {
+  content: '';
+  position: absolute;
+  top: 15%;
+  left: 20%;
+  width: 35%;
+  height: 25%;
+  background: radial-gradient(ellipse, rgba(255,255,255,0.4) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
 }
 .coin-card .coin-denom {
-  font-size: 16px;
   font-weight: 800;
+  line-height: 1;
+  position: relative;
+  z-index: 2;
+}
+.coin-card .coin-hanzi {
+  font-weight: 600;
+  opacity: 0.5;
+  position: relative;
+  z-index: 2;
   line-height: 1;
 }
 .coin-card .coin-figure {
-  font-size: 7px;
-  opacity: 0.6;
-  margin-top: 1px;
-}
-.coin-card .coin-unit {
-  font-size: 8px;
-  opacity: 0.7;
+  opacity: 0.5;
+  position: relative;
+  z-index: 2;
 }
 .coin-card .coin-count {
   position: absolute;
@@ -549,6 +688,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 5;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 .coin-card .coin-krw-tiny {
   position: absolute;
@@ -557,38 +698,68 @@ body {
   color: var(--text-light);
   white-space: nowrap;
 }
-/* Coin colors */
+/* 50원: 황동(금색), 톱니 가장자리, 가장 큼 */
 .coin-50 {
-  background: linear-gradient(160deg, #D4AF37, #FFD700, #D4AF37);
-  color: #4A3800;
-  border: 2.5px solid #C19A2E;
+  width: 64px;
+  height: 64px;
+  background: radial-gradient(circle at 35% 35%, #FFE082, #D4AF37 40%, #C19A2E 70%, #B8860B 100%);
+  color: #5D3A00;
+  border: 3px dashed #B8860B;
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.3), inset 0 -2px 4px rgba(0,0,0,0.15), 0 2px 6px rgba(0,0,0,0.2);
 }
-.coin-50::before {
+.coin-50 .coin-denom { font-size: 18px; }
+.coin-50 .coin-hanzi { font-size: 6px; margin-top: 1px; }
+.coin-50 .coin-figure { font-size: 6px; margin-top: 1px; }
+/* 10원: 바이메탈 (은색 외곽 + 금색 중앙) */
+.coin-10 {
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle at 50% 50%, #D4AF37 0%, #C19A2E 38%, #A0A0A0 42%, #C8C8C8 50%, #E0E0E0 60%, #B8B8B8 100%);
+  color: #333;
+  border: 2.5px solid #A0A0A0;
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.3), inset 0 -2px 4px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.2);
+}
+.coin-10::after {
   content: '';
   position: absolute;
-  inset: 3px;
+  top: 50%; left: 50%;
+  width: 38px; height: 38px;
+  transform: translate(-50%, -50%);
   border-radius: 50%;
-  border: 1px dashed rgba(0,0,0,0.15);
+  border: 1px solid rgba(0,0,0,0.08);
   pointer-events: none;
 }
-.coin-10 {
-  background: linear-gradient(160deg, #C0C0C0, #E0E0E0, #D0D0D0);
-  color: #333;
-  border: 2.5px solid #DAA520;
-}
+.coin-10 .coin-denom { font-size: 16px; }
+.coin-10 .coin-hanzi { font-size: 6px; margin-top: 1px; }
+.coin-10 .coin-figure { font-size: 6px; margin-top: 1px; }
+/* 5원: 구리색, 작은 크기 */
 .coin-5 {
-  background: linear-gradient(160deg, #CD7F32, #E8A850, #CD7F32);
+  width: 52px;
+  height: 52px;
+  background: radial-gradient(circle at 35% 35%, #E8A850, #CD7F32 40%, #B8722E 70%, #A0602A 100%);
   color: #3E2000;
-  border: 2.5px solid #B8722E;
+  border: 2.5px solid #A0602A;
+  box-shadow: inset 0 2px 3px rgba(255,255,255,0.3), inset 0 -2px 3px rgba(0,0,0,0.15), 0 2px 5px rgba(0,0,0,0.2);
 }
+.coin-5 .coin-denom { font-size: 14px; }
+.coin-5 .coin-hanzi { font-size: 5px; margin-top: 1px; }
+.coin-5 .coin-figure { font-size: 5px; margin-top: 1px; }
+/* 1원: 은색(알루미늄), 가장 작고 가벼움 */
 .coin-1 {
-  background: linear-gradient(160deg, #C8C8C8, #E8E8E8, #D0D0D0);
+  width: 46px;
+  height: 46px;
+  background: radial-gradient(circle at 35% 35%, #F0F0F0, #D8D8D8 40%, #C0C0C0 70%, #A8A8A8 100%);
   color: #444;
   border: 2px solid #A0A0A0;
+  box-shadow: inset 0 1px 3px rgba(255,255,255,0.5), inset 0 -1px 3px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.15);
 }
+.coin-1 .coin-denom { font-size: 13px; }
+.coin-1 .coin-hanzi { font-size: 5px; margin-top: 1px; }
+.coin-1 .coin-figure { font-size: 5px; margin-top: 1px; }
 
 .bill-card.zero, .coin-card.zero {
-  opacity: 0.2;
+  opacity: 0.15;
+  filter: grayscale(0.5);
 }
 
 /* -- INLINE BILLS SUMMARY (in order tab) -- */
@@ -1262,18 +1433,18 @@ const BILLS = [1000, 500, 200, 100];
 const COINS = [50, 10, 5, 1];
 const DENOMS = [...BILLS, ...COINS];
 
-// Bill metadata
+// Bill metadata (실제 대만 지폐 참고)
 const BILL_META = {
-  1000: { color: '#1B4F8A', figure: '지구본 교육', back: '꿩' },
-  500:  { color: '#8B4513', figure: '소년야구팀', back: '매화사슴' },
-  200:  { color: '#2E7D32', figure: '장개석 기념관', back: '대만 연어', rare: true },
-  100:  { color: '#C62828', figure: '쑨원 초상', back: '중산루' }
+  1000: { figure: '지구본 교육', back: '꿩', hanzi: '壹仟圓', icon: '🔬', portrait: '育' },
+  500:  { figure: '소년야구', back: '매화사슴', hanzi: '伍佰圓', icon: '⚾', portrait: '球' },
+  200:  { figure: '기념관', back: '연어', hanzi: '貳佰圓', icon: '🏛', rare: true, portrait: '堂' },
+  100:  { figure: '쑨원 초상', back: '중산루', hanzi: '壹佰圓', icon: '🏛', portrait: '孫' }
 };
 const COIN_META = {
-  50: { figure: '쑨원', desc: '황동, 톱니' },
-  10: { figure: '장개석', desc: '바이메탈' },
-  5:  { figure: '장개석', desc: '적동' },
-  1:  { figure: '장개석', desc: '알루미늄' }
+  50: { figure: '쑨원', hanzi: '伍拾圓', desc: '황동, 톱니' },
+  10: { figure: '장개석', hanzi: '拾圓', desc: '바이메탈' },
+  5:  { figure: '장개석', hanzi: '伍圓', desc: '적동' },
+  1:  { figure: '장개석', hanzi: '壹圓', desc: '알루미늄' }
 };
 
 // Default presets
@@ -1767,16 +1938,22 @@ function renderBillBreakdown(breakdown, billsId, coinsId) {
     const zeroClass = breakdown[d] === 0 ? 'zero' : '';
     return `
     <div class="bill-card bill-${d} ${zeroClass}">
+      <div class="bill-texture"></div>
+      <div class="bill-inner-frame"></div>
+      <div class="bill-security"></div>
+      <div class="bill-bank">中央銀行</div>
+      <div class="bill-portrait-text">${meta.portrait}</div>
+      <div class="bill-hanzi">${meta.hanzi}</div>
+      <div class="bill-watermark">${d}</div>
+      <div class="bill-count-badge">${breakdown[d]}장</div>
       <div class="bill-top-row">
-        <div>
+        <div class="bill-denom-area">
           <div class="bill-denom">${fmt(d)}</div>
           <div class="bill-ntd-mark">NT$</div>
         </div>
-        <div class="bill-count-badge">${breakdown[d]}장</div>
       </div>
       <div class="bill-bottom-row">
         <div class="bill-figure">${meta.figure} / ${meta.back}</div>
-        <div class="bill-krw-tiny">${fmtKrw(d)}</div>
       </div>
       ${meta.rare ? '<div class="bill-rare">희귀</div>' : ''}
     </div>`;
@@ -1788,6 +1965,7 @@ function renderBillBreakdown(breakdown, billsId, coinsId) {
     return `
     <div class="coin-card coin-${d} ${zeroClass}">
       <div class="coin-denom">${d}</div>
+      <div class="coin-hanzi">${meta.hanzi}</div>
       <div class="coin-figure">${meta.figure}</div>
       ${breakdown[d] > 0 ? `<div class="coin-count">${breakdown[d]}</div>` : ''}
       <div class="coin-krw-tiny">${fmtKrw(d)}</div>
