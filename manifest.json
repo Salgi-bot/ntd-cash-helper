@@ -1,12 +1,12 @@
 {
-  "name": "NTD Cash Helper - 대만 현금 도우미",
-  "short_name": "NTD Helper",
+  "name": "NT$ 대만 현금 도우미",
+  "short_name": "NT$",
   "description": "대만 달러(NTD) 환율 변환, 주문 합산, 화폐 조합, 거스름돈 계산",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#F5F5F5",
-  "theme_color": "#C4122F",
+  "background_color": "#F7F6F3",
+  "theme_color": "#5B8C6A",
   "orientation": "portrait",
   "icons": [
     {
