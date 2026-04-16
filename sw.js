@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ntd-cash-helper-v1';
+const CACHE_NAME = 'ntd-cash-helper-v2';
 const ASSETS = [
   '/',
   '/index.html',
