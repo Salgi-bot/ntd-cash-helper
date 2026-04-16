@@ -109,7 +109,7 @@ body {
   border: none;
   background: none;
   padding: 10px 4px 8px;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-light);
   display: flex;
   flex-direction: column;
@@ -118,6 +118,7 @@ body {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transition: color 0.2s;
+  font-weight: 600;
 }
 .tab-nav button.active {
   color: var(--accent);
@@ -154,6 +155,27 @@ body {
   gap: 6px;
 }
 .card-title .icon { font-size: 16px; }
+
+/* -- SECTION DIVIDER -- */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0 14px;
+}
+.section-divider::before,
+.section-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.section-divider span {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-sub);
+  white-space: nowrap;
+}
 
 /* -- FORM -- */
 .input-group {
@@ -785,6 +807,16 @@ body {
   font-weight: 700;
   margin-top: 8px;
 }
+.shortage-badge {
+  display: inline-block;
+  background: #FFEBEE;
+  color: #C62828;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 8px;
+}
 
 /* -- QUICK AMOUNTS -- */
 .quick-amounts {
@@ -809,6 +841,47 @@ body {
   border-color: var(--accent);
   background: var(--accent-light);
   color: var(--accent);
+}
+
+/* -- PAY SUGGEST CHIPS -- */
+.pay-suggest-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.pay-chip {
+  padding: 8px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  background: white;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.pay-chip:active { background: var(--bg); border-color: var(--accent); }
+.pay-chip .pay-chip-label {
+  font-size: 9px;
+  color: var(--text-light);
+  font-weight: 500;
+}
+.pay-chip .pay-chip-amount {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--tw-blue);
+}
+.pay-chip.exact-chip {
+  border-color: var(--success);
+  background: var(--success-light);
+}
+.pay-chip.exact-chip .pay-chip-amount {
+  color: var(--success);
 }
 
 /* -- EMPTY STATE -- */
@@ -968,34 +1041,12 @@ body {
 <!-- TAB PANELS -->
 <div class="content">
 
-  <!-- TAB 1: 환율 변환 -->
-  <div class="tab-panel active" id="panelConvert">
-    <div class="card">
-      <div class="card-title"><span class="icon">&#8361;</span> 환율 변환기</div>
-      <div class="input-group">
-        <label id="convertFromLabel">NTD (대만 달러)</label>
-        <input type="number" id="convertFrom" inputmode="decimal" placeholder="금액 입력" oninput="convert()">
-      </div>
-      <div class="text-center">
-        <button class="swap-btn" onclick="swapCurrency()" title="통화 전환">&#8645;</button>
-      </div>
-      <div class="converter-display">
-        <div class="amount-ntd" id="convertResultTop">0 <span class="unit" id="convertUnitTop">NTD</span></div>
-        <div class="amount-krw" id="convertResultBottom">= 0 <span class="unit" id="convertUnitBottom">KRW</span></div>
-      </div>
-      <div class="quick-amounts" id="quickConvert">
-        <button onclick="quickConvertAmount(100)">100</button>
-        <button onclick="quickConvertAmount(500)">500</button>
-        <button onclick="quickConvertAmount(1000)">1,000</button>
-        <button onclick="quickConvertAmount(5000)">5,000</button>
-        <button onclick="quickConvertAmount(10000)">10,000</button>
-      </div>
-    </div>
-  </div>
+  <!-- ============================== -->
+  <!-- TAB 1: 주문/결제 (통합 스크롤) -->
+  <!-- ============================== -->
+  <div class="tab-panel active" id="panelOrder">
 
-  <!-- TAB 2: 주문 합산 -->
-  <div class="tab-panel" id="panelOrder">
-    <!-- Preset chips -->
+    <!-- 섹션 1: 주문 입력 -->
     <div class="card" id="presetCard">
       <div class="flex-between">
         <div class="card-title" style="margin-bottom:0"><span class="icon">&#9889;</span> 빠른 추가</div>
@@ -1005,7 +1056,7 @@ body {
     </div>
 
     <div class="card">
-      <div class="card-title"><span class="icon">&#128722;</span> 주문 합산 계산기</div>
+      <div class="card-title"><span class="icon">&#128722;</span> 주문 입력</div>
       <div class="input-row">
         <div class="input-group" style="flex:2">
           <label>품목명</label>
@@ -1030,8 +1081,13 @@ body {
           <p>품목을 추가하면 여기에 표시됩니다</p>
         </div>
       </div>
-      <div id="orderTotal" class="hidden">
-        <div class="total-bar">
+    </div>
+
+    <!-- 섹션 2: 합계 + 화폐 조합 (주문 1개 이상일 때만 표시) -->
+    <div id="orderSummarySection" class="hidden">
+      <div class="card">
+        <div class="card-title"><span class="icon">&#128181;</span> 합계</div>
+        <div class="total-bar" style="margin-top:0">
           <div>
             <div class="total-label">총 합계</div>
           </div>
@@ -1040,11 +1096,74 @@ body {
             <div class="total-krw" id="orderTotalKRW">= 0 KRW</div>
           </div>
         </div>
-        <div id="orderBillsSummary"></div>
+
+        <!-- 필요 화폐 조합 시각화 -->
+        <div id="orderBillsVisual" style="margin-top:14px">
+          <div style="font-size:12px;font-weight:700;color:var(--tw-blue);margin-bottom:8px">필요 화폐 조합</div>
+          <div class="bills-grid" id="orderBillsGrid"></div>
+          <div class="coins-row mt-8" id="orderCoinsRow" style="margin-bottom:16px"></div>
+        </div>
+      </div>
+
+      <!-- 섹션 3: 지불 -->
+      <div class="card" id="paySection">
+        <div class="card-title"><span class="icon">&#128176;</span> 얼마 내시나요?</div>
+        <div class="input-group">
+          <label>지불 금액 (NTD)</label>
+          <input type="number" id="payAmount" inputmode="decimal" placeholder="내는 금액 입력" oninput="onPayInput()">
+        </div>
+        <div class="pay-suggest-chips" id="paySuggestChips"></div>
+      </div>
+
+      <!-- 섹션 4: 거스름돈 (지불 금액 입력 시 자동 표시) -->
+      <div id="changeSection" class="hidden">
+        <div class="card">
+          <div class="change-result">
+            <div id="changeBadge"></div>
+            <div class="change-amount" id="changeAmountDisplay">0 NTD</div>
+            <div class="change-krw" id="changeKRWDisplay">= 0 KRW</div>
+          </div>
+          <div id="changeBillsSection">
+            <div class="divider"></div>
+            <div style="font-size:12px;font-weight:700;color:var(--tw-blue);margin-bottom:8px">거스름돈 화폐 조합</div>
+            <div class="bills-grid" id="changeBillsGrid"></div>
+            <div class="coins-row mt-8" id="changeCoinsRow"></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Price reference collapsible -->
+  </div>
+
+  <!-- ============================== -->
+  <!-- TAB 2: 환율                     -->
+  <!-- ============================== -->
+  <div class="tab-panel" id="panelRate">
+
+    <!-- 환율 변환기 -->
+    <div class="card">
+      <div class="card-title"><span class="icon">&#8361;</span> 환율 변환기</div>
+      <div class="input-group">
+        <label id="convertFromLabel">NTD (대만 달러)</label>
+        <input type="number" id="convertFrom" inputmode="decimal" placeholder="금액 입력" oninput="convert()">
+      </div>
+      <div class="text-center">
+        <button class="swap-btn" onclick="swapCurrency()" title="통화 전환">&#8645;</button>
+      </div>
+      <div class="converter-display">
+        <div class="amount-ntd" id="convertResultTop">0 <span class="unit" id="convertUnitTop">NTD</span></div>
+        <div class="amount-krw" id="convertResultBottom">= 0 <span class="unit" id="convertUnitBottom">KRW</span></div>
+      </div>
+      <div class="quick-amounts" id="quickConvert">
+        <button onclick="quickConvertAmount(100)">100</button>
+        <button onclick="quickConvertAmount(500)">500</button>
+        <button onclick="quickConvertAmount(1000)">1,000</button>
+        <button onclick="quickConvertAmount(5000)">5,000</button>
+        <button onclick="quickConvertAmount(10000)">10,000</button>
+      </div>
+    </div>
+
+    <!-- 물가 참고표 -->
     <div class="collapsible">
       <button class="collapsible-toggle" onclick="togglePriceRef(this)">
         <span>&#128200; 대만 물가 참고표</span>
@@ -1059,83 +1178,33 @@ body {
         </table>
       </div>
     </div>
-  </div>
 
-  <!-- TAB 3: 화폐 조합 -->
-  <div class="tab-panel" id="panelBills">
-    <div class="card">
-      <div class="card-title"><span class="icon">&#128181;</span> 최적 화폐 조합</div>
+    <!-- 환율 설정 카드 -->
+    <div class="card mt-12">
+      <div class="card-title"><span class="icon">&#9881;</span> 환율 설정</div>
       <div class="input-group">
-        <label>금액 (NTD)</label>
-        <input type="number" id="billAmount" inputmode="decimal" placeholder="지불할 금액 입력" oninput="calcBills()">
+        <label>1 NTD = ? KRW</label>
+        <input type="number" id="rateInputInline" inputmode="decimal" step="0.01" placeholder="예: 42.5">
       </div>
-      <div class="quick-amounts">
-        <button onclick="quickBill(100)">100</button>
-        <button onclick="quickBill(250)">250</button>
-        <button onclick="quickBill(500)">500</button>
-        <button onclick="quickBill(1000)">1,000</button>
-        <button onclick="quickBill(1500)">1,500</button>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-outline" style="flex:1" onclick="saveRateInline()">수동 저장</button>
+        <button class="btn btn-primary" style="flex:1;background:var(--tw-blue)" onclick="fetchRate()">실시간 환율</button>
       </div>
-    </div>
-
-    <div class="card" id="billsResult" style="display:none">
-      <div class="card-title"><span class="icon">&#127979;</span> 지폐</div>
-      <div class="bills-grid" id="billsGrid"></div>
-      <div class="divider"></div>
-      <div class="card-title"><span class="icon">&#129689;</span> 동전</div>
-      <div class="coins-row" id="coinsRow"></div>
-      <div class="mt-12 text-center text-sm text-sub" id="billsKRW"></div>
-    </div>
-  </div>
-
-  <!-- TAB 4: 거스름돈 -->
-  <div class="tab-panel" id="panelChange">
-    <div class="card">
-      <div class="card-title"><span class="icon">&#128176;</span> 거스름돈 계산기</div>
-      <div class="input-group">
-        <label>구매 금액 (NTD)</label>
-        <input type="number" id="purchaseAmount" inputmode="decimal" placeholder="물건 가격">
-      </div>
-      <div class="input-group">
-        <label>지불 금액 (NTD)</label>
-        <input type="number" id="payAmount" inputmode="decimal" placeholder="내는 금액">
-      </div>
-      <div class="quick-amounts" id="payQuick"></div>
-      <button class="btn btn-primary mt-8" onclick="calcChange()">거스름돈 계산</button>
-    </div>
-
-    <div class="card" id="changeResult" style="display:none">
-      <div class="change-result">
-        <div id="changeBadge"></div>
-        <div class="change-amount" id="changeAmountDisplay">0 NTD</div>
-        <div class="change-krw" id="changeKRWDisplay">= 0 KRW</div>
-      </div>
-      <div class="divider"></div>
-      <div class="card-title"><span class="icon">&#127979;</span> 거스름돈 화폐 조합</div>
-      <div class="bills-grid" id="changeBillsGrid"></div>
-      <div class="coins-row mt-8" id="changeCoinsRow"></div>
+      <div class="mt-8 text-sm text-sub" id="rateLastUpdateInline"></div>
     </div>
   </div>
 
 </div>
 
-<!-- TAB NAV -->
+<!-- TAB NAV (2 tabs) -->
 <nav class="tab-nav">
-  <button class="active" data-tab="panelConvert" onclick="switchTab(this)">
+  <button class="active" data-tab="panelOrder" onclick="switchTab(this)">
+    <span class="tab-icon">&#128722;</span>
+    주문/결제
+  </button>
+  <button data-tab="panelRate" onclick="switchTab(this)">
     <span class="tab-icon">&#8361;</span>
     환율
-  </button>
-  <button data-tab="panelOrder" onclick="switchTab(this)">
-    <span class="tab-icon">&#128722;</span>
-    주문
-  </button>
-  <button data-tab="panelBills" onclick="switchTab(this)">
-    <span class="tab-icon">&#128181;</span>
-    화폐
-  </button>
-  <button data-tab="panelChange" onclick="switchTab(this)">
-    <span class="tab-icon">&#128176;</span>
-    거스름
   </button>
 </nav>
 
@@ -1307,6 +1376,15 @@ function updateRateDisplay() {
   if (rateTime) {
     lastUpdate.textContent = '마지막 업데이트: ' + rateTime + ' (' + rateSource + ')';
   }
+  // Update inline rate display in tab 2
+  const inlineUpdate = document.getElementById('rateLastUpdateInline');
+  if (inlineUpdate && rateTime) {
+    inlineUpdate.textContent = '마지막 업데이트: ' + rateTime + ' (' + rateSource + ')';
+  }
+  const inlineInput = document.getElementById('rateInputInline');
+  if (inlineInput) {
+    inlineInput.value = rate || '';
+  }
 }
 
 function openRateModal() {
@@ -1333,13 +1411,26 @@ function saveRate() {
   closeRateModal();
 }
 
+function saveRateInline() {
+  const v = parseFloat(document.getElementById('rateInputInline').value);
+  if (!v || v <= 0) { alert('올바른 환율을 입력하세요'); return; }
+  rate = v;
+  rateSource = '수동 입력';
+  rateTime = new Date().toLocaleString('ko-KR');
+  saveRateToStorage();
+  updateRateDisplay();
+  convert();
+  renderPriceRef();
+  renderOrders();
+}
+
 function ntdToKrw(ntd) { return Math.round(ntd * rate); }
 function krwToNtd(krw) { return rate > 0 ? Math.round(krw / rate) : 0; }
 function fmt(n) { return n.toLocaleString('ko-KR'); }
 function fmtKrw(ntd) { return rate > 0 ? '(' + String.fromCharCode(8776) + ' ' + String.fromCharCode(8361) + fmt(ntdToKrw(ntd)) + ')' : ''; }
 
 // ======================================
-// TAB 1: CONVERTER
+// CONVERTER (Tab 2)
 // ======================================
 function convert() {
   const input = parseFloat(document.getElementById('convertFrom').value) || 0;
@@ -1368,7 +1459,7 @@ function quickConvertAmount(n) {
 }
 
 // ======================================
-// TAB 2: ORDER
+// ORDER (Tab 1 - Section 1)
 // ======================================
 function addItem() {
   const nameEl = document.getElementById('itemName');
@@ -1378,7 +1469,6 @@ function addItem() {
 
   if (!price || price <= 0) { priceEl.focus(); return; }
 
-  // Auto-name if empty
   if (!name) {
     itemCounter++;
     name = '품목 ' + itemCounter;
@@ -1426,13 +1516,16 @@ function saveOrders() {
 
 function renderOrders() {
   const list = document.getElementById('orderList');
-  const totalEl = document.getElementById('orderTotal');
+  const summarySection = document.getElementById('orderSummarySection');
   const clearBtn = document.getElementById('clearOrderBtn');
 
   if (orders.length === 0) {
     list.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128722;</div><p>품목을 추가하면 여기에 표시됩니다</p></div>';
-    totalEl.classList.add('hidden');
+    summarySection.classList.add('hidden');
     clearBtn.style.display = 'none';
+    // Clear change section
+    document.getElementById('changeSection').classList.add('hidden');
+    document.getElementById('payAmount').value = '';
     return;
   }
 
@@ -1460,33 +1553,118 @@ function renderOrders() {
   });
 
   list.innerHTML = html;
-  totalEl.classList.remove('hidden');
+
+  // Show summary section
+  summarySection.classList.remove('hidden');
   document.getElementById('orderTotalNTD').textContent = fmt(total) + ' NTD';
   document.getElementById('orderTotalKRW').textContent = '= ' + fmt(ntdToKrw(total)) + ' KRW';
 
-  // Render inline bills summary
-  renderOrderBillsSummary(total);
+  // Render bill/coin visual breakdown for the total
+  const breakdown = getBillBreakdown(total);
+  renderBillBreakdown(breakdown, 'orderBillsGrid', 'orderCoinsRow');
 
-  // Auto-fill change calc purchase amount
-  document.getElementById('purchaseAmount').value = total;
-  suggestPayAmounts(total);
+  // Render pay suggestion chips
+  renderPaySuggestions(total);
+
+  // Re-calc change if pay amount exists
+  const payVal = parseInt(document.getElementById('payAmount').value) || 0;
+  if (payVal > 0) {
+    calcChange(total, payVal);
+  }
 }
 
-function renderOrderBillsSummary(total) {
-  const el = document.getElementById('orderBillsSummary');
-  if (total <= 0) { el.innerHTML = ''; return; }
+// ======================================
+// PAY SUGGESTIONS (Tab 1 - Section 3)
+// ======================================
+function renderPaySuggestions(total) {
+  const el = document.getElementById('paySuggestChips');
+  if (!total || total <= 0) { el.innerHTML = ''; return; }
 
-  const bd = getBillBreakdown(total);
-  let chips = '';
-  DENOMS.forEach(d => {
-    if (bd[d] > 0) {
-      const isBill = BILLS.includes(d);
-      const iconCls = isBill ? '' : 'coin-icon';
-      chips += `<span class="obs-chip ${isBill ? 'bill' : 'coin'}"><span class="obs-chip-icon ${iconCls} c${d}"></span>${fmt(d)}x${bd[d]}${isBill ? '장' : '개'}</span>`;
-    }
-  });
+  const suggestions = [];
 
-  el.innerHTML = `<div class="order-bills-summary"><div class="obs-title">필요 화폐 조합</div><div class="obs-chips">${chips}</div></div>`;
+  // Exact amount
+  suggestions.push({ amount: total, label: '정확히' });
+
+  // Round up to 100
+  const r100 = Math.ceil(total / 100) * 100;
+  if (r100 > total) suggestions.push({ amount: r100, label: '100 올림' });
+
+  // Round up to 500
+  const r500 = Math.ceil(total / 500) * 500;
+  if (r500 > total && r500 !== r100) suggestions.push({ amount: r500, label: '500 올림' });
+
+  // Round up to 1000
+  const r1000 = Math.ceil(total / 1000) * 1000;
+  if (r1000 > total && r1000 !== r500 && r1000 !== r100) suggestions.push({ amount: r1000, label: '1000 올림' });
+
+  el.innerHTML = suggestions.map((s, i) =>
+    `<button class="pay-chip ${i === 0 ? 'exact-chip' : ''}" onclick="setPayAmount(${s.amount})">
+      <span class="pay-chip-label">${s.label}</span>
+      <span class="pay-chip-amount">${fmt(s.amount)}</span>
+    </button>`
+  ).join('');
+}
+
+function setPayAmount(amount) {
+  document.getElementById('payAmount').value = amount;
+  onPayInput();
+}
+
+function onPayInput() {
+  const total = orders.reduce((s, o) => s + o.price * o.qty, 0);
+  const pay = parseInt(document.getElementById('payAmount').value) || 0;
+
+  if (pay > 0 && total > 0) {
+    calcChange(total, pay);
+  } else {
+    document.getElementById('changeSection').classList.add('hidden');
+  }
+}
+
+// ======================================
+// CHANGE CALCULATION (Tab 1 - Section 4)
+// ======================================
+function calcChange(purchase, pay) {
+  const changeSection = document.getElementById('changeSection');
+  const changeBillsSection = document.getElementById('changeBillsSection');
+
+  if (!purchase || purchase <= 0 || !pay || pay <= 0) {
+    changeSection.classList.add('hidden');
+    return;
+  }
+
+  changeSection.classList.remove('hidden');
+  const change = pay - purchase;
+  const badgeEl = document.getElementById('changeBadge');
+
+  if (change < 0) {
+    document.getElementById('changeAmountDisplay').textContent = fmt(Math.abs(change)) + ' NTD 부족';
+    document.getElementById('changeAmountDisplay').style.color = '#CC0000';
+    document.getElementById('changeKRWDisplay').textContent = fmtKrw(Math.abs(change));
+    badgeEl.innerHTML = '<span class="shortage-badge">금액 부족</span>';
+    changeBillsSection.style.display = 'none';
+    return;
+  }
+
+  document.getElementById('changeAmountDisplay').style.color = 'var(--success)';
+  changeBillsSection.style.display = '';
+
+  if (change === 0) {
+    document.getElementById('changeAmountDisplay').textContent = '딱 맞음!';
+    document.getElementById('changeKRWDisplay').textContent = '';
+    badgeEl.innerHTML = '<span class="exact-badge">정확한 금액</span>';
+    changeBillsSection.style.display = 'none';
+    return;
+  }
+
+  document.getElementById('changeAmountDisplay').textContent = fmt(change) + ' NTD';
+  document.getElementById('changeKRWDisplay').textContent = '= ' + fmt(ntdToKrw(change)) + ' KRW ' + fmtKrw(change);
+  badgeEl.innerHTML = '<span class="overpay-badge">거스름돈</span>';
+
+  const breakdown = getBillBreakdown(change);
+  renderBillBreakdown(breakdown, 'changeBillsGrid', 'changeCoinsRow');
+
+  addHistory(purchase, pay, change);
 }
 
 // ======================================
@@ -1568,26 +1746,8 @@ function togglePriceRef(btn) {
 }
 
 // ======================================
-// TAB 3: BILLS
+// BILL BREAKDOWN
 // ======================================
-function calcBills() {
-  const amount = parseInt(document.getElementById('billAmount').value) || 0;
-  const resultEl = document.getElementById('billsResult');
-  if (amount <= 0) { resultEl.style.display = 'none'; return; }
-  resultEl.style.display = '';
-
-  const breakdown = getBillBreakdown(amount);
-  renderBillBreakdown(breakdown, 'billsGrid', 'coinsRow');
-
-  document.getElementById('billsKRW').textContent =
-    '= ' + fmt(ntdToKrw(amount)) + ' KRW (' + String.fromCharCode(8776) + ' ' + fmt(Math.round(ntdToKrw(amount) / 1000) * 1000) + '원)';
-}
-
-function quickBill(n) {
-  document.getElementById('billAmount').value = n;
-  calcBills();
-}
-
 function getBillBreakdown(amount) {
   let remaining = amount;
   const result = {};
@@ -1636,69 +1796,6 @@ function renderBillBreakdown(breakdown, billsId, coinsId) {
 }
 
 // ======================================
-// TAB 4: CHANGE
-// ======================================
-function suggestPayAmounts(purchaseAmount) {
-  const quick = document.getElementById('payQuick');
-  if (!purchaseAmount || purchaseAmount <= 0) { quick.innerHTML = ''; return; }
-
-  const suggestions = [];
-  const r100 = Math.ceil(purchaseAmount / 100) * 100;
-  if (r100 > purchaseAmount) suggestions.push(r100);
-  const r500 = Math.ceil(purchaseAmount / 500) * 500;
-  if (r500 > purchaseAmount && !suggestions.includes(r500)) suggestions.push(r500);
-  const r1000 = Math.ceil(purchaseAmount / 1000) * 1000;
-  if (r1000 > purchaseAmount && !suggestions.includes(r1000)) suggestions.push(r1000);
-  if (!suggestions.includes(purchaseAmount)) suggestions.unshift(purchaseAmount);
-
-  quick.innerHTML = suggestions.map(s =>
-    `<button onclick="document.getElementById('payAmount').value=${s};calcChange()">${fmt(s)} NTD</button>`
-  ).join('');
-}
-
-function calcChange() {
-  const purchase = parseInt(document.getElementById('purchaseAmount').value) || 0;
-  const pay = parseInt(document.getElementById('payAmount').value) || 0;
-  const resultEl = document.getElementById('changeResult');
-
-  if (purchase <= 0 || pay <= 0) { resultEl.style.display = 'none'; return; }
-
-  resultEl.style.display = '';
-  const change = pay - purchase;
-  const badgeEl = document.getElementById('changeBadge');
-
-  if (change < 0) {
-    document.getElementById('changeAmountDisplay').textContent = fmt(Math.abs(change)) + ' NTD 부족';
-    document.getElementById('changeAmountDisplay').style.color = '#CC0000';
-    document.getElementById('changeKRWDisplay').textContent = fmtKrw(Math.abs(change));
-    badgeEl.innerHTML = '<span class="overpay-badge">금액 부족</span>';
-    document.getElementById('changeBillsGrid').innerHTML = '';
-    document.getElementById('changeCoinsRow').innerHTML = '';
-    return;
-  }
-
-  document.getElementById('changeAmountDisplay').style.color = 'var(--success)';
-
-  if (change === 0) {
-    document.getElementById('changeAmountDisplay').textContent = '딱 맞음!';
-    document.getElementById('changeKRWDisplay').textContent = '';
-    badgeEl.innerHTML = '<span class="exact-badge">정확한 금액</span>';
-    document.getElementById('changeBillsGrid').innerHTML = '';
-    document.getElementById('changeCoinsRow').innerHTML = '';
-    return;
-  }
-
-  document.getElementById('changeAmountDisplay').textContent = fmt(change) + ' NTD';
-  document.getElementById('changeKRWDisplay').textContent = '= ' + fmt(ntdToKrw(change)) + ' KRW ' + fmtKrw(change);
-  badgeEl.innerHTML = '<span class="overpay-badge">거스름돈</span>';
-
-  const breakdown = getBillBreakdown(change);
-  renderBillBreakdown(breakdown, 'changeBillsGrid', 'changeCoinsRow');
-
-  addHistory(purchase, pay, change);
-}
-
-// ======================================
 // HISTORY
 // ======================================
 function addHistory(purchase, pay, change) {
@@ -1718,18 +1815,6 @@ function switchTab(btn) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById(btn.dataset.tab).classList.add('active');
-
-  if (btn.dataset.tab === 'panelChange' && orders.length > 0) {
-    const total = orders.reduce((s, o) => s + o.price * o.qty, 0);
-    document.getElementById('purchaseAmount').value = total;
-    suggestPayAmounts(total);
-  }
-
-  if (btn.dataset.tab === 'panelBills' && orders.length > 0) {
-    const total = orders.reduce((s, o) => s + o.price * o.qty, 0);
-    document.getElementById('billAmount').value = total;
-    calcBills();
-  }
 }
 
 // ======================================
