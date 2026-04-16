@@ -1,5 +1,5 @@
 // NTD Cash Helper — Network First Service Worker
-const CACHE_NAME = 'ntd-cash-helper-v10';
+const CACHE_NAME = 'ntd-cash-helper-v11';
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => {
