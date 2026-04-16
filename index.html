@@ -130,7 +130,7 @@ body {
 
 /* -- CONTENT -- */
 .content {
-  padding: 16px;
+  padding: 12px;
   max-width: 480px;
   margin: 0 auto;
 }
@@ -142,7 +142,7 @@ body {
   background: var(--card-bg);
   border-radius: var(--radius);
   box-shadow: var(--card-shadow);
-  padding: 16px;
+  padding: 12px;
   margin-bottom: 14px;
 }
 .card-title {
@@ -300,9 +300,8 @@ body {
 .order-name {
   font-size: 13px;
   font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-word;
 }
 .order-price {
   font-size: 12px;
@@ -388,20 +387,22 @@ body {
 /* -- CURRENCY BILLS/COINS (Realistic NTD Design) -- */
 .bills-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
   margin-top: 12px;
+  overflow: hidden;
 }
 .bill-card {
   border-radius: 6px;
-  padding: 12px 10px 10px 18px;
+  padding: 10px 8px 8px 16px;
   position: relative;
   overflow: hidden;
   aspect-ratio: 2.4 / 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 72px;
+  min-height: 64px;
+  min-width: 0;
   border: 1.5px solid rgba(0,0,0,0.12);
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), inset 0 0 0 1px rgba(255,255,255,0.08);
 }
@@ -544,13 +545,13 @@ body {
   text-align: right;
 }
 .bill-card .bill-denom {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 800;
   line-height: 1;
   text-shadow: 0 1px 2px rgba(0,0,0,0.15);
 }
 .bill-card .bill-ntd-mark {
-  font-size: 8px;
+  font-size: 7px;
   font-weight: 600;
   opacity: 0.6;
   letter-spacing: 0.5px;
@@ -574,9 +575,9 @@ body {
 .bill-card .bill-count-badge {
   background: rgba(0,0,0,0.4);
   color: white;
-  padding: 2px 8px;
+  padding: 2px 6px;
   border-radius: 10px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   white-space: nowrap;
   backdrop-filter: blur(2px);
@@ -700,20 +701,20 @@ body {
 }
 /* 50원: 황동(금색), 톱니 가장자리, 가장 큼 */
 .coin-50 {
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
   background: radial-gradient(circle at 35% 35%, #FFE082, #D4AF37 40%, #C19A2E 70%, #B8860B 100%);
   color: #5D3A00;
   border: 3px dashed #B8860B;
   box-shadow: inset 0 2px 4px rgba(255,255,255,0.3), inset 0 -2px 4px rgba(0,0,0,0.15), 0 2px 6px rgba(0,0,0,0.2);
 }
-.coin-50 .coin-denom { font-size: 18px; }
+.coin-50 .coin-denom { font-size: 16px; }
 .coin-50 .coin-hanzi { font-size: 6px; margin-top: 1px; }
 .coin-50 .coin-figure { font-size: 6px; margin-top: 1px; }
 /* 10원: 바이메탈 (은색 외곽 + 금색 중앙) */
 .coin-10 {
-  width: 60px;
-  height: 60px;
+  width: 52px;
+  height: 52px;
   background: radial-gradient(circle at 50% 50%, #D4AF37 0%, #C19A2E 38%, #A0A0A0 42%, #C8C8C8 50%, #E0E0E0 60%, #B8B8B8 100%);
   color: #333;
   border: 2.5px solid #A0A0A0;
@@ -729,31 +730,31 @@ body {
   border: 1px solid rgba(0,0,0,0.08);
   pointer-events: none;
 }
-.coin-10 .coin-denom { font-size: 16px; }
+.coin-10 .coin-denom { font-size: 14px; }
 .coin-10 .coin-hanzi { font-size: 6px; margin-top: 1px; }
 .coin-10 .coin-figure { font-size: 6px; margin-top: 1px; }
 /* 5원: 구리색, 작은 크기 */
 .coin-5 {
-  width: 52px;
-  height: 52px;
+  width: 46px;
+  height: 46px;
   background: radial-gradient(circle at 35% 35%, #E8A850, #CD7F32 40%, #B8722E 70%, #A0602A 100%);
   color: #3E2000;
   border: 2.5px solid #A0602A;
   box-shadow: inset 0 2px 3px rgba(255,255,255,0.3), inset 0 -2px 3px rgba(0,0,0,0.15), 0 2px 5px rgba(0,0,0,0.2);
 }
-.coin-5 .coin-denom { font-size: 14px; }
+.coin-5 .coin-denom { font-size: 12px; }
 .coin-5 .coin-hanzi { font-size: 5px; margin-top: 1px; }
 .coin-5 .coin-figure { font-size: 5px; margin-top: 1px; }
 /* 1원: 은색(알루미늄), 가장 작고 가벼움 */
 .coin-1 {
-  width: 46px;
-  height: 46px;
+  width: 40px;
+  height: 40px;
   background: radial-gradient(circle at 35% 35%, #F0F0F0, #D8D8D8 40%, #C0C0C0 70%, #A8A8A8 100%);
   color: #444;
   border: 2px solid #A0A0A0;
   box-shadow: inset 0 1px 3px rgba(255,255,255,0.5), inset 0 -1px 3px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.15);
 }
-.coin-1 .coin-denom { font-size: 13px; }
+.coin-1 .coin-denom { font-size: 11px; }
 .coin-1 .coin-hanzi { font-size: 5px; margin-top: 1px; }
 .coin-1 .coin-figure { font-size: 5px; margin-top: 1px; }
 
@@ -1142,8 +1143,36 @@ body {
   color: #CCC;
   font-size: 18px;
   cursor: pointer;
+  flex-shrink: 0;
 }
 .preset-modal-item .pmi-del:active { color: #CC0000; }
+.preset-modal-item .pmi-edit-name,
+.preset-modal-item .pmi-edit-price {
+  padding: 4px 8px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  background: #FAFAFA;
+  -webkit-appearance: none;
+}
+.preset-modal-item .pmi-edit-name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+}
+.preset-modal-item .pmi-edit-price {
+  width: 70px;
+  font-weight: 700;
+  color: var(--accent);
+  text-align: right;
+}
+.preset-modal-item .pmi-edit-name:focus,
+.preset-modal-item .pmi-edit-price:focus {
+  border-color: var(--accent);
+  outline: none;
+  background: #FFF;
+}
 .preset-add-row {
   display: flex;
   gap: 8px;
@@ -1655,7 +1684,12 @@ function addItem() {
 }
 
 function addPresetItem(name, price) {
-  orders.push({ name, price, qty: 1, id: Date.now() });
+  const existing = orders.find(o => o.name === name && o.price === price);
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    orders.push({ name, price, qty: 1, id: Date.now() });
+  }
   saveOrders();
   renderOrders();
 }
@@ -1869,8 +1903,8 @@ function renderPresetModalList() {
   }
   el.innerHTML = presets.map((p, i) =>
     `<div class="preset-modal-item">
-      <span class="pmi-name">${escHtml(p.name)}</span>
-      <span class="pmi-price">${fmt(p.price)} NTD</span>
+      <input class="pmi-edit-name" type="text" value="${escAttr(p.name)}" data-idx="${i}" onchange="updatePreset(${i})">
+      <input class="pmi-edit-price" type="number" inputmode="decimal" value="${p.price}" data-idx="${i}" onchange="updatePreset(${i})">
       <button class="pmi-del" onclick="removePreset(${i})" title="삭제">&#215;</button>
     </div>`
   ).join('');
@@ -1880,6 +1914,20 @@ function removePreset(idx) {
   presets.splice(idx, 1);
   localStorage.setItem('ntd_presets', JSON.stringify(presets));
   renderPresetModalList();
+  renderPresets();
+}
+
+function updatePreset(idx) {
+  const el = document.getElementById('presetModalList');
+  const nameInput = el.querySelector(`.pmi-edit-name[data-idx="${idx}"]`);
+  const priceInput = el.querySelector(`.pmi-edit-price[data-idx="${idx}"]`);
+  if (!nameInput || !priceInput) return;
+  const name = nameInput.value.trim();
+  const price = parseFloat(priceInput.value);
+  if (!name || !price || price <= 0) return;
+  presets[idx].name = name;
+  presets[idx].price = price;
+  localStorage.setItem('ntd_presets', JSON.stringify(presets));
   renderPresets();
 }
 
@@ -2002,6 +2050,10 @@ function escHtml(s) {
   const d = document.createElement('div');
   d.textContent = s;
   return d.innerHTML;
+}
+
+function escAttr(s) {
+  return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 // ======================================
