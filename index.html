@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NTD Helper">
+<meta name="theme-color" content="#C4122F">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>NTD Cash Helper | 대만 현금 도우미</title>
+<style>
+:root {
+  --tw-red: #C4122F;
+  --tw-blue: #002A6B;
+  --tw-white: #FFFFFF;
+  --bg: #F5F5F5;
+  --card-bg: #FFFFFF;
+  --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --border: #E0E0E0;
+  --text: #222222;
+  --text-sub: #666666;
+  --text-light: #999999;
+  --accent: #C4122F;
+  --accent-light: #FDEDEF;
+  --success: #2E7D32;
+  --success-light: #E8F5E9;
+  --radius: 12px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: calc(70px + var(--safe-bottom));
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── HEADER ── */
+.header {
+  background: linear-gradient(135deg, var(--tw-red), #A00E26);
+  color: var(--tw-white);
+  padding: 16px 20px;
+  padding-top: calc(16px + env(safe-area-inset-top, 0px));
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header h1 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.header .subtitle {
+  font-size: 12px;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+.rate-bar {
+  background: rgba(255,255,255,0.15);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.rate-bar .rate-value {
+  font-weight: 700;
+  font-size: 16px;
+}
+.rate-bar .rate-label {
+  font-size: 11px;
+  opacity: 0.8;
+}
+.rate-bar button {
+  background: rgba(255,255,255,0.25);
+  border: none;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.rate-bar button:active { background: rgba(255,255,255,0.4); }
+
+/* ── TAB NAV ── */
+.tab-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--card-bg);
+  border-top: 1px solid var(--border);
+  display: flex;
+  padding-bottom: var(--safe-bottom);
+  z-index: 100;
+}
+.tab-nav button {
+  flex: 1;
+  border: none;
+  background: none;
+  padding: 10px 4px 8px;
+  font-size: 10px;
+  color: var(--text-light);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.2s;
+}
+.tab-nav button.active {
+  color: var(--accent);
+}
+.tab-nav button .tab-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+/* ── CONTENT ── */
+.content {
+  padding: 16px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── CARD ── */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--tw-blue);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.card-title .icon { font-size: 16px; }
+
+/* ── FORM ── */
+.input-group {
+  margin-bottom: 12px;
+}
+.input-group label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+.input-group input, .input-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  background: #FAFAFA;
+  -webkit-appearance: none;
+  transition: border-color 0.2s;
+}
+.input-group input:focus, .input-group select:focus {
+  border-color: var(--accent);
+  outline: none;
+  background: #FFF;
+}
+.input-row {
+  display: flex;
+  gap: 10px;
+}
+.input-row .input-group { flex: 1; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  width: 100%;
+}
+.btn-primary:active { background: #A00E26; }
+.btn-outline {
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+}
+.btn-outline:active { background: var(--accent-light); }
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+.btn-danger {
+  background: #F5F5F5;
+  color: #CC0000;
+  border: none;
+}
+
+/* ── CONVERTER ── */
+.converter-display {
+  text-align: center;
+  padding: 20px 0;
+}
+.converter-display .amount-ntd {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--tw-red);
+  line-height: 1.1;
+}
+.converter-display .amount-krw {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--tw-blue);
+  margin-top: 4px;
+}
+.converter-display .unit {
+  font-size: 14px;
+  font-weight: 400;
+  opacity: 0.6;
+}
+.swap-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: white;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--text-sub);
+  -webkit-tap-highlight-color: transparent;
+}
+.swap-btn:active { background: var(--bg); }
+
+/* ── ORDER LIST ── */
+.order-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #F0F0F0;
+}
+.order-item:last-child { border-bottom: none; }
+.order-info { flex: 1; min-width: 0; }
+.order-name {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.order-price {
+  font-size: 12px;
+  color: var(--text-sub);
+}
+.order-qty {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.order-qty button {
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  background: white;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.order-qty button:active { background: var(--bg); }
+.order-qty .qty-num {
+  width: 28px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+.order-subtotal {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--tw-red);
+  min-width: 70px;
+  text-align: right;
+}
+.order-delete {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  color: #CCC;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.order-delete:active { color: #CC0000; }
+
+/* ── TOTAL BAR ── */
+.total-bar {
+  background: var(--tw-blue);
+  color: white;
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+.total-bar .total-label {
+  font-size: 13px;
+  opacity: 0.8;
+}
+.total-bar .total-amount {
+  font-size: 22px;
+  font-weight: 800;
+}
+.total-bar .total-krw {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-top: 2px;
+  text-align: right;
+}
+
+/* ── CURRENCY BILLS/COINS ── */
+.bills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+.bill-card {
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.bill-card .bill-denom {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+}
+.bill-card .bill-unit {
+  font-size: 10px;
+  margin-top: 2px;
+  opacity: 0.7;
+}
+.bill-card .bill-count {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: 18px;
+  font-weight: 800;
+}
+.bill-card .bill-count-label {
+  font-size: 9px;
+  position: absolute;
+  top: 26px;
+  right: 10px;
+  opacity: 0.7;
+}
+/* Bill colors mimicking real NTD */
+.bill-1000 { background: linear-gradient(135deg, #4169A8, #5B8AC4); color: white; }
+.bill-500  { background: linear-gradient(135deg, #8B6914, #B8860B); color: white; }
+.bill-200  { background: linear-gradient(135deg, #2E7D32, #43A047); color: white; }
+.bill-100  { background: linear-gradient(135deg, #CC3333, #E05555); color: white; }
+
+.coins-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.coin-card {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.coin-card .coin-denom {
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+}
+.coin-card .coin-unit {
+  font-size: 8px;
+  opacity: 0.7;
+}
+.coin-card .coin-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--accent);
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Coin colors */
+.coin-50  { background: linear-gradient(135deg, #D4AF37, #FFD700); color: #333; border: 2px solid #C19A2E; }
+.coin-10  { background: linear-gradient(135deg, #B8860B, #DAA520); color: #333; border: 2px solid #A0760A; }
+.coin-5   { background: linear-gradient(135deg, #CD7F32, #E8A850); color: #333; border: 2px solid #B8722E; }
+.coin-1   { background: linear-gradient(135deg, #C0C0C0, #E8E8E8); color: #333; border: 2px solid #A0A0A0; }
+
+.bill-card.zero, .coin-card.zero {
+  opacity: 0.2;
+}
+
+/* ── CHANGE CALC ── */
+.change-result {
+  text-align: center;
+  padding: 16px;
+}
+.change-result .change-amount {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--success);
+}
+.change-result .change-krw {
+  font-size: 14px;
+  color: var(--text-sub);
+}
+.exact-badge {
+  display: inline-block;
+  background: var(--success-light);
+  color: var(--success);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+.overpay-badge {
+  display: inline-block;
+  background: #FFF3E0;
+  color: #E65100;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+/* ── QUICK AMOUNTS ── */
+.quick-amounts {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.quick-amounts button {
+  padding: 6px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  background: white;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.quick-amounts button:active { background: var(--bg); }
+.quick-amounts button.selected {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-light);
+}
+.empty-state .empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  opacity: 0.4;
+}
+.empty-state p {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ── RATE MODAL ── */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal-sheet {
+  background: white;
+  border-radius: 16px 16px 0 0;
+  padding: 24px 20px;
+  padding-bottom: calc(24px + var(--safe-bottom));
+  width: 100%;
+  max-width: 480px;
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.modal-sheet h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.modal-sheet .modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  border: none;
+  background: none;
+  font-size: 24px;
+  color: var(--text-sub);
+  cursor: pointer;
+}
+
+/* ── HISTORY ── */
+.history-item {
+  padding: 12px 0;
+  border-bottom: 1px solid #F0F0F0;
+}
+.history-item:last-child { border-bottom: none; }
+.history-time {
+  font-size: 11px;
+  color: var(--text-light);
+}
+.history-detail {
+  font-size: 13px;
+  margin-top: 2px;
+}
+.history-amount {
+  font-weight: 700;
+  color: var(--tw-red);
+}
+
+/* ── UTILITIES ── */
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.text-center { text-align: center; }
+.text-sm { font-size: 12px; }
+.text-sub { color: var(--text-sub); }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.divider { height: 1px; background: #F0F0F0; margin: 12px 0; }
+.hidden { display: none !important; }
+
+/* Haptic feedback simulation */
+@media (hover: none) {
+  button:active, .btn:active { transform: scale(0.97); }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>NTD Cash Helper</h1>
+  <div class="subtitle">대만 현금 도우미</div>
+  <div class="rate-bar">
+    <div>
+      <div class="rate-label">1 NTD =</div>
+      <div class="rate-value" id="headerRate">-- KRW</div>
+    </div>
+    <button onclick="openRateModal()">환율 설정</button>
+    <button onclick="fetchRate()" id="fetchBtn" title="실시간 환율">새로고침</button>
+  </div>
+</div>
+
+<!-- TAB PANELS -->
+<div class="content">
+
+  <!-- TAB 1: 환율 변환 -->
+  <div class="tab-panel active" id="panelConvert">
+    <div class="card">
+      <div class="card-title"><span class="icon">&#8361;</span> 환율 변환기</div>
+      <div class="input-group">
+        <label id="convertFromLabel">NTD (대만 달러)</label>
+        <input type="number" id="convertFrom" inputmode="decimal" placeholder="금액 입력" oninput="convert()">
+      </div>
+      <div class="text-center">
+        <button class="swap-btn" onclick="swapCurrency()" title="통화 전환">&#8645;</button>
+      </div>
+      <div class="converter-display">
+        <div class="amount-ntd" id="convertResultTop">0 <span class="unit" id="convertUnitTop">NTD</span></div>
+        <div class="amount-krw" id="convertResultBottom">= 0 <span class="unit" id="convertUnitBottom">KRW</span></div>
+      </div>
+      <div class="quick-amounts" id="quickConvert">
+        <button onclick="quickConvertAmount(100)">100</button>
+        <button onclick="quickConvertAmount(500)">500</button>
+        <button onclick="quickConvertAmount(1000)">1,000</button>
+        <button onclick="quickConvertAmount(5000)">5,000</button>
+        <button onclick="quickConvertAmount(10000)">10,000</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: 주문 합산 -->
+  <div class="tab-panel" id="panelOrder">
+    <div class="card">
+      <div class="card-title"><span class="icon">&#128722;</span> 주문 합산 계산기</div>
+      <div class="input-row">
+        <div class="input-group" style="flex:2">
+          <label>품목명</label>
+          <input type="text" id="itemName" placeholder="예: 지파이, 밀크티">
+        </div>
+        <div class="input-group" style="flex:1">
+          <label>가격 (NTD)</label>
+          <input type="number" id="itemPrice" inputmode="decimal" placeholder="0">
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="addItem()">+ 품목 추가</button>
+    </div>
+
+    <div class="card" id="orderListCard">
+      <div class="flex-between">
+        <div class="card-title" style="margin-bottom:0"><span class="icon">&#128203;</span> 주문 목록</div>
+        <button class="btn btn-sm btn-danger" onclick="clearOrder()" id="clearOrderBtn" style="display:none">전체 삭제</button>
+      </div>
+      <div id="orderList">
+        <div class="empty-state">
+          <div class="empty-icon">&#128722;</div>
+          <p>품목을 추가하면 여기에 표시됩니다</p>
+        </div>
+      </div>
+      <div id="orderTotal" class="hidden">
+        <div class="total-bar">
+          <div>
+            <div class="total-label">총 합계</div>
+          </div>
+          <div style="text-align:right">
+            <div class="total-amount" id="orderTotalNTD">0 NTD</div>
+            <div class="total-krw" id="orderTotalKRW">= 0 KRW</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: 화폐 조합 -->
+  <div class="tab-panel" id="panelBills">
+    <div class="card">
+      <div class="card-title"><span class="icon">&#128181;</span> 최적 화폐 조합</div>
+      <div class="input-group">
+        <label>금액 (NTD)</label>
+        <input type="number" id="billAmount" inputmode="decimal" placeholder="지불할 금액 입력" oninput="calcBills()">
+      </div>
+      <div class="quick-amounts">
+        <button onclick="quickBill(100)">100</button>
+        <button onclick="quickBill(250)">250</button>
+        <button onclick="quickBill(500)">500</button>
+        <button onclick="quickBill(1000)">1,000</button>
+        <button onclick="quickBill(1500)">1,500</button>
+      </div>
+    </div>
+
+    <div class="card" id="billsResult" style="display:none">
+      <div class="card-title"><span class="icon">&#127979;</span> 지폐</div>
+      <div class="bills-grid" id="billsGrid"></div>
+      <div class="divider"></div>
+      <div class="card-title"><span class="icon">&#129689;</span> 동전</div>
+      <div class="coins-row" id="coinsRow"></div>
+      <div class="mt-12 text-center text-sm text-sub" id="billsKRW"></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: 거스름돈 -->
+  <div class="tab-panel" id="panelChange">
+    <div class="card">
+      <div class="card-title"><span class="icon">&#128176;</span> 거스름돈 계산기</div>
+      <div class="input-group">
+        <label>구매 금액 (NTD)</label>
+        <input type="number" id="purchaseAmount" inputmode="decimal" placeholder="물건 가격">
+      </div>
+      <div class="input-group">
+        <label>지불 금액 (NTD)</label>
+        <input type="number" id="payAmount" inputmode="decimal" placeholder="내는 금액">
+      </div>
+      <div class="quick-amounts" id="payQuick"></div>
+      <button class="btn btn-primary mt-8" onclick="calcChange()">거스름돈 계산</button>
+    </div>
+
+    <div class="card" id="changeResult" style="display:none">
+      <div class="change-result">
+        <div id="changeBadge"></div>
+        <div class="change-amount" id="changeAmountDisplay">0 NTD</div>
+        <div class="change-krw" id="changeKRWDisplay">= 0 KRW</div>
+      </div>
+      <div class="divider"></div>
+      <div class="card-title"><span class="icon">&#127979;</span> 거스름돈 화폐 조합</div>
+      <div class="bills-grid" id="changeBillsGrid"></div>
+      <div class="coins-row mt-8" id="changeCoinsRow"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TAB NAV -->
+<nav class="tab-nav">
+  <button class="active" data-tab="panelConvert" onclick="switchTab(this)">
+    <span class="tab-icon">&#8361;</span>
+    환율
+  </button>
+  <button data-tab="panelOrder" onclick="switchTab(this)">
+    <span class="tab-icon">&#128722;</span>
+    주문
+  </button>
+  <button data-tab="panelBills" onclick="switchTab(this)">
+    <span class="tab-icon">&#128181;</span>
+    화폐
+  </button>
+  <button data-tab="panelChange" onclick="switchTab(this)">
+    <span class="tab-icon">&#128176;</span>
+    거스름
+  </button>
+</nav>
+
+<!-- RATE MODAL -->
+<div class="modal-overlay" id="rateModal" onclick="closeRateModal(event)">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <h3>환율 설정</h3>
+    <div class="input-group">
+      <label>1 NTD = ? KRW</label>
+      <input type="number" id="rateInput" inputmode="decimal" step="0.01" placeholder="예: 42.5">
+    </div>
+    <div class="text-sm text-sub mt-8">
+      수동 입력하거나 "실시간 환율" 버튼으로 자동 업데이트
+    </div>
+    <div class="mt-12" style="display:flex;gap:10px">
+      <button class="btn btn-outline" style="flex:1" onclick="closeRateModal()">취소</button>
+      <button class="btn btn-primary" style="flex:1" onclick="saveRate()">저장</button>
+    </div>
+    <div class="mt-12">
+      <button class="btn btn-primary" style="width:100%;background:var(--tw-blue)" onclick="fetchRate();closeRateModal()">실시간 환율 가져오기</button>
+    </div>
+    <div class="mt-8 text-sm text-sub" id="rateLastUpdate"></div>
+  </div>
+</div>
+
+<script>
+// ──────────────────────────────────
+// STATE
+// ──────────────────────────────────
+let rate = parseFloat(localStorage.getItem('ntd_rate')) || 0;
+let rateSource = localStorage.getItem('ntd_rate_source') || '';
+let rateTime = localStorage.getItem('ntd_rate_time') || '';
+let convertDir = 'NTD_TO_KRW'; // or KRW_TO_NTD
+let orders = JSON.parse(localStorage.getItem('ntd_orders') || '[]');
+let history = JSON.parse(localStorage.getItem('ntd_history') || '[]');
+
+const BILLS = [1000, 500, 200, 100];
+const COINS = [50, 10, 5, 1];
+const DENOMS = [...BILLS, ...COINS];
+
+// ──────────────────────────────────
+// INIT
+// ──────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  updateRateDisplay();
+  renderOrders();
+  if (!rate) {
+    fetchRate();
+  }
+});
+
+// ──────────────────────────────────
+// RATE
+// ──────────────────────────────────
+async function fetchRate() {
+  const btn = document.getElementById('fetchBtn');
+  btn.textContent = '...';
+  btn.disabled = true;
+  try {
+    // Primary: ExchangeRate-API (free)
+    const res = await fetch('https://api.exchangerate-api.com/v4/latest/TWD');
+    const data = await res.json();
+    if (data && data.rates && data.rates.KRW) {
+      rate = Math.round(data.rates.KRW * 100) / 100;
+      rateSource = 'ExchangeRate-API';
+      rateTime = new Date().toLocaleString('ko-KR');
+      saveRateToStorage();
+      updateRateDisplay();
+    }
+  } catch (e) {
+    try {
+      // Fallback: open.er-api.com
+      const res2 = await fetch('https://open.er-api.com/v6/latest/TWD');
+      const data2 = await res2.json();
+      if (data2 && data2.rates && data2.rates.KRW) {
+        rate = Math.round(data2.rates.KRW * 100) / 100;
+        rateSource = 'open.er-api (fallback)';
+        rateTime = new Date().toLocaleString('ko-KR');
+        saveRateToStorage();
+        updateRateDisplay();
+      }
+    } catch (e2) {
+      if (!rate) {
+        rate = 42.5; // offline default
+        rateSource = '오프라인 기본값';
+        rateTime = new Date().toLocaleString('ko-KR');
+        saveRateToStorage();
+        updateRateDisplay();
+      }
+      alert('환율 API 접속 실패. ' + (rate ? '캐시된 환율 사용 중.' : '기본값(42.5) 사용 중.'));
+    }
+  }
+  btn.textContent = '새로고침';
+  btn.disabled = false;
+}
+
+function saveRateToStorage() {
+  localStorage.setItem('ntd_rate', rate);
+  localStorage.setItem('ntd_rate_source', rateSource);
+  localStorage.setItem('ntd_rate_time', rateTime);
+}
+
+function updateRateDisplay() {
+  document.getElementById('headerRate').textContent = rate ? (rate.toFixed(2) + ' KRW') : '-- KRW';
+  const lastUpdate = document.getElementById('rateLastUpdate');
+  if (rateTime) {
+    lastUpdate.textContent = '마지막 업데이트: ' + rateTime + ' (' + rateSource + ')';
+  }
+}
+
+function openRateModal() {
+  document.getElementById('rateInput').value = rate || '';
+  document.getElementById('rateModal').classList.add('show');
+}
+
+function closeRateModal(e) {
+  if (e && e.target !== document.getElementById('rateModal')) return;
+  document.getElementById('rateModal').classList.remove('show');
+}
+
+function saveRate() {
+  const v = parseFloat(document.getElementById('rateInput').value);
+  if (!v || v <= 0) { alert('올바른 환율을 입력하세요'); return; }
+  rate = v;
+  rateSource = '수동 입력';
+  rateTime = new Date().toLocaleString('ko-KR');
+  saveRateToStorage();
+  updateRateDisplay();
+  convert();
+  closeRateModal();
+}
+
+function ntdToKrw(ntd) { return Math.round(ntd * rate); }
+function krwToNtd(krw) { return rate > 0 ? Math.round(krw / rate) : 0; }
+function fmt(n) { return n.toLocaleString('ko-KR'); }
+
+// ──────────────────────────────────
+// TAB 1: CONVERTER
+// ──────────────────────────────────
+function convert() {
+  const input = parseFloat(document.getElementById('convertFrom').value) || 0;
+  const topEl = document.getElementById('convertResultTop');
+  const bottomEl = document.getElementById('convertResultBottom');
+
+  if (convertDir === 'NTD_TO_KRW') {
+    topEl.innerHTML = fmt(input) + ' <span class="unit">NTD</span>';
+    bottomEl.innerHTML = '= ' + fmt(ntdToKrw(input)) + ' <span class="unit">KRW</span>';
+  } else {
+    topEl.innerHTML = fmt(input) + ' <span class="unit">KRW</span>';
+    bottomEl.innerHTML = '= ' + fmt(krwToNtd(input)) + ' <span class="unit">NTD</span>';
+  }
+}
+
+function swapCurrency() {
+  convertDir = convertDir === 'NTD_TO_KRW' ? 'KRW_TO_NTD' : 'NTD_TO_KRW';
+  const label = document.getElementById('convertFromLabel');
+  label.textContent = convertDir === 'NTD_TO_KRW' ? 'NTD (대만 달러)' : 'KRW (한국 원)';
+  convert();
+}
+
+function quickConvertAmount(n) {
+  document.getElementById('convertFrom').value = n;
+  convert();
+}
+
+// ──────────────────────────────────
+// TAB 2: ORDER
+// ──────────────────────────────────
+function addItem() {
+  const nameEl = document.getElementById('itemName');
+  const priceEl = document.getElementById('itemPrice');
+  const name = nameEl.value.trim();
+  const price = parseFloat(priceEl.value);
+
+  if (!name) { nameEl.focus(); return; }
+  if (!price || price <= 0) { priceEl.focus(); return; }
+
+  orders.push({ name, price, qty: 1, id: Date.now() });
+  saveOrders();
+  renderOrders();
+  nameEl.value = '';
+  priceEl.value = '';
+  nameEl.focus();
+}
+
+function removeItem(id) {
+  orders = orders.filter(o => o.id !== id);
+  saveOrders();
+  renderOrders();
+}
+
+function changeQty(id, delta) {
+  const item = orders.find(o => o.id === id);
+  if (!item) return;
+  item.qty = Math.max(1, item.qty + delta);
+  saveOrders();
+  renderOrders();
+}
+
+function clearOrder() {
+  if (!confirm('주문 목록을 전체 삭제하시겠습니까?')) return;
+  orders = [];
+  saveOrders();
+  renderOrders();
+}
+
+function saveOrders() {
+  localStorage.setItem('ntd_orders', JSON.stringify(orders));
+}
+
+function renderOrders() {
+  const list = document.getElementById('orderList');
+  const totalEl = document.getElementById('orderTotal');
+  const clearBtn = document.getElementById('clearOrderBtn');
+
+  if (orders.length === 0) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128722;</div><p>품목을 추가하면 여기에 표시됩니다</p></div>';
+    totalEl.classList.add('hidden');
+    clearBtn.style.display = 'none';
+    return;
+  }
+
+  clearBtn.style.display = '';
+  let html = '';
+  let total = 0;
+
+  orders.forEach(o => {
+    const sub = o.price * o.qty;
+    total += sub;
+    html += `
+      <div class="order-item">
+        <div class="order-info">
+          <div class="order-name">${escHtml(o.name)}</div>
+          <div class="order-price">${fmt(o.price)} NTD</div>
+        </div>
+        <div class="order-qty">
+          <button onclick="changeQty(${o.id},-1)">-</button>
+          <span class="qty-num">${o.qty}</span>
+          <button onclick="changeQty(${o.id},1)">+</button>
+        </div>
+        <div class="order-subtotal">${fmt(sub)}</div>
+        <button class="order-delete" onclick="removeItem(${o.id})" title="삭제">&#215;</button>
+      </div>`;
+  });
+
+  list.innerHTML = html;
+  totalEl.classList.remove('hidden');
+  document.getElementById('orderTotalNTD').textContent = fmt(total) + ' NTD';
+  document.getElementById('orderTotalKRW').textContent = '= ' + fmt(ntdToKrw(total)) + ' KRW';
+
+  // Auto-fill change calc purchase amount
+  document.getElementById('purchaseAmount').value = total;
+  suggestPayAmounts(total);
+}
+
+// ──────────────────────────────────
+// TAB 3: BILLS
+// ──────────────────────────────────
+function calcBills() {
+  const amount = parseInt(document.getElementById('billAmount').value) || 0;
+  const resultEl = document.getElementById('billsResult');
+  if (amount <= 0) { resultEl.style.display = 'none'; return; }
+  resultEl.style.display = '';
+
+  const breakdown = getBillBreakdown(amount);
+  renderBillBreakdown(breakdown, 'billsGrid', 'coinsRow');
+
+  document.getElementById('billsKRW').textContent =
+    '= ' + fmt(ntdToKrw(amount)) + ' KRW (약 ' + fmt(Math.round(ntdToKrw(amount) / 1000) * 1000) + '원)';
+}
+
+function quickBill(n) {
+  document.getElementById('billAmount').value = n;
+  calcBills();
+}
+
+function getBillBreakdown(amount) {
+  let remaining = amount;
+  const result = {};
+  DENOMS.forEach(d => {
+    result[d] = Math.floor(remaining / d);
+    remaining = remaining % d;
+  });
+  return result;
+}
+
+function renderBillBreakdown(breakdown, billsId, coinsId) {
+  const billsEl = document.getElementById(billsId);
+  const coinsEl = document.getElementById(coinsId);
+
+  billsEl.innerHTML = BILLS.map(d => `
+    <div class="bill-card bill-${d} ${breakdown[d] === 0 ? 'zero' : ''}">
+      <div class="bill-denom">${fmt(d)}</div>
+      <div class="bill-unit">NTD</div>
+      <div class="bill-count">${breakdown[d]}</div>
+      <div class="bill-count-label">장</div>
+    </div>
+  `).join('');
+
+  coinsEl.innerHTML = COINS.map(d => `
+    <div class="coin-card coin-${d} ${breakdown[d] === 0 ? 'zero' : ''}">
+      <div class="coin-denom">${d}</div>
+      <div class="coin-unit">NTD</div>
+      ${breakdown[d] > 0 ? `<div class="coin-count">${breakdown[d]}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+// ──────────────────────────────────
+// TAB 4: CHANGE
+// ──────────────────────────────────
+function suggestPayAmounts(purchaseAmount) {
+  const quick = document.getElementById('payQuick');
+  if (!purchaseAmount || purchaseAmount <= 0) { quick.innerHTML = ''; return; }
+
+  const suggestions = [];
+  // Round up to nearest 100
+  const r100 = Math.ceil(purchaseAmount / 100) * 100;
+  if (r100 > purchaseAmount) suggestions.push(r100);
+  // Round up to nearest 500
+  const r500 = Math.ceil(purchaseAmount / 500) * 500;
+  if (r500 > purchaseAmount && !suggestions.includes(r500)) suggestions.push(r500);
+  // Round up to nearest 1000
+  const r1000 = Math.ceil(purchaseAmount / 1000) * 1000;
+  if (r1000 > purchaseAmount && !suggestions.includes(r1000)) suggestions.push(r1000);
+  // Exact
+  if (!suggestions.includes(purchaseAmount)) suggestions.unshift(purchaseAmount);
+
+  quick.innerHTML = suggestions.map(s =>
+    `<button onclick="document.getElementById('payAmount').value=${s};calcChange()">${fmt(s)} NTD</button>`
+  ).join('');
+}
+
+function calcChange() {
+  const purchase = parseInt(document.getElementById('purchaseAmount').value) || 0;
+  const pay = parseInt(document.getElementById('payAmount').value) || 0;
+  const resultEl = document.getElementById('changeResult');
+
+  if (purchase <= 0 || pay <= 0) { resultEl.style.display = 'none'; return; }
+
+  resultEl.style.display = '';
+  const change = pay - purchase;
+  const badgeEl = document.getElementById('changeBadge');
+
+  if (change < 0) {
+    document.getElementById('changeAmountDisplay').textContent = fmt(Math.abs(change)) + ' NTD 부족';
+    document.getElementById('changeAmountDisplay').style.color = '#CC0000';
+    document.getElementById('changeKRWDisplay').textContent = '';
+    badgeEl.innerHTML = '<span class="overpay-badge">금액 부족</span>';
+    document.getElementById('changeBillsGrid').innerHTML = '';
+    document.getElementById('changeCoinsRow').innerHTML = '';
+    return;
+  }
+
+  document.getElementById('changeAmountDisplay').style.color = 'var(--success)';
+
+  if (change === 0) {
+    document.getElementById('changeAmountDisplay').textContent = '딱 맞음!';
+    document.getElementById('changeKRWDisplay').textContent = '';
+    badgeEl.innerHTML = '<span class="exact-badge">정확한 금액</span>';
+    document.getElementById('changeBillsGrid').innerHTML = '';
+    document.getElementById('changeCoinsRow').innerHTML = '';
+    return;
+  }
+
+  document.getElementById('changeAmountDisplay').textContent = fmt(change) + ' NTD';
+  document.getElementById('changeKRWDisplay').textContent = '= ' + fmt(ntdToKrw(change)) + ' KRW';
+  badgeEl.innerHTML = '<span class="overpay-badge">거스름돈</span>';
+
+  const breakdown = getBillBreakdown(change);
+  renderBillBreakdown(breakdown, 'changeBillsGrid', 'changeCoinsRow');
+
+  // Save to history
+  addHistory(purchase, pay, change);
+}
+
+// ──────────────────────────────────
+// HISTORY
+// ──────────────────────────────────
+function addHistory(purchase, pay, change) {
+  history.unshift({
+    time: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+    purchase, pay, change
+  });
+  if (history.length > 20) history.pop();
+  localStorage.setItem('ntd_history', JSON.stringify(history));
+}
+
+// ──────────────────────────────────
+// TAB SWITCH
+// ──────────────────────────────────
+function switchTab(btn) {
+  document.querySelectorAll('.tab-nav button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(btn.dataset.tab).classList.add('active');
+
+  // Auto-sync: when switching to change tab, copy order total
+  if (btn.dataset.tab === 'panelChange' && orders.length > 0) {
+    const total = orders.reduce((s, o) => s + o.price * o.qty, 0);
+    document.getElementById('purchaseAmount').value = total;
+    suggestPayAmounts(total);
+  }
+
+  // Auto-sync: when switching to bills tab, copy order total
+  if (btn.dataset.tab === 'panelBills' && orders.length > 0) {
+    const total = orders.reduce((s, o) => s + o.price * o.qty, 0);
+    document.getElementById('billAmount').value = total;
+    calcBills();
+  }
+}
+
+// ──────────────────────────────────
+// UTILS
+// ──────────────────────────────────
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ──────────────────────────────────
+// SERVICE WORKER
+// ──────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+
+</body>
+</html>
