@@ -317,6 +317,12 @@ body {
   background: #F0F0F0;
   outline: none;
 }
+.order-kor {
+  font-size: 11px;
+  color: #EA580C;
+  margin: 2px 0 2px 4px;
+  font-weight: 500;
+}
 .order-price {
   font-size: 12px;
   color: var(--text-sub);
@@ -1564,6 +1570,82 @@ const BILLS = [1000, 500, 100];
 const COINS = [50, 10, 5, 1];
 const DENOMS = [...BILLS, ...COINS];
 
+// 대만 메뉴 중→한 사전 (번체자 기준)
+const TW_KOR_DICT = {
+  // 대표 요리
+  '魯肉飯': '루러우판(돼지고기덮밥)', '滷肉飯': '루러우판(돼지고기덮밥)',
+  '肉燥飯': '돼지고기양념덮밥', '控肉飯': '삼겹살덮밥',
+  '排骨飯': '돼지갈비덮밥', '雞腿飯': '닭다리덮밥', '雞排飯': '치킨가스덮밥',
+  '牛肉麵': '우육면(소고기국수)', '牛肉湯麵': '소고기국수',
+  '擔仔麵': '딴자이면', '乾麵': '비빔면', '湯麵': '국물국수',
+  '炸醬麵': '자장면', '麻醬麵': '땅콩장면',
+  '米粉': '쌀국수', '米粉湯': '쌀국수탕', '炒米粉': '볶음쌀국수',
+  '炒飯': '볶음밥', '蝦仁炒飯': '새우볶음밥', '雞肉炒飯': '닭고기볶음밥',
+  '蚵仔煎': '굴전', '蚵仔麵線': '굴국수',
+  '小籠包': '샤오롱바오', '湯包': '탕바오(국물만두)',
+  '水餃': '물만두', '煎餃': '군만두', '蒸餃': '찐만두', '鍋貼': '군만두',
+  '餛飩': '완탕', '餛飩湯': '완탕국', '餛飩麵': '완탕면',
+  '肉圓': '뤄우위안(고기만두)', '刈包': '대만식버거',
+  '鹽酥雞': '대만식치킨', '雞排': '닭튀김', '鹹酥雞': '대만치킨',
+  '滷味': '대만조림', '臭豆腐': '취두부',
+  '蔥抓餅': '대만파전', '蔥油餅': '파전', '胡椒餅': '후추빵',
+  '蛋餅': '대만에그랩', '飯糰': '주먹밥',
+  '豆漿': '두유', '鹹豆漿': '짠두유', '油條': '꽈배기빵', '燒餅': '중국빵',
+  '大腸包小腸': '대만소시지핫도그',
+  '春捲': '춘권', '潤餅': '춘권',
+
+  // 음료·빙수
+  '珍珠奶茶': '버블티', '奶茶': '밀크티', '紅茶': '홍차', '綠茶': '녹차',
+  '烏龍茶': '우롱차', '冬瓜茶': '동과차', '青茶': '청차',
+  '檸檬': '레몬', '檸檬紅茶': '레몬홍차', '檸檬綠茶': '레몬녹차',
+  '咖啡': '커피', '拿鐵': '라떼', '美式': '아메리카노',
+  '豆花': '두화(푸딩)', '愛玉': '아이위젤리', '仙草': '선초젤리',
+  '芒果冰': '망고빙수', '剉冰': '빙수', '雪花冰': '눈꽃빙수',
+  '珍珠': '타피오카', '粉圓': '타피오카',
+
+  // 반찬/야채
+  '青菜': '야채', '燙青菜': '데친야채', '炒青菜': '볶음야채',
+  '高麗菜': '양배추', '空心菜': '공심채', '地瓜葉': '고구마잎',
+  '滷蛋': '장조림계란', '茶葉蛋': '차잎계란', '荷包蛋': '계란후라이',
+  '白飯': '흰밥', '滷豆腐': '두부조림',
+
+  // 재료
+  '豬': '돼지', '豬肉': '돼지고기', '牛': '소', '牛肉': '소고기',
+  '雞': '닭', '雞肉': '닭고기', '鴨': '오리', '鴨肉': '오리고기',
+  '魚': '생선', '蝦': '새우', '蝦仁': '새우살', '花枝': '오징어',
+  '蛋': '계란', '豆腐': '두부', '蔥': '파', '蒜': '마늘',
+  '薑': '생강', '辣椒': '고추', '香菜': '고수',
+
+  // 맛·조리법
+  '辣': '매운', '不辣': '안매움', '微辣': '약간매움', '小辣': '조금매움',
+  '中辣': '보통매움', '大辣': '매움', '鹹': '짠', '甜': '달콤한',
+  '酸': '신맛', '香': '향긋한', '炸': '튀긴', '炒': '볶은',
+  '煎': '부친', '蒸': '찐', '煮': '삶은', '烤': '구운',
+  '冷': '차가운', '熱': '따뜻한', '冰': '얼음',
+
+  // 기타
+  '湯': '국', '粥': '죽', '麵': '면', '飯': '밥', '菜': '요리',
+  '大': '큰', '小': '작은', '中': '중간', '份': '인분', '碗': '그릇',
+  '加': '추가', '免': '빼기'
+};
+
+function translateMenuName(name) {
+  if (!name) return '';
+  // 완전 일치 먼저
+  if (TW_KOR_DICT[name]) return TW_KOR_DICT[name];
+  // 최장 매칭 (긴 단어부터)
+  const keys = Object.keys(TW_KOR_DICT).sort((a, b) => b.length - a.length);
+  const hits = [];
+  let remaining = name;
+  for (const k of keys) {
+    if (remaining.includes(k)) {
+      hits.push(TW_KOR_DICT[k]);
+      remaining = remaining.split(k).join('');
+    }
+  }
+  return hits.length ? hits.join(' + ') : '';
+}
+
 // Bill metadata (실제 대만 지폐 참고)
 const BILL_META = {
   1000: { figure: '지구본 교육', back: '꿩', hanzi: '壹仟圓', icon: '🔬', portrait: '育' },
@@ -1855,10 +1937,13 @@ function renderOrders() {
   orders.forEach(o => {
     const sub = o.price * o.qty;
     total += sub;
+    const kor = translateMenuName(o.name);
+    const korHtml = kor ? `<div class="order-kor">↳ ${escAttr(kor)}</div>` : '';
     html += `
       <div class="order-item">
         <div class="order-info">
           <div class="order-name"><input class="order-name-input" value="${escAttr(o.name)}" onchange="updateItemName(${o.id},this.value)" onblur="updateItemName(${o.id},this.value)"></div>
+          ${korHtml}
           <div class="order-price"><input class="order-price-input" type="number" inputmode="decimal" value="${o.price}" onchange="updateItemPrice(${o.id},this.value)" onblur="updateItemPrice(${o.id},this.value)"> NTD <span class="order-krw-sub">${fmtKrw(o.price)}</span></div>
         </div>
         <div class="order-qty">
