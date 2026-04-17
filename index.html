@@ -645,11 +645,6 @@ body {
   color: #FFF3E0;
   border-color: rgba(107,58,16,0.4);
 }
-.bill-200 {
-  background: linear-gradient(135deg, #1B5E20 0%, #256D27 25%, #2E7D32 50%, #388E3C 75%, #1B5E20 100%);
-  color: #E8F5E9;
-  border-color: rgba(27,94,32,0.4);
-}
 .bill-100 {
   background: linear-gradient(135deg, #B71C1C 0%, #C62828 25%, #D32F2F 50%, #C62828 75%, #B71C1C 100%);
   color: #FFEBEE;
@@ -834,7 +829,6 @@ body {
 }
 .obs-chip-icon.c1000 { background: #1B4F8A; }
 .obs-chip-icon.c500 { background: #8B4513; }
-.obs-chip-icon.c200 { background: #2E7D32; }
 .obs-chip-icon.c100 { background: #C62828; }
 .obs-chip-icon.c50 { background: #D4AF37; }
 .obs-chip-icon.c10 { background: linear-gradient(#C0C0C0, #E0E0E0); border: 1px solid #DAA520; }
@@ -1556,7 +1550,7 @@ let orders = JSON.parse(localStorage.getItem('ntd_orders') || '[]');
 let history = JSON.parse(localStorage.getItem('ntd_history') || '[]');
 let itemCounter = parseInt(localStorage.getItem('ntd_item_counter') || '0');
 
-const BILLS = [1000, 500, 200, 100];
+const BILLS = [1000, 500, 100];
 const COINS = [50, 10, 5, 1];
 const DENOMS = [...BILLS, ...COINS];
 
@@ -1564,7 +1558,6 @@ const DENOMS = [...BILLS, ...COINS];
 const BILL_META = {
   1000: { figure: '지구본 교육', back: '꿩', hanzi: '壹仟圓', icon: '🔬', portrait: '育' },
   500:  { figure: '소년야구', back: '매화사슴', hanzi: '伍佰圓', icon: '⚾', portrait: '球' },
-  200:  { figure: '기념관', back: '연어', hanzi: '貳佰圓', icon: '🏛', rare: true, portrait: '堂' },
   100:  { figure: '쑨원 초상', back: '중산루', hanzi: '壹佰圓', icon: '🏛', portrait: '孫' }
 };
 const COIN_META = {
