@@ -1683,13 +1683,31 @@ const COIN_META = {
 
 // Default presets
 const DEFAULT_PRESETS = [
+  // 식당
+  { name: '루로우판', price: 60 },
+  { name: '샤오롱바오', price: 330 },
+  { name: '새우볶음밥', price: 280 },
+  { name: '배추만두', price: 230 },
+  { name: '두꺼운파이', price: 60 },
+  { name: '짭짤한두유', price: 40 },
+  { name: '홍소우육면', price: 220 },
+  { name: '용강우육면', price: 200 },
+  { name: '카페음료', price: 240 },
+  // 야시장
+  { name: '굴전', price: 70 },
+  { name: '족발밥', price: 100 },
+  { name: '탕후루', price: 50 },
+  { name: '후추빵', price: 55 },
+  { name: '약선배', price: 120 },
+  { name: '해산물구이', price: 150 },
+  { name: '대왕카스테라', price: 120 },
+  { name: '오징어튀김', price: 100 },
+  { name: '지파이', price: 80 },
   { name: '버블티', price: 55 },
-  { name: '지파이', price: 70 },
-  { name: '샤오롱바오', price: 250 },
-  { name: '루로우판', price: 50 },
-  { name: '택시기본', price: 85 }
+  { name: '택시기본', price: 85 },
 ];
-let presets = JSON.parse(localStorage.getItem('ntd_presets') || 'null') || [...DEFAULT_PRESETS];
+const _stored = JSON.parse(localStorage.getItem('ntd_presets') || 'null');
+let presets = (_stored && _stored.length > 0) ? _stored : [...DEFAULT_PRESETS];
 
 // Price reference data
 const PRICE_REF = [
