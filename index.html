@@ -1242,6 +1242,234 @@ body {
   font-family: inherit;
 }
 
+/* -- PRESET ACCORDION / MODAL REDESIGN -- */
+.preset-label-row {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.preset-collapse-arrow {
+  font-size: 10px;
+  color: var(--text-sub);
+}
+.preset-label-text {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-sub);
+}
+.pmi-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.pmi-modal-header h3 {
+  font-size: 16px;
+  font-weight: 700;
+}
+.pmi-close-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: #F0F0F0;
+  border-radius: 50%;
+  font-size: 16px;
+  color: var(--text-sub);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.pmi-cat-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.pmi-cat-btn {
+  flex: 1;
+  padding: 7px 0;
+  border-radius: 10px;
+  border: 1.5px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s, color 0.15s;
+}
+.pmi-cat-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+.pmi-section {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+}
+.pmi-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.pmi-section-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+.pmi-section-hidden .pmi-section-name {
+  opacity: 0.4;
+}
+.pmi-del-btn {
+  padding: 3px 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #F5F5F5;
+  font-size: 11px;
+  color: var(--text-sub);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.pmi-del-btn:active { background: #e0e0e0; }
+.pmi-restore-btn {
+  padding: 3px 8px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: var(--accent-light);
+  font-size: 11px;
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 600;
+  -webkit-tap-highlight-color: transparent;
+}
+.pmi-restore-btn:active { background: var(--accent); color: #fff; }
+.pmi-item {
+  display: flex;
+  gap: 6px;
+  padding: 5px 0;
+  align-items: center;
+}
+.pmi-item-hidden {
+  opacity: 0.5;
+}
+.pmi-hidden-name {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-sub);
+  text-decoration: line-through;
+}
+.pmi-hidden-price {
+  font-size: 12px;
+  color: var(--text-sub);
+}
+.pmi-add-item-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+.pmi-add-item-row input {
+  padding: 5px 8px;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: inherit;
+  background: #FAFAFA;
+}
+.pmi-add-item-row input:focus {
+  border-color: var(--accent);
+  outline: none;
+  background: #fff;
+}
+.pmi-add-item-name { flex: 1; }
+.pmi-add-item-price { width: 64px; }
+.pmi-add-btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.pmi-add-btn:active { opacity: 0.8; }
+.pmi-new-section-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+  border-top: 2px dashed var(--accent-light);
+  padding-top: 12px;
+}
+.pmi-new-section-row input {
+  flex: 1;
+  padding: 7px 10px;
+  border: 1.5px dashed var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  background: #FAFAFA;
+}
+.pmi-new-section-row input:focus {
+  border-color: var(--accent);
+  outline: none;
+  background: #fff;
+}
+.pmi-add-sec-btn {
+  padding: 7px 12px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+}
+.pmi-add-sec-btn:active { opacity: 0.8; }
+.pmi-show-hidden-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px 0;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: transparent;
+  font-size: 12px;
+  color: var(--text-sub);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.pmi-show-hidden-btn:active { background: var(--bg); }
+.pmi-hidden-area {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+.pmi-hidden-area-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-sub);
+  margin-bottom: 8px;
+}
+.pmi-hard-del-btn {
+  padding: 3px 7px;
+  border: 1px solid #FFCDD2;
+  border-radius: 6px;
+  background: #FFF5F5;
+  font-size: 11px;
+  color: #CC0000;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  margin-left: 4px;
+}
+.pmi-hard-del-btn:active { background: #FFCDD2; }
+
 /* -- HISTORY -- */
 .history-item {
   padding: 12px 0;
@@ -1553,14 +1781,11 @@ body {
 <!-- PRESET MODAL -->
 <div class="modal-overlay" id="presetModal" onclick="closePresetModal(event)">
   <div class="modal-sheet" onclick="event.stopPropagation()">
-    <h3>프리셋 편집</h3>
-    <div class="preset-modal-body" id="presetModalList"></div>
-    <div class="preset-add-row">
-      <input type="text" id="presetNewName" placeholder="품목명">
-      <input type="number" id="presetNewPrice" inputmode="decimal" placeholder="NTD" style="max-width:80px">
-      <button class="btn btn-sm btn-primary" style="width:auto;padding:8px 14px" onclick="addCustomPreset()">추가</button>
+    <div class="pmi-modal-header">
+      <h3>프리셋 편집</h3>
+      <button class="pmi-close-btn" onclick="closePresetModal()">&#215;</button>
     </div>
-    <div style="font-size:11px;color:var(--text-sub);margin-top:4px" id="presetAddHint"></div>
+    <div class="preset-modal-body" id="presetModalList"></div>
     <div class="mt-12">
       <button class="btn btn-outline" style="width:100%" onclick="closePresetModal()">닫기</button>
     </div>
@@ -1734,6 +1959,13 @@ const DEFAULT_PRESETS = [
   { name: '택시기본', price: 85, section: '기타' },
 ];
 const YASIZAN_SECTIONS = ['닝샤', '라오허제', '스린', '야시장기타'];
+let collapsedSections = new Set();
+let hiddenSections = new Set(JSON.parse(localStorage.getItem('ntd_hidden_sections') || '[]'));
+let showHiddenPresets = false;
+let customSections = JSON.parse(localStorage.getItem('ntd_custom_sections') || '{}');
+Object.keys(customSections)
+  .filter(s => customSections[s] === 'yasizan' && !YASIZAN_SECTIONS.includes(s))
+  .forEach(s => YASIZAN_SECTIONS.push(s));
 const _stored = JSON.parse(localStorage.getItem('ntd_presets') || 'null');
 let presets = (_stored && _stored.length > 0 && _stored[0].section) ? _stored : [...DEFAULT_PRESETS];
 
@@ -2148,11 +2380,98 @@ function selectPresetCategory(cat) {
   renderPresets();
 }
 
+function setModalCategory(cat) {
+  presetCategory = cat;
+  renderPresetModalList();
+  renderPresets();
+}
+
+function toggleSectionCollapse(sec) {
+  if (collapsedSections.has(sec)) {
+    collapsedSections.delete(sec);
+  } else {
+    collapsedSections.add(sec);
+  }
+  renderPresets();
+}
+
+function hidePreset(idx) {
+  presets[idx].hidden = true;
+  localStorage.setItem('ntd_presets', JSON.stringify(presets));
+  renderPresetModalList();
+  renderPresets();
+}
+
+function restorePreset(idx) {
+  presets[idx].hidden = false;
+  localStorage.setItem('ntd_presets', JSON.stringify(presets));
+  renderPresetModalList();
+  renderPresets();
+}
+
+function hardDeletePreset(idx) {
+  presets.splice(idx, 1);
+  localStorage.setItem('ntd_presets', JSON.stringify(presets));
+  renderPresetModalList();
+  renderPresets();
+}
+
+function hideSection(sec) {
+  hiddenSections.add(sec);
+  localStorage.setItem('ntd_hidden_sections', JSON.stringify([...hiddenSections]));
+  renderPresetModalList();
+  renderPresets();
+}
+
+function restoreSection(sec) {
+  hiddenSections.delete(sec);
+  localStorage.setItem('ntd_hidden_sections', JSON.stringify([...hiddenSections]));
+  renderPresetModalList();
+  renderPresets();
+}
+
+function addSectionItem(sec, sIdx) {
+  const nameEl = document.getElementById('ni-name-' + sIdx);
+  const priceEl = document.getElementById('ni-price-' + sIdx);
+  if (!nameEl || !priceEl) return;
+  const name = nameEl.value.trim();
+  const price = parseFloat(priceEl.value);
+  if (!name || !price || price <= 0) return;
+  presets.push({ name, price, section: sec });
+  localStorage.setItem('ntd_presets', JSON.stringify(presets));
+  nameEl.value = '';
+  priceEl.value = '';
+  renderPresetModalList();
+  renderPresets();
+}
+
+function addNewSection() {
+  const nameEl = document.getElementById('newSectionName');
+  if (!nameEl) return;
+  const sec = nameEl.value.trim();
+  if (!sec) return;
+  if (customSections[sec]) return;
+  const cat = presetCategory === '야시장' ? 'yasizan' : 'restaurant';
+  customSections[sec] = cat;
+  localStorage.setItem('ntd_custom_sections', JSON.stringify(customSections));
+  if (cat === 'yasizan' && !YASIZAN_SECTIONS.includes(sec)) {
+    YASIZAN_SECTIONS.push(sec);
+  }
+  nameEl.value = '';
+  renderPresetModalList();
+  renderPresets();
+}
+
+function toggleShowHiddenPresets() {
+  showHiddenPresets = !showHiddenPresets;
+  renderPresetModalList();
+}
+
 function renderPresets() {
   const el = document.getElementById('presetChips');
   const hasSections = presets.some(p => p.section);
   if (!hasSections) {
-    el.innerHTML = presets.map(p =>
+    el.innerHTML = presets.filter(p => !p.hidden).map(p =>
       `<button class="preset-chip" onclick="addPresetItem('${escHtml(p.name)}',${p.price})">
         <span class="preset-name">${escHtml(p.name)}</span>
         <span class="preset-price">${fmt(p.price)}</span>
@@ -2173,7 +2492,19 @@ function renderPresets() {
     </button>`;
   }
   function secBlock(sec) {
-    return `<div class="preset-section"><div class="preset-label">${escHtml(sec)}</div><div class="preset-chips">${sectionMap[sec].map(chipBtn).join('')}</div></div>`;
+    if (hiddenSections.has(sec)) return '';
+    const visibleItems = sectionMap[sec].filter(p => !p.hidden);
+    if (visibleItems.length === 0) return '';
+    const collapsed = collapsedSections.has(sec);
+    const arrow = collapsed ? '&#9654;' : '&#9660;';
+    const chipsHtml = collapsed ? '' : `<div class="preset-chips">${visibleItems.map(chipBtn).join('')}</div>`;
+    return `<div class="preset-section">
+      <div class="preset-label-row" onclick="toggleSectionCollapse('${escAttr(sec)}')">
+        <span class="preset-collapse-arrow">${arrow}</span>
+        <span class="preset-label-text">${escHtml(sec)}</span>
+      </div>
+      ${chipsHtml}
+    </div>`;
   }
   const restaurantSecs = sectionOrder.filter(s => !YASIZAN_SECTIONS.includes(s) && s !== '기타');
   const marketSecs = sectionOrder.filter(s => YASIZAN_SECTIONS.includes(s));
@@ -2188,8 +2519,6 @@ function renderPresets() {
 
 function openPresetModal() {
   renderPresetModalList();
-  const hint = document.getElementById('presetAddHint');
-  if (hint) hint.textContent = `현재 "${presetCategory}" 탭에 추가됩니다`;
   document.getElementById('presetModal').classList.add('show');
 }
 
@@ -2200,17 +2529,107 @@ function closePresetModal(e) {
 
 function renderPresetModalList() {
   const el = document.getElementById('presetModalList');
-  if (presets.length === 0) {
-    el.innerHTML = '<div class="text-center text-sub text-sm" style="padding:20px">프리셋이 없습니다</div>';
-    return;
+
+  // Build section order and map
+  const sectionOrder = [], sectionMap = {};
+  presets.forEach((p, idx) => {
+    const sec = p.section || '기타';
+    if (!sectionMap[sec]) { sectionMap[sec] = []; sectionOrder.push(sec); }
+    sectionMap[sec].push({ p, idx });
+  });
+
+  const restaurantSecs = sectionOrder.filter(s => !YASIZAN_SECTIONS.includes(s) && s !== '기타');
+  const marketSecs = sectionOrder.filter(s => YASIZAN_SECTIONS.includes(s));
+  const etcSecs = sectionOrder.filter(s => s === '기타');
+  const activeSecs = presetCategory === '야시장' ? [...marketSecs, ...etcSecs] : [...restaurantSecs, ...etcSecs];
+
+  // Category tabs
+  let html = `<div class="pmi-cat-tabs">
+    <button class="pmi-cat-btn${presetCategory === '식당' ? ' active' : ''}" onclick="setModalCategory('식당')">🍜 식당</button>
+    <button class="pmi-cat-btn${presetCategory === '야시장' ? ' active' : ''}" onclick="setModalCategory('야시장')">🏮 야시장</button>
+  </div>`;
+
+  if (sectionOrder.length === 0) {
+    html += '<div style="padding:20px;text-align:center;color:var(--text-sub);font-size:13px">프리셋이 없습니다</div>';
   }
-  el.innerHTML = presets.map((p, i) =>
-    `<div class="preset-modal-item">
-      <input class="pmi-edit-name" type="text" value="${escAttr(p.name)}" data-idx="${i}" onchange="updatePreset(${i})">
-      <input class="pmi-edit-price" type="number" inputmode="decimal" value="${p.price}" data-idx="${i}" onchange="updatePreset(${i})">
-      <button class="pmi-del" onclick="removePreset(${i})" title="삭제">&#215;</button>
-    </div>`
-  ).join('');
+
+  activeSecs.forEach((sec, sIdx) => {
+    const isHidden = hiddenSections.has(sec);
+    const items = sectionMap[sec] || [];
+    const visibleItems = items.filter(({ p }) => !p.hidden);
+    const hiddenItems = items.filter(({ p }) => p.hidden);
+
+    html += `<div class="pmi-section${isHidden ? ' pmi-section-hidden' : ''}">
+      <div class="pmi-section-header">
+        <span class="pmi-section-name">${escHtml(sec)}</span>
+        ${isHidden
+          ? `<button class="pmi-restore-btn" onclick="restoreSection('${escAttr(sec)}')">복원</button>`
+          : `<button class="pmi-del-btn" onclick="hideSection('${escAttr(sec)}')">섹션 숨김</button>`
+        }
+      </div>`;
+
+    if (!isHidden) {
+      visibleItems.forEach(({ p, idx }) => {
+        html += `<div class="pmi-item">
+          <input class="pmi-edit-name" type="text" value="${escAttr(p.name)}" data-idx="${idx}" onchange="updatePreset(${idx})" style="flex:1;min-width:0">
+          <input class="pmi-edit-price" type="number" inputmode="decimal" value="${p.price}" data-idx="${idx}" onchange="updatePreset(${idx})" style="width:64px">
+          <button class="pmi-del-btn" onclick="hidePreset(${idx})" title="숨김">&#215; 숨김</button>
+        </div>`;
+      });
+
+      // Inline add row
+      html += `<div class="pmi-add-item-row">
+        <input class="pmi-add-item-name" type="text" id="ni-name-${sIdx}" placeholder="메뉴명">
+        <input class="pmi-add-item-price" type="number" inputmode="decimal" id="ni-price-${sIdx}" placeholder="NTD">
+        <button class="pmi-add-btn" onclick="addSectionItem('${escAttr(sec)}',${sIdx})">+</button>
+      </div>`;
+    }
+
+    html += '</div>';
+  });
+
+  // New section row
+  const placeholder = presetCategory === '야시장' ? '새 야시장 이름' : '새 식당 이름';
+  html += `<div class="pmi-new-section-row">
+    <input type="text" id="newSectionName" placeholder="${placeholder}">
+    <button class="pmi-add-sec-btn" onclick="addNewSection()">+ 추가</button>
+  </div>`;
+
+  // Hidden items toggle
+  const allHiddenPresets = presets.map((p, idx) => ({ p, idx })).filter(({ p }) => p.hidden);
+  const allHiddenSections = [...hiddenSections];
+  const totalHidden = allHiddenPresets.length + allHiddenSections.length;
+
+  html += `<button class="pmi-show-hidden-btn" onclick="toggleShowHiddenPresets()">
+    ${showHiddenPresets ? '▲ 숨겨진 항목 닫기' : '▼ 숨겨진 항목 보기 (' + totalHidden + '개)'}
+  </button>`;
+
+  if (showHiddenPresets && totalHidden > 0) {
+    html += '<div class="pmi-hidden-area">';
+    if (allHiddenPresets.length > 0) {
+      html += '<div class="pmi-hidden-area-title">숨겨진 메뉴</div>';
+      allHiddenPresets.forEach(({ p, idx }) => {
+        html += `<div class="pmi-item pmi-item-hidden">
+          <span class="pmi-hidden-name">${escHtml(p.name)}</span>
+          <span class="pmi-hidden-price">${fmt(p.price)} NTD</span>
+          <button class="pmi-restore-btn" onclick="restorePreset(${idx})">복원</button>
+          <button class="pmi-hard-del-btn" onclick="hardDeletePreset(${idx})">삭제</button>
+        </div>`;
+      });
+    }
+    if (allHiddenSections.length > 0) {
+      html += '<div class="pmi-hidden-area-title" style="margin-top:10px">숨겨진 섹션</div>';
+      allHiddenSections.forEach(sec => {
+        html += `<div class="pmi-item pmi-item-hidden">
+          <span class="pmi-hidden-name">${escHtml(sec)}</span>
+          <button class="pmi-restore-btn" onclick="restoreSection('${escAttr(sec)}')">복원</button>
+        </div>`;
+      });
+    }
+    html += '</div>';
+  }
+
+  el.innerHTML = html;
 }
 
 function removePreset(idx) {
@@ -2231,21 +2650,6 @@ function updatePreset(idx) {
   presets[idx].name = name;
   presets[idx].price = price;
   localStorage.setItem('ntd_presets', JSON.stringify(presets));
-  renderPresets();
-}
-
-function addCustomPreset() {
-  const nameEl = document.getElementById('presetNewName');
-  const priceEl = document.getElementById('presetNewPrice');
-  const name = nameEl.value.trim();
-  const price = parseFloat(priceEl.value);
-  if (!name || !price || price <= 0) return;
-  const section = presetCategory === '야시장' ? '야시장기타' : '기타';
-  presets.push({ name, price, section });
-  localStorage.setItem('ntd_presets', JSON.stringify(presets));
-  nameEl.value = '';
-  priceEl.value = '';
-  renderPresetModalList();
   renderPresets();
 }
 
