@@ -1560,6 +1560,7 @@ body {
       <input type="number" id="presetNewPrice" inputmode="decimal" placeholder="NTD" style="max-width:80px">
       <button class="btn btn-sm btn-primary" style="width:auto;padding:8px 14px" onclick="addCustomPreset()">추가</button>
     </div>
+    <div style="font-size:11px;color:var(--text-sub);margin-top:4px" id="presetAddHint"></div>
     <div class="mt-12">
       <button class="btn btn-outline" style="width:100%" onclick="closePresetModal()">닫기</button>
     </div>
@@ -1732,7 +1733,7 @@ const DEFAULT_PRESETS = [
   { name: '버블티', price: 55, section: '스린' },
   { name: '택시기본', price: 85, section: '기타' },
 ];
-const YASIZAN_SECTIONS = ['닝샤', '라오허제', '스린'];
+const YASIZAN_SECTIONS = ['닝샤', '라오허제', '스린', '야시장기타'];
 const _stored = JSON.parse(localStorage.getItem('ntd_presets') || 'null');
 let presets = (_stored && _stored.length > 0 && _stored[0].section) ? _stored : [...DEFAULT_PRESETS];
 
@@ -2187,6 +2188,8 @@ function renderPresets() {
 
 function openPresetModal() {
   renderPresetModalList();
+  const hint = document.getElementById('presetAddHint');
+  if (hint) hint.textContent = `현재 "${presetCategory}" 탭에 추가됩니다`;
   document.getElementById('presetModal').classList.add('show');
 }
 
@@ -2237,7 +2240,8 @@ function addCustomPreset() {
   const name = nameEl.value.trim();
   const price = parseFloat(priceEl.value);
   if (!name || !price || price <= 0) return;
-  presets.push({ name, price });
+  const section = presetCategory === '야시장' ? '야시장기타' : '기타';
+  presets.push({ name, price, section });
   localStorage.setItem('ntd_presets', JSON.stringify(presets));
   nameEl.value = '';
   priceEl.value = '';
