@@ -843,6 +843,16 @@ body {
 .obs-chip-icon.c1 { background: #C0C0C0; }
 
 /* -- PRESET CHIPS -- */
+.preset-group-divider {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 10px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1.5px solid var(--accent-light);
+}
 .preset-section {
   margin-bottom: 14px;
 }
@@ -1684,30 +1694,31 @@ const COIN_META = {
 // Default presets
 const DEFAULT_PRESETS = [
   // 식당
-  { name: '루로우판', price: 60 },
-  { name: '샤오롱바오', price: 330 },
-  { name: '새우볶음밥', price: 280 },
-  { name: '배추만두', price: 230 },
-  { name: '두꺼운파이', price: 60 },
-  { name: '짭짤한두유', price: 40 },
-  { name: '홍소우육면', price: 220 },
-  { name: '용강우육면', price: 200 },
-  { name: '카페음료', price: 240 },
+  { name: '루로우판', price: 60, section: '금봉' },
+  { name: '샤오롱바오', price: 330, section: '딘타이펑' },
+  { name: '새우볶음밥', price: 280, section: '딘타이펑' },
+  { name: '배추만두', price: 230, section: '딘타이펑' },
+  { name: '두꺼운파이', price: 60, section: '부항두장' },
+  { name: '짭짤한두유', price: 40, section: '부항두장' },
+  { name: '홍소우육면', price: 220, section: '린동팡' },
+  { name: '용강우육면', price: 200, section: '용강' },
+  { name: '카페음료', price: 240, section: 'SimpleKaffa' },
   // 야시장
-  { name: '굴전', price: 70 },
-  { name: '족발밥', price: 100 },
-  { name: '탕후루', price: 50 },
-  { name: '후추빵', price: 55 },
-  { name: '약선배', price: 120 },
-  { name: '해산물구이', price: 150 },
-  { name: '대왕카스테라', price: 120 },
-  { name: '오징어튀김', price: 100 },
-  { name: '지파이', price: 80 },
-  { name: '버블티', price: 55 },
-  { name: '택시기본', price: 85 },
+  { name: '굴전', price: 70, section: '닝샤' },
+  { name: '족발밥', price: 100, section: '닝샤' },
+  { name: '탕후루', price: 50, section: '닝샤' },
+  { name: '후추빵', price: 55, section: '라오허제' },
+  { name: '약선배', price: 120, section: '라오허제' },
+  { name: '해산물구이', price: 150, section: '라오허제' },
+  { name: '대왕카스테라', price: 120, section: '스린' },
+  { name: '오징어튀김', price: 100, section: '스린' },
+  { name: '지파이', price: 80, section: '스린' },
+  { name: '버블티', price: 55, section: '스린' },
+  { name: '택시기본', price: 85, section: '기타' },
 ];
+const YASIZAN_SECTIONS = ['닝샤', '라오허제', '스린'];
 const _stored = JSON.parse(localStorage.getItem('ntd_presets') || 'null');
-let presets = (_stored && _stored.length > 0) ? _stored : [...DEFAULT_PRESETS];
+let presets = (_stored && _stored.length > 0 && _stored[0].section) ? _stored : [...DEFAULT_PRESETS];
 
 // Price reference data
 const PRICE_REF = [
@@ -2116,12 +2127,40 @@ function calcChange(purchase, pay) {
 // ======================================
 function renderPresets() {
   const el = document.getElementById('presetChips');
-  el.innerHTML = presets.map((p, i) =>
-    `<button class="preset-chip" onclick="addPresetItem('${escHtml(p.name)}',${p.price})">
-      <span class="preset-name">${escHtml(p.name)}</span>
-      <span class="preset-price">${fmt(p.price)}</span>
-    </button>`
-  ).join('');
+  const hasSections = presets.some(p => p.section);
+  if (!hasSections) {
+    el.innerHTML = presets.map(p =>
+      `<button class="preset-chip" onclick="addPresetItem('${escHtml(p.name)}',${p.price})">
+        <span class="preset-name">${escHtml(p.name)}</span>
+        <span class="preset-price">${fmt(p.price)}</span>
+      </button>`
+    ).join('');
+    return;
+  }
+  const sectionOrder = [], sectionMap = {};
+  presets.forEach(p => {
+    const sec = p.section || '기타';
+    if (!sectionMap[sec]) { sectionMap[sec] = []; sectionOrder.push(sec); }
+    sectionMap[sec].push(p);
+  });
+  function chips(sec) {
+    return sectionMap[sec].map(p =>
+      `<button class="preset-chip" onclick="addPresetItem('${escHtml(p.name)}',${p.price})">
+        <span class="preset-name">${escHtml(p.name)}</span>
+        <span class="preset-price">${fmt(p.price)}</span>
+      </button>`
+    ).join('');
+  }
+  function secBlock(sec) {
+    return `<div class="preset-section"><div class="preset-label">${escHtml(sec)}</div><div class="preset-chips">${chips(sec)}</div></div>`;
+  }
+  const restaurants = sectionOrder.filter(s => !YASIZAN_SECTIONS.includes(s) && s !== '기타');
+  const markets = sectionOrder.filter(s => YASIZAN_SECTIONS.includes(s));
+  const etc = sectionOrder.filter(s => s === '기타');
+  let html = restaurants.map(secBlock).join('');
+  if (markets.length) html += `<div class="preset-group-divider">야시장</div>` + markets.map(secBlock).join('');
+  html += etc.map(secBlock).join('');
+  el.innerHTML = html;
 }
 
 function openPresetModal() {
