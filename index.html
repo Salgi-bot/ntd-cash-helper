@@ -1809,9 +1809,8 @@ function saveRateToStorage() {
 }
 
 function updateRateDisplay() {
-  document.getElementById('headerRate').textContent = rate ? (rate.toFixed(2) + ' KRW') : '-- KRW';
   const lastUpdate = document.getElementById('rateLastUpdate');
-  if (rateTime) {
+  if (lastUpdate && rateTime) {
     lastUpdate.textContent = '마지막 업데이트: ' + rateTime + ' (' + rateSource + ')';
   }
   // Update inline rate display in tab 2
