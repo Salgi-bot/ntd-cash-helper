@@ -2376,6 +2376,26 @@ function calcChange(purchase, pay) {
 let presetCategory = '식당';
 
 function selectPresetCategory(cat) {
+  if (presetCategory === cat) {
+    const sectionOrder = [];
+    const seen = new Set();
+    presets.forEach(p => {
+      const sec = p.section || '기타';
+      if (!seen.has(sec)) { seen.add(sec); sectionOrder.push(sec); }
+    });
+    const restaurantSecs = sectionOrder.filter(s => !YASIZAN_SECTIONS.includes(s) && s !== '기타');
+    const marketSecs = sectionOrder.filter(s => YASIZAN_SECTIONS.includes(s));
+    const etcSecs = sectionOrder.filter(s => s === '기타');
+    const activeSecs = cat === '야시장' ? marketSecs : [...restaurantSecs, ...etcSecs];
+    const allCollapsed = activeSecs.length > 0 && activeSecs.every(s => collapsedSections.has(s));
+    if (allCollapsed) {
+      activeSecs.forEach(s => collapsedSections.delete(s));
+    } else {
+      activeSecs.forEach(s => collapsedSections.add(s));
+    }
+    renderPresets();
+    return;
+  }
   presetCategory = cat;
   renderPresets();
 }
