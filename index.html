@@ -2002,49 +2002,61 @@ document.addEventListener('DOMContentLoaded', () => {
 // RATE
 // ======================================
 async function fetchRate() {
-  const btn = document.getElementById('fetchBtn');
-  btn.textContent = '...';
-  btn.disabled = true;
+  const btns = document.querySelectorAll('button[onclick*="fetchRate"]');
+  btns.forEach(b => {
+    if (!b.dataset.origText) b.dataset.origText = b.textContent;
+    b.textContent = '...';
+    b.disabled = true;
+  });
   try {
-    const res = await fetch('https://api.exchangerate-api.com/v4/latest/TWD');
-    const data = await res.json();
-    if (data && data.rates && data.rates.KRW) {
-      rate = Math.round(data.rates.KRW * 100) / 100;
-      rateSource = 'ExchangeRate-API';
-      rateTime = new Date().toLocaleString('ko-KR');
-      saveRateToStorage();
-      updateRateDisplay();
-      renderPriceRef();
-      renderOrders();
-    }
-  } catch (e) {
     try {
-      const res2 = await fetch('https://open.er-api.com/v6/latest/TWD');
-      const data2 = await res2.json();
-      if (data2 && data2.rates && data2.rates.KRW) {
-        rate = Math.round(data2.rates.KRW * 100) / 100;
-        rateSource = 'open.er-api (fallback)';
+      const res = await fetch('https://api.exchangerate-api.com/v4/latest/TWD', { cache: 'no-store' });
+      const data = await res.json();
+      if (data && data.rates && data.rates.KRW) {
+        rate = Math.round(data.rates.KRW * 100) / 100;
+        rateSource = 'ExchangeRate-API';
         rateTime = new Date().toLocaleString('ko-KR');
         saveRateToStorage();
         updateRateDisplay();
         renderPriceRef();
         renderOrders();
+        return;
       }
-    } catch (e2) {
-      if (!rate) {
-        rate = 42.5;
-        rateSource = '오프라인 기본값';
-        rateTime = new Date().toLocaleString('ko-KR');
-        saveRateToStorage();
-        updateRateDisplay();
-        renderPriceRef();
-        renderOrders();
+      throw new Error('invalid response');
+    } catch (e) {
+      try {
+        const res2 = await fetch('https://open.er-api.com/v6/latest/TWD', { cache: 'no-store' });
+        const data2 = await res2.json();
+        if (data2 && data2.rates && data2.rates.KRW) {
+          rate = Math.round(data2.rates.KRW * 100) / 100;
+          rateSource = 'open.er-api (fallback)';
+          rateTime = new Date().toLocaleString('ko-KR');
+          saveRateToStorage();
+          updateRateDisplay();
+          renderPriceRef();
+          renderOrders();
+          return;
+        }
+        throw new Error('invalid fallback response');
+      } catch (e2) {
+        if (!rate) {
+          rate = 42.5;
+          rateSource = '오프라인 기본값';
+          rateTime = new Date().toLocaleString('ko-KR');
+          saveRateToStorage();
+          updateRateDisplay();
+          renderPriceRef();
+          renderOrders();
+        }
+        alert('환율 API 접속 실패. ' + (rate ? '캐시된 환율 사용 중.' : '기본값(42.5) 사용 중.'));
       }
-      alert('환율 API 접속 실패. ' + (rate ? '캐시된 환율 사용 중.' : '기본값(42.5) 사용 중.'));
     }
+  } finally {
+    btns.forEach(b => {
+      b.textContent = b.dataset.origText || '실시간 환율';
+      b.disabled = false;
+    });
   }
-  btn.textContent = '새로고침';
-  btn.disabled = false;
 }
 
 function saveRateToStorage() {
