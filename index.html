@@ -138,6 +138,88 @@ body {
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
 
+/* -- PHRASE (대만여행회화) -- */
+.phrase-cat-tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+.phrase-cat-tabs::-webkit-scrollbar { display: none; }
+.phrase-cat-btn {
+  flex: 0 0 auto;
+  padding: 7px 14px;
+  border-radius: 18px;
+  border: 1.5px solid var(--tw-blue);
+  background: transparent;
+  color: var(--tw-blue);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s, color 0.15s;
+}
+.phrase-cat-btn.active {
+  background: var(--tw-blue);
+  color: #fff;
+}
+.phrase-search {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px;
+  background: var(--bg);
+  -webkit-appearance: none;
+  outline: none;
+}
+.phrase-search:focus { border-color: var(--tw-blue); }
+.phrase-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  border-left: 3px solid var(--tw-blue);
+}
+.phrase-ko {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+  line-height: 1.35;
+}
+.phrase-zh {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--tw-blue);
+  letter-spacing: 0.3px;
+  line-height: 1.4;
+  margin-bottom: 3px;
+}
+.phrase-pinyin {
+  font-size: 12px;
+  color: var(--text-sub);
+  font-style: italic;
+  margin-bottom: 2px;
+  line-height: 1.35;
+}
+.phrase-hangul {
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+  line-height: 1.35;
+}
+.phrase-empty {
+  text-align: center;
+  padding: 30px 10px;
+  color: var(--text-light);
+  font-size: 13px;
+}
+
 /* -- CARD -- */
 .card {
   background: var(--card-bg);
@@ -1742,9 +1824,38 @@ body {
     </div>
   </div>
 
+  <!-- ============================== -->
+  <!-- TAB 3: 대만여행회화             -->
+  <!-- ============================== -->
+  <div class="tab-panel" id="panelPhrase">
+
+    <!-- 카테고리 탭 -->
+    <div class="card" style="padding:10px 10px 6px">
+      <div class="phrase-cat-tabs" id="phraseCatTabs"></div>
+    </div>
+
+    <!-- 검색 -->
+    <div class="card" style="padding:10px">
+      <input type="text" id="phraseSearch" class="phrase-search" placeholder="&#128269; 한국어 / 중국어 검색" oninput="renderPhrases()">
+    </div>
+
+    <!-- 회화 리스트 -->
+    <div id="phraseList"></div>
+
+    <!-- 안내 -->
+    <div class="card mt-12" style="background:#FFF7EF;border:1px solid #F5D7B8">
+      <div class="text-sm text-sub" style="line-height:1.6">
+        &#128161; <b>사용 팁</b><br>
+        &bull; 번체자(&#32321;&#39636;&#23383;)는 대만에서 쓰는 한자입니다.<br>
+        &bull; 한글 발음은 대만 현지 발음에 가깝게 표기했습니다.<br>
+        &bull; 말하기 어려우면 해당 문장을 대만 사람에게 보여주세요.
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<!-- TAB NAV (2 tabs) -->
+<!-- TAB NAV (3 tabs) -->
 <nav class="tab-nav">
   <button class="active" data-tab="panelOrder" onclick="switchTab(this)">
     <span class="tab-icon">&#128722;</span>
@@ -1753,6 +1864,10 @@ body {
   <button data-tab="panelRate" onclick="switchTab(this)">
     <span class="tab-icon">&#8361;</span>
     환율
+  </button>
+  <button data-tab="panelPhrase" onclick="switchTab(this)">
+    <span class="tab-icon">&#128172;</span>
+    회화
   </button>
 </nav>
 
@@ -1993,6 +2108,8 @@ document.addEventListener('DOMContentLoaded', () => {
   renderOrders();
   renderPresets();
   renderPriceRef();
+  renderPhraseCats();
+  renderPhrases();
   if (!rate) {
     fetchRate();
   }
@@ -2781,6 +2898,236 @@ function switchTab(btn) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById(btn.dataset.tab).classList.add('active');
+}
+
+// ======================================
+// 대만여행회화 (번체자 · 대만식 표현)
+// ======================================
+// 카테고리별 회화 데이터: [한국어, 번체중국어, 병음, 한글발음]
+const PHRASE_DATA = {
+  '인사/기본': [
+    ['안녕하세요', '你好', 'Nǐ hǎo', '니 하오'],
+    ['안녕하세요 (아침)', '早安', 'Zǎo ān', '자오 안'],
+    ['안녕히 가세요', '再見', 'Zài jiàn', '짜이 찌엔'],
+    ['감사합니다', '謝謝', 'Xièxie', '씨에씨에'],
+    ['정말 감사합니다', '非常感謝', 'Fēicháng gǎnxiè', '페이창 간씨에'],
+    ['죄송합니다 / 실례합니다', '不好意思', 'Bù hǎoyìsi', '뿌 하오이스'],
+    ['미안합니다', '對不起', 'Duìbùqǐ', '뚜이부치'],
+    ['괜찮아요', '沒關係', 'Méi guānxi', '메이 꽌시'],
+    ['네 / 맞아요', '對', 'Duì', '뚜이'],
+    ['아니에요', '不是', 'Bú shì', '부 스'],
+    ['있어요', '有', 'Yǒu', '여우'],
+    ['없어요', '沒有', 'Méi yǒu', '메이 여우'],
+    ['저는 한국 사람이에요', '我是韓國人', 'Wǒ shì Hánguó rén', '워 스 한구어 런'],
+    ['중국어 못해요', '我不會說中文', 'Wǒ bú huì shuō Zhōngwén', '워 부 후이 슈오 중원'],
+    ['영어 할 줄 아세요?', '你會說英文嗎?', 'Nǐ huì shuō Yīngwén ma?', '니 후이 슈오 잉원 마?'],
+    ['천천히 말해 주세요', '請說慢一點', 'Qǐng shuō màn yì diǎn', '칭 슈오 만 이디엔'],
+    ['한 번 더 말해 주세요', '請再說一次', 'Qǐng zài shuō yí cì', '칭 짜이 슈오 이츠'],
+    ['이해했어요', '我懂了', 'Wǒ dǒng le', '워 둥 러'],
+    ['모르겠어요', '我不知道', 'Wǒ bù zhīdào', '워 부 즈다오'],
+  ],
+  '공항/교통': [
+    ['택시', '計程車', 'Jìchéngchē', '찌청처'],
+    ['MRT (지하철)', '捷運', 'Jiéyùn', '찌에윈'],
+    ['버스', '公車', 'Gōngchē', '꿍처'],
+    ['고속철도 (HSR)', '高鐵', 'Gāotiě', '까오티에'],
+    ['기차 (일반)', '台鐵', 'Táitiě', '타이티에'],
+    ['공항', '機場', 'Jīchǎng', '찌창'],
+    ['타이베이역까지 가 주세요', '請到台北車站', 'Qǐng dào Táiběi chēzhàn', '칭 따오 타이베이 처짠'],
+    ['이 주소로 가 주세요', '請到這個地址', 'Qǐng dào zhège dìzhǐ', '칭 따오 쩌거 띠즈'],
+    ['얼마예요?', '多少錢?', 'Duōshǎo qián?', '뚜어샤오 치엔?'],
+    ['미터기 켜 주세요', '請打表', 'Qǐng dǎ biǎo', '칭 다 뱌오'],
+    ['여기서 세워 주세요', '這裡停車', 'Zhèlǐ tíngchē', '쩌리 팅처'],
+    ['悠遊카드 충전해 주세요', '悠遊卡加值', 'Yōuyóukǎ jiāzhí', '여우여우카 찌아즈'],
+    ['이 열차 타이베이 가나요?', '這班車到台北嗎?', 'Zhè bān chē dào Táiběi ma?', '쩌 빤 처 따오 타이베이 마?'],
+    ['몇 번 출구예요?', '幾號出口?', 'Jǐ hào chūkǒu?', '지 하오 추커우?'],
+    ['표 한 장 주세요', '一張票', 'Yì zhāng piào', '이 짱 퍄오'],
+    ['왕복표', '來回票', 'Láihuí piào', '라이후이 퍄오'],
+  ],
+  '호텔': [
+    ['체크인하고 싶어요', '我要辦入住', 'Wǒ yào bàn rùzhù', '워 야오 빤 루쭈'],
+    ['체크아웃하고 싶어요', '我要退房', 'Wǒ yào tuìfáng', '워 야오 투이팡'],
+    ['예약했습니다', '我有訂房', 'Wǒ yǒu dìngfáng', '워 여우 띵팡'],
+    ['제 이름은 김입니다', '我姓金', 'Wǒ xìng Jīn', '워 씽 찐'],
+    ['여권입니다', '這是我的護照', 'Zhè shì wǒ de hùzhào', '쩌 스 워 더 후짜오'],
+    ['아침식사 포함인가요?', '有含早餐嗎?', 'Yǒu hán zǎocān ma?', '여우 한 자오찬 마?'],
+    ['Wi-Fi 비밀번호가 뭐예요?', 'Wi-Fi 密碼是多少?', 'Wi-Fi mìmǎ shì duōshǎo?', '와이파이 미마 스 뚜어샤오?'],
+    ['방을 바꾸고 싶어요', '我想換房間', 'Wǒ xiǎng huàn fángjiān', '워 시앙 환 팡찌엔'],
+    ['에어컨이 고장났어요', '冷氣壞了', 'Lěngqì huài le', '렁치 화이 러'],
+    ['수건 더 주세요', '請多給我毛巾', 'Qǐng duō gěi wǒ máojīn', '칭 뚜어 게이 워 마오찐'],
+    ['짐 맡길 수 있나요?', '可以寄放行李嗎?', 'Kěyǐ jìfàng xínglǐ ma?', '커이 찌팡 씽리 마?'],
+    ['몇 시에 체크아웃해야 하나요?', '幾點要退房?', 'Jǐ diǎn yào tuìfáng?', '지 디엔 야오 투이팡?'],
+    ['하루 더 묵고 싶어요', '我想多住一晚', 'Wǒ xiǎng duō zhù yì wǎn', '워 시앙 뚜어 쭈 이 완'],
+  ],
+  '음식점': [
+    ['메뉴 주세요', '請給我菜單', 'Qǐng gěi wǒ càidān', '칭 게이 워 차이딴'],
+    ['주문할게요', '我要點餐', 'Wǒ yào diǎncān', '워 야오 디엔찬'],
+    ['이거 주세요 (손가락으로)', '我要這個', 'Wǒ yào zhège', '워 야오 쩌거'],
+    ['추천 메뉴가 뭐예요?', '有什麼推薦?', 'Yǒu shénme tuījiàn?', '여우 션머 투이찌엔?'],
+    ['맵게 하지 마세요', '不要辣', 'Bú yào là', '부 야오 라'],
+    ['덜 맵게 해주세요', '小辣', 'Xiǎo là', '샤오 라'],
+    ['고수 빼 주세요', '不要香菜', 'Bú yào xiāngcài', '부 야오 시앙차이'],
+    ['얼음 빼 주세요', '去冰', 'Qù bīng', '취 삥'],
+    ['설탕 반만', '半糖', 'Bàn táng', '빤 탕'],
+    ['설탕 빼 주세요', '無糖', 'Wú táng', '우 탕'],
+    ['포장해 주세요', '我要外帶', 'Wǒ yào wàidài', '워 야오 와이따이'],
+    ['여기서 먹어요', '內用', 'Nèi yòng', '네이 융'],
+    ['맛있어요!', '很好吃!', 'Hěn hǎo chī!', '헌 하오 츠!'],
+    ['물 한 잔 주세요', '請給我一杯水', 'Qǐng gěi wǒ yì bēi shuǐ', '칭 게이 워 이 뻬이 슈이'],
+    ['젓가락 주세요', '請給我筷子', 'Qǐng gěi wǒ kuàizi', '칭 게이 워 콰이즈'],
+    ['계산해 주세요', '買單 / 結帳', 'Mǎidān / Jiézhàng', '마이딴 / 찌에짱'],
+    ['영수증 주세요', '請給我發票', 'Qǐng gěi wǒ fāpiào', '칭 게이 워 파퍄오'],
+    ['카드 되나요?', '可以刷卡嗎?', 'Kěyǐ shuākǎ ma?', '커이 슈아카 마?'],
+  ],
+  '쇼핑': [
+    ['얼마예요?', '多少錢?', 'Duōshǎo qián?', '뚜어샤오 치엔?'],
+    ['너무 비싸요', '太貴了', 'Tài guì le', '타이 꾸이 러'],
+    ['좀 깎아 주세요', '可以便宜一點嗎?', 'Kěyǐ piányí yì diǎn ma?', '커이 피엔이 이디엔 마?'],
+    ['할인 되나요?', '有打折嗎?', 'Yǒu dǎzhé ma?', '여우 다저 마?'],
+    ['그냥 구경할게요', '我只是看看', 'Wǒ zhǐshì kànkan', '워 즈스 칸칸'],
+    ['이거 주세요', '我要這個', 'Wǒ yào zhège', '워 야오 쩌거'],
+    ['다른 색 있어요?', '有別的顏色嗎?', 'Yǒu bié de yánsè ma?', '여우 비에 더 옌써 마?'],
+    ['더 큰 사이즈 있어요?', '有大一點的嗎?', 'Yǒu dà yì diǎn de ma?', '여우 따 이디엔 더 마?'],
+    ['더 작은 사이즈 있어요?', '有小一點的嗎?', 'Yǒu xiǎo yì diǎn de ma?', '여우 샤오 이디엔 더 마?'],
+    ['입어 봐도 돼요?', '可以試穿嗎?', 'Kěyǐ shìchuān ma?', '커이 스촨 마?'],
+    ['현금으로 낼게요', '我付現金', 'Wǒ fù xiànjīn', '워 푸 시엔찐'],
+    ['카드로 낼게요', '我刷卡', 'Wǒ shuākǎ', '워 슈아카'],
+    ['봉투 필요해요', '我要袋子', 'Wǒ yào dàizi', '워 야오 따이즈'],
+    ['봉투 필요 없어요', '不用袋子', 'Bú yòng dàizi', '부 융 따이즈'],
+    ['영수증 주세요', '請給我發票', 'Qǐng gěi wǒ fāpiào', '칭 게이 워 파퍄오'],
+  ],
+  '관광': [
+    ['길 좀 물을게요', '請問一下', 'Qǐngwèn yíxià', '칭원 이씨아'],
+    ['~이(가) 어디 있어요?', '...在哪裡?', '... zài nǎlǐ?', '... 짜이 나리?'],
+    ['화장실 어디예요?', '廁所在哪裡?', 'Cèsuǒ zài nǎlǐ?', '처수오 짜이 나리?'],
+    ['여기가 어디예요?', '這裡是哪裡?', 'Zhèlǐ shì nǎlǐ?', '쩌리 스 나리?'],
+    ['길을 잃었어요', '我迷路了', 'Wǒ mílù le', '워 미루 러'],
+    ['걸어서 얼마나 걸려요?', '走路要多久?', 'Zǒulù yào duōjiǔ?', '저우루 야오 뚜어지우?'],
+    ['사진 찍어 주실래요?', '可以幫我拍照嗎?', 'Kěyǐ bāng wǒ pāizhào ma?', '커이 빵 워 파이짜오 마?'],
+    ['같이 사진 찍어도 돼요?', '可以一起拍照嗎?', 'Kěyǐ yìqǐ pāizhào ma?', '커이 이치 파이짜오 마?'],
+    ['여기 찍어도 되나요?', '這裡可以拍照嗎?', 'Zhèlǐ kěyǐ pāizhào ma?', '쩌리 커이 파이짜오 마?'],
+    ['입장료가 얼마예요?', '門票多少錢?', 'Ménpiào duōshǎo qián?', '먼퍄오 뚜어샤오 치엔?'],
+    ['몇 시에 문 여나요?', '幾點開門?', 'Jǐ diǎn kāimén?', '지 디엔 카이먼?'],
+    ['몇 시에 문 닫나요?', '幾點關門?', 'Jǐ diǎn guānmén?', '지 디엔 꽌먼?'],
+    ['야시장', '夜市', 'Yèshì', '예스'],
+    ['예쁘네요!', '好漂亮!', 'Hǎo piàoliang!', '하오 퍄오량!'],
+  ],
+  '응급상황': [
+    ['도와주세요!', '救命!', 'Jiùmìng!', '찌우밍!'],
+    ['도와주실 수 있어요?', '可以幫我嗎?', 'Kěyǐ bāng wǒ ma?', '커이 빵 워 마?'],
+    ['경찰 불러 주세요', '請叫警察', 'Qǐng jiào jǐngchá', '칭 찌아오 징차'],
+    ['구급차 불러 주세요', '請叫救護車', 'Qǐng jiào jiùhùchē', '칭 찌아오 찌우후처'],
+    ['아파요', '我不舒服', 'Wǒ bù shūfu', '워 부 슈푸'],
+    ['배가 아파요', '我肚子痛', 'Wǒ dùzi tòng', '워 뚜즈 퉁'],
+    ['머리가 아파요', '我頭痛', 'Wǒ tóu tòng', '워 터우 퉁'],
+    ['열이 나요', '我發燒', 'Wǒ fāshāo', '워 파샤오'],
+    ['병원 어디예요?', '醫院在哪裡?', 'Yīyuàn zài nǎlǐ?', '이위엔 짜이 나리?'],
+    ['약국 어디예요?', '藥局在哪裡?', 'Yàojú zài nǎlǐ?', '야오쥐 짜이 나리?'],
+    ['지갑을 잃어버렸어요', '我的錢包丟了', 'Wǒ de qiánbāo diū le', '워 더 치엔빠오 띠우 러'],
+    ['여권을 잃어버렸어요', '我的護照丟了', 'Wǒ de hùzhào diū le', '워 더 후짜오 띠우 러'],
+    ['한국 대사관 연락처 아세요?', '韓國代表處電話?', 'Hánguó dàibiǎochù diànhuà?', '한구어 따이뱌오추 띠엔화?'],
+    ['알레르기가 있어요', '我會過敏', 'Wǒ huì guòmǐn', '워 후이 꾸어민'],
+  ],
+  '숫자/시간': [
+    ['1', '一', 'Yī', '이'],
+    ['2', '二 / 兩', 'Èr / Liǎng', '얼 / 량'],
+    ['3', '三', 'Sān', '싼'],
+    ['4', '四', 'Sì', '쓰'],
+    ['5', '五', 'Wǔ', '우'],
+    ['6', '六', 'Liù', '리우'],
+    ['7', '七', 'Qī', '치'],
+    ['8', '八', 'Bā', '빠'],
+    ['9', '九', 'Jiǔ', '지우'],
+    ['10', '十', 'Shí', '스'],
+    ['100', '一百', 'Yì bǎi', '이 바이'],
+    ['1,000', '一千', 'Yì qiān', '이 치엔'],
+    ['10,000', '一萬', 'Yí wàn', '이 완'],
+    ['오늘', '今天', 'Jīntiān', '찐티엔'],
+    ['내일', '明天', 'Míngtiān', '밍티엔'],
+    ['어제', '昨天', 'Zuótiān', '주어티엔'],
+    ['지금', '現在', 'Xiànzài', '시엔짜이'],
+    ['아침', '早上', 'Zǎoshang', '자오샹'],
+    ['점심', '中午', 'Zhōngwǔ', '쭝우'],
+    ['저녁', '晚上', 'Wǎnshang', '완샹'],
+    ['몇 시예요?', '現在幾點?', 'Xiànzài jǐ diǎn?', '시엔짜이 지 디엔?'],
+    ['1시', '一點', 'Yì diǎn', '이 디엔'],
+    ['30분', '三十分', 'Sānshí fēn', '싼스 펀'],
+    ['월요일', '星期一', 'Xīngqí yī', '씽치 이'],
+    ['화요일', '星期二', 'Xīngqí èr', '씽치 얼'],
+    ['수요일', '星期三', 'Xīngqí sān', '씽치 싼'],
+    ['목요일', '星期四', 'Xīngqí sì', '씽치 쓰'],
+    ['금요일', '星期五', 'Xīngqí wǔ', '씽치 우'],
+    ['토요일', '星期六', 'Xīngqí liù', '씽치 리우'],
+    ['일요일', '星期日', 'Xīngqí rì', '씽치 르'],
+  ],
+};
+
+let phraseCategory = '인사/기본';
+const PHRASE_CAT_ICONS = {
+  '인사/기본': '👋',
+  '공항/교통': '🚕',
+  '호텔': '🏨',
+  '음식점': '🍜',
+  '쇼핑': '🛍️',
+  '관광': '📸',
+  '응급상황': '🚑',
+  '숫자/시간': '🔢',
+};
+
+function renderPhraseCats() {
+  const el = document.getElementById('phraseCatTabs');
+  if (!el) return;
+  el.innerHTML = Object.keys(PHRASE_DATA).map(cat =>
+    `<button class="phrase-cat-btn${cat === phraseCategory ? ' active' : ''}" onclick="selectPhraseCategory('${escAttr(cat)}')">${PHRASE_CAT_ICONS[cat] || ''} ${cat}</button>`
+  ).join('');
+}
+
+function selectPhraseCategory(cat) {
+  phraseCategory = cat;
+  renderPhraseCats();
+  renderPhrases();
+  // 선택된 카테고리 탭으로 스크롤
+  setTimeout(() => {
+    const active = document.querySelector('#phraseCatTabs .phrase-cat-btn.active');
+    if (active) active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }, 30);
+}
+
+function renderPhrases() {
+  const el = document.getElementById('phraseList');
+  if (!el) return;
+  const searchEl = document.getElementById('phraseSearch');
+  const q = (searchEl && searchEl.value || '').trim().toLowerCase();
+
+  let items;
+  if (q) {
+    // 전체 카테고리에서 검색
+    items = [];
+    Object.entries(PHRASE_DATA).forEach(([cat, list]) => {
+      list.forEach(p => {
+        const [ko, zh, py, han] = p;
+        if (ko.toLowerCase().includes(q) || zh.includes(q) || py.toLowerCase().includes(q) || han.includes(q)) {
+          items.push([ko, zh, py, han, cat]);
+        }
+      });
+    });
+  } else {
+    items = (PHRASE_DATA[phraseCategory] || []).map(p => [...p, phraseCategory]);
+  }
+
+  if (!items.length) {
+    el.innerHTML = '<div class="phrase-empty">검색 결과가 없습니다.</div>';
+    return;
+  }
+
+  el.innerHTML = items.map(([ko, zh, py, han, cat]) => `
+    <div class="phrase-card">
+      <div class="phrase-ko">${escHtml(ko)}${q ? ` <span style="color:var(--text-light);font-weight:400;font-size:11px">[${escHtml(cat)}]</span>` : ''}</div>
+      <div class="phrase-zh">${escHtml(zh)}</div>
+      <div class="phrase-pinyin">${escHtml(py)}</div>
+      <div class="phrase-hangul">🔊 ${escHtml(han)}</div>
+    </div>
+  `).join('');
 }
 
 // ======================================
