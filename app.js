@@ -9,30 +9,44 @@ const COUNTRIES = {
     lang: ["zh-TW", "zh-HK", "zh-CN"],
     theme: { c1: "#c8102e", c2: "#8a0a1f", gold: "#e4b04a", bg: "#fff7ef", border: "#f1d9b3" },
     marketName: "야시장 (夜市)",
-    currency: { code: "TWD", symbol: "NT$", name: "대만 달러", krwRate: 44, defaultService: 10 },
+    currency: { code: "TWD", symbol: "NT$", name: "대만 달러", krwRate: 44, defaultService: 0 },
     presetMenu: {
       rest: [
-        { name: "牛肉麵", price: 220 },
-        { name: "滷肉飯", price: 80 },
-        { name: "小籠包", price: 200 },
-        { name: "炒飯", price: 150 },
-        { name: "蚵仔煎", price: 90 },
-        { name: "三杯雞", price: 280 },
-        { name: "排骨飯", price: 120 },
-        { name: "珍珠奶茶", price: 60 },
+        { ko: "우육면", local: "牛肉麵", price: 220 },
+        { ko: "루로우판", local: "滷肉飯", price: 80 },
+        { ko: "샤오롱바오", local: "小籠包", price: 200 },
+        { ko: "볶음밥", local: "炒飯", price: 150 },
+        { ko: "굴전", local: "蚵仔煎", price: 90 },
+        { ko: "삼배계", local: "三杯雞", price: 280 },
+        { ko: "돈가스밥", local: "排骨飯", price: 120 },
+        { ko: "버블티", local: "珍珠奶茶", price: 60 },
       ],
       market: [
-        { name: "胡椒餅", price: 60 },
-        { name: "大腸包小腸", price: 70 },
-        { name: "雞排", price: 80 },
-        { name: "蚵仔麵線", price: 75 },
-        { name: "臭豆腐", price: 70 },
-        { name: "大王カスタード", price: 100 },
-        { name: "烤魷魚", price: 150 },
-        { name: "芒果冰", price: 120 },
+        { ko: "후추빵", local: "胡椒餅", price: 60 },
+        { ko: "대장포소장", local: "大腸包小腸", price: 70 },
+        { ko: "지파이", local: "雞排", price: 80 },
+        { ko: "굴국수", local: "蚵仔麵線", price: 75 },
+        { ko: "취두부", local: "臭豆腐", price: 70 },
+        { ko: "대왕카스테라", local: "古早味蛋糕", price: 100 },
+        { ko: "오징어구이", local: "烤魷魚", price: 150 },
+        { ko: "망고빙수", local: "芒果冰", price: 120 },
       ],
     },
-    denominations: { notes: [2000, 1000, 500, 200, 100], coins: [50, 10, 5, 1] },
+    denominations: {
+      notes: [
+        { value: 2000, color: "#7a4a8a", label: "2000" },
+        { value: 1000, color: "#3a6e9a", label: "1000" },
+        { value: 500,  color: "#8b6f3a", label: "500" },
+        { value: 200,  color: "#4a8a3a", label: "200" },
+        { value: 100,  color: "#d54040", label: "100" },
+      ],
+      coins: [
+        { value: 50, color: "#c9a44a", label: "50" },
+        { value: 10, color: "#b0b0b0", label: "10" },
+        { value: 5,  color: "#c8c8c8", label: "5" },
+        { value: 1,  color: "#c8c8c8", label: "1" },
+      ],
+    },
     data: [
       { id: "greet", title: "기본 인사", icon: "👋", items: [
         { hz: "你好",           py: "nǐ hǎo",                  pr: "니 하오",          ko: "안녕하세요" },
@@ -142,30 +156,45 @@ const COUNTRIES = {
     lang: ["ja-JP", "ja"],
     theme: { c1: "#bc002d", c2: "#7a0020", gold: "#e8a5b5", bg: "#fff5f7", border: "#f5d0d8" },
     marketName: "이자카야 (居酒屋)",
-    currency: { code: "JPY", symbol: "¥", name: "일본 엔", krwRate: 9.5, defaultService: 10 },
+    currency: { code: "JPY", symbol: "¥", name: "일본 엔", krwRate: 9.5, defaultService: 0 },
     presetMenu: {
       rest: [
-        { name: "ラーメン", price: 1000 },
-        { name: "寿司セット", price: 2500 },
-        { name: "天ぷら定食", price: 1800 },
-        { name: "うどん", price: 800 },
-        { name: "牛丼", price: 600 },
-        { name: "とんかつ定食", price: 1500 },
-        { name: "カレーライス", price: 900 },
-        { name: "親子丼", price: 1100 },
+        { ko: "라멘", local: "ラーメン", price: 1000 },
+        { ko: "스시세트", local: "寿司セット", price: 2500 },
+        { ko: "텐푸라정식", local: "天ぷら定食", price: 1800 },
+        { ko: "우동", local: "うどん", price: 800 },
+        { ko: "규동", local: "牛丼", price: 600 },
+        { ko: "돈카츠정식", local: "とんかつ定食", price: 1500 },
+        { ko: "카레라이스", local: "カレーライス", price: 900 },
+        { ko: "오야코동", local: "親子丼", price: 1100 },
       ],
       market: [
-        { name: "焼き鳥", price: 350 },
-        { name: "唐揚げ", price: 600 },
-        { name: "枝豆", price: 400 },
-        { name: "餃子", price: 550 },
-        { name: "刺身盛り", price: 1500 },
-        { name: "お好み焼き", price: 900 },
-        { name: "だし巻き卵", price: 600 },
-        { name: "生ビール", price: 550 },
+        { ko: "야키토리", local: "焼き鳥", price: 350 },
+        { ko: "가라아게", local: "唐揚げ", price: 600 },
+        { ko: "에다마메", local: "枝豆", price: 400 },
+        { ko: "교자", local: "餃子", price: 550 },
+        { ko: "사시미모듬", local: "刺身盛り", price: 1500 },
+        { ko: "오코노미야키", local: "お好み焼き", price: 900 },
+        { ko: "다시마키타마고", local: "だし巻き卵", price: 600 },
+        { ko: "생맥주", local: "生ビール", price: 550 },
       ],
     },
-    denominations: { notes: [10000, 5000, 2000, 1000], coins: [500, 100, 50, 10, 5, 1] },
+    denominations: {
+      notes: [
+        { value: 10000, color: "#a87850", label: "10000" },
+        { value: 5000,  color: "#8a6a9a", label: "5000" },
+        { value: 2000,  color: "#5a9a7a", label: "2000" },
+        { value: 1000,  color: "#5a8ec5", label: "1000" },
+      ],
+      coins: [
+        { value: 500, color: "#d4af37", label: "500" },
+        { value: 100, color: "#b0b0b0", label: "100" },
+        { value: 50,  color: "#c8c8c8", label: "50",  hole: true },
+        { value: 10,  color: "#c08560", label: "10" },
+        { value: 5,   color: "#c9a44a", label: "5",   hole: true },
+        { value: 1,   color: "#d8d8d8", label: "1" },
+      ],
+    },
     data: [
       { id: "greet", title: "기본 인사", icon: "👋", items: [
         { hz: "こんにちは",                 py: "konnichiwa",                  pr: "콘니치와",            ko: "안녕하세요" },
@@ -275,30 +304,44 @@ const COUNTRIES = {
     lang: ["th-TH", "th"],
     theme: { c1: "#ed8936", c2: "#9c4221", gold: "#fbd38d", bg: "#fffaf0", border: "#fbd38d" },
     marketName: "야시장 (ตลาดกลางคืน)",
-    currency: { code: "THB", symbol: "฿", name: "태국 바트", krwRate: 40, defaultService: 17 },
+    currency: { code: "THB", symbol: "฿", name: "태국 바트", krwRate: 40, defaultService: 0 },
     presetMenu: {
       rest: [
-        { name: "ผัดไทย", price: 80 },
-        { name: "ต้มยำกุ้ง", price: 150 },
-        { name: "แกงเขียวหวาน", price: 120 },
-        { name: "ข้าวผัด", price: 70 },
-        { name: "ส้มตำ", price: 60 },
-        { name: "ก๋วยเตี๋ยว", price: 60 },
-        { name: "ผัดกะเพรา", price: 80 },
-        { name: "ข้าวมันไก่", price: 70 },
+        { ko: "팟타이", local: "ผัดไทย", price: 80 },
+        { ko: "똠얌꿍", local: "ต้มยำกุ้ง", price: 150 },
+        { ko: "그린커리", local: "แกงเขียวหวาน", price: 120 },
+        { ko: "카오팟", local: "ข้าวผัด", price: 70 },
+        { ko: "솜땀", local: "ส้มตำ", price: 60 },
+        { ko: "쌀국수", local: "ก๋วยเตี๋ยว", price: 60 },
+        { ko: "팟까파오", local: "ผัดกะเพรา", price: 80 },
+        { ko: "카오만까이", local: "ข้าวมันไก่", price: 70 },
       ],
       market: [
-        { name: "หมูปิ้ง", price: 15 },
-        { name: "มะม่วงข้าวเหนียว", price: 80 },
-        { name: "ปอเปี๊ยะ", price: 30 },
-        { name: "ลูกชิ้นปิ้ง", price: 20 },
-        { name: "ไก่ทอด", price: 60 },
-        { name: "เครป", price: 50 },
-        { name: "น้ำมะพร้าว", price: 40 },
-        { name: "โรตี", price: 40 },
+        { ko: "무핑(돼지꼬치)", local: "หมูปิ้ง", price: 15 },
+        { ko: "망고스티키라이스", local: "มะม่วงข้าวเหนียว", price: 80 },
+        { ko: "포피아(춘권)", local: "ปอเปี๊ยะ", price: 30 },
+        { ko: "룩친삥(완자꼬치)", local: "ลูกชิ้นปิ้ง", price: 20 },
+        { ko: "가이텃(닭튀김)", local: "ไก่ทอด", price: 60 },
+        { ko: "크레프", local: "เครป", price: 50 },
+        { ko: "코코넛주스", local: "น้ำมะพร้าว", price: 40 },
+        { ko: "로띠", local: "โรตี", price: 40 },
       ],
     },
-    denominations: { notes: [1000, 500, 100, 50, 20], coins: [10, 5, 2, 1] },
+    denominations: {
+      notes: [
+        { value: 1000, color: "#8a7a5a", label: "1000" },
+        { value: 500,  color: "#8a5a9a", label: "500" },
+        { value: 100,  color: "#c54040", label: "100" },
+        { value: 50,   color: "#4a7aa8", label: "50" },
+        { value: 20,   color: "#5a9a6a", label: "20" },
+      ],
+      coins: [
+        { value: 10, color: "#c9a44a", label: "10" },
+        { value: 5,  color: "#b0b0b0", label: "5" },
+        { value: 2,  color: "#c9a44a", label: "2" },
+        { value: 1,  color: "#c8c8c8", label: "1" },
+      ],
+    },
     data: [
       { id: "greet", title: "기본 인사", icon: "🙏", items: [
         { hz: "สวัสดี",                       py: "sawatdee",                pr: "싸왓디-",              ko: "안녕하세요" },
@@ -407,30 +450,43 @@ const COUNTRIES = {
     lang: ["vi-VN", "vi"],
     theme: { c1: "#da251d", c2: "#8a0a0a", gold: "#ffcd00", bg: "#fffdf2", border: "#fde68a" },
     marketName: "야시장 (Chợ đêm)",
-    currency: { code: "VND", symbol: "₫", name: "베트남 동", krwRate: 0.055, defaultService: 15 },
+    currency: { code: "VND", symbol: "₫", name: "베트남 동", krwRate: 0.055, defaultService: 0 },
     presetMenu: {
       rest: [
-        { name: "Phở bò", price: 50000 },
-        { name: "Bún chả", price: 50000 },
-        { name: "Cơm tấm", price: 45000 },
-        { name: "Bánh mì", price: 25000 },
-        { name: "Bún bò Huế", price: 55000 },
-        { name: "Gỏi cuốn", price: 40000 },
-        { name: "Cơm gà", price: 50000 },
-        { name: "Mì Quảng", price: 50000 },
+        { ko: "쌀국수", local: "Phở bò", price: 50000 },
+        { ko: "분짜", local: "Bún chả", price: 50000 },
+        { ko: "껌땀", local: "Cơm tấm", price: 45000 },
+        { ko: "반미", local: "Bánh mì", price: 25000 },
+        { ko: "분보후에", local: "Bún bò Huế", price: 55000 },
+        { ko: "고이꾸온(월남쌈)", local: "Gỏi cuốn", price: 40000 },
+        { ko: "껌가(닭밥)", local: "Cơm gà", price: 50000 },
+        { ko: "미꽝", local: "Mì Quảng", price: 50000 },
       ],
       market: [
-        { name: "Bánh xèo", price: 40000 },
-        { name: "Chả giò", price: 30000 },
-        { name: "Nem nướng", price: 60000 },
-        { name: "Xôi", price: 25000 },
-        { name: "Cà phê sữa đá", price: 25000 },
-        { name: "Sinh tố", price: 35000 },
-        { name: "Bánh tráng nướng", price: 25000 },
-        { name: "Chè", price: 20000 },
+        { ko: "반세오", local: "Bánh xèo", price: 40000 },
+        { ko: "짜조(스프링롤)", local: "Chả giò", price: 30000 },
+        { ko: "넴느엉", local: "Nem nướng", price: 60000 },
+        { ko: "쏘이(찰밥)", local: "Xôi", price: 25000 },
+        { ko: "카페쓰어다", local: "Cà phê sữa đá", price: 25000 },
+        { ko: "신또(스무디)", local: "Sinh tố", price: 35000 },
+        { ko: "반짱느엉", local: "Bánh tráng nướng", price: 25000 },
+        { ko: "째(디저트)", local: "Chè", price: 20000 },
       ],
     },
-    denominations: { notes: [500000, 200000, 100000, 50000, 20000, 10000, 5000, 2000, 1000], coins: [] },
+    denominations: {
+      notes: [
+        { value: 500000, color: "#3a8a7a", label: "500K" },
+        { value: 200000, color: "#8a6a4a", label: "200K" },
+        { value: 100000, color: "#3a8a5a", label: "100K" },
+        { value: 50000,  color: "#a85a7a", label: "50K" },
+        { value: 20000,  color: "#3a6aa8", label: "20K" },
+        { value: 10000,  color: "#daa040", label: "10K" },
+        { value: 5000,   color: "#3a8a8a", label: "5K" },
+        { value: 2000,   color: "#8a8a4a", label: "2K" },
+        { value: 1000,   color: "#7a8a6a", label: "1K" },
+      ],
+      coins: [],
+    },
     data: [
       { id: "greet", title: "기본 인사", icon: "👋", items: [
         { hz: "Xin chào",                          py: "Xin chao",                       pr: "신 짜오",              ko: "안녕하세요" },
@@ -757,19 +813,39 @@ function bindPhrase(root, c) {
    ========================================================= */
 function renderCalcSection(c) {
   return `
-    <div class="accordion" data-acc="rest">
-      <button class="acc-head" type="button"><span>🍽️ 식당 계산</span><span class="arrow">▼</span></button>
-      <div class="acc-body">
-        ${calcFormHTML(c, "rest", true)}
+    <div class="calc-grid">
+      <div class="accordion open" data-acc="rest">
+        <button class="acc-head" type="button"><span>🍽️ 식당 계산</span><span class="arrow">▼</span></button>
+        <div class="acc-body">
+          ${calcFormHTML(c, "rest", true)}
+        </div>
       </div>
-    </div>
-    <div class="accordion" data-acc="market">
-      <button class="acc-head" type="button"><span>🌃 ${escapeHtml(c.marketName)} 계산</span><span class="arrow">▼</span></button>
-      <div class="acc-body">
-        ${calcFormHTML(c, "market", false)}
+      <div class="accordion open" data-acc="market">
+        <button class="acc-head" type="button"><span>🌃 ${escapeHtml(c.marketName)} 계산</span><span class="arrow">▼</span></button>
+        <div class="acc-body">
+          ${calcFormHTML(c, "market", true)}
+        </div>
       </div>
     </div>
   `;
+}
+
+function denoNoteHTML(n, ccyCode) {
+  return `<button type="button" class="deno-note" data-val="${n.value}"
+    style="background:linear-gradient(135deg, ${n.color}, ${n.color}99);">
+    <span class="value">${n.label || fmtMoney(n.value)}</span>
+    <span class="ccy">${ccyCode}</span>
+  </button>`;
+}
+
+function denoCoinHTML(c0) {
+  const sizeMap = { 1:32, 2:34, 5:36, 10:40, 50:44, 100:44, 500:48 };
+  const size = sizeMap[c0.value] || 38;
+  const holeClass = c0.hole ? " has-hole" : "";
+  return `<button type="button" class="deno-coin${holeClass}" data-val="${c0.value}"
+    style="width:${size}px;height:${size}px;background:radial-gradient(circle at 30% 30%, ${c0.color}, ${c0.color}99 60%, ${c0.color}77);">
+    <span class="value">${c0.label || c0.value}</span>
+  </button>`;
 }
 
 function calcFormHTML(c, key, withService) {
@@ -780,21 +856,21 @@ function calcFormHTML(c, key, withService) {
     <div class="preset-wrap">
       <div class="preset-label">🍽️ 자주 먹는 메뉴</div>
       <div class="preset-chips" data-preset="${key}">
-        ${preset.map(m => `<button type="button" class="preset-chip" data-name="${m.name}" data-price="${m.price}">${m.name}<span class="price">${cur.symbol}${fmtMoney(m.price)}</span></button>`).join("")}
+        ${preset.map(m => `<button type="button" class="preset-chip" data-ko="${escapeHtml(m.ko)}" data-local="${escapeHtml(m.local)}" data-price="${m.price}"><span class="ko">${escapeHtml(m.ko)}</span><span class="local">${escapeHtml(m.local)}</span><span class="price">${cur.symbol}${fmtMoney(m.price)}</span></button>`).join("")}
       </div>
     </div>` : "";
   const notesRow = deno.notes && deno.notes.length ? `
     <div class="deno-row">
       <div class="label">지폐</div>
       <div class="deno-chips">
-        ${deno.notes.map(v => `<button type="button" class="deno-chip" data-val="${v}">${fmtMoney(v)}</button>`).join("")}
+        ${deno.notes.map(n => denoNoteHTML(n, cur.code)).join("")}
       </div>
     </div>` : "";
   const coinsRow = deno.coins && deno.coins.length ? `
     <div class="deno-row">
       <div class="label">동전</div>
       <div class="deno-chips">
-        ${deno.coins.map(v => `<button type="button" class="deno-chip" data-val="${v}">${fmtMoney(v)}</button>`).join("")}
+        ${deno.coins.map(c0 => denoCoinHTML(c0)).join("")}
       </div>
     </div>` : "";
   return `
@@ -812,7 +888,8 @@ function calcFormHTML(c, key, withService) {
         <label>봉사료/세금</label>
         <input type="number" class="service" inputmode="decimal" step="any" value="${cur.defaultService}">
         <span class="suffix">%</span>
-      </div>` : ""}
+      </div>
+      <div class="calc-hint">고급 레스토랑·호텔은 10% 별도. 메뉴판 ++ 표기 시 입력</div>` : ""}
     <div class="calc-row">
       <label>인원수</label>
       <input type="number" class="people" inputmode="numeric" min="1" value="1">
@@ -898,12 +975,12 @@ function bindCalc(root, c) {
         `;
         list.appendChild(target);
       }
-      target.querySelector(".name").value = presetChip.dataset.name;
+      target.querySelector(".name").value = presetChip.dataset.ko;
       target.querySelector(".price").value = presetChip.dataset.price;
       recalc(root, c);
       return;
     }
-    const denoChip = e.target.closest(".deno-chip");
+    const denoChip = e.target.closest(".deno-note, .deno-coin, .deno-chip");
     if (denoChip) {
       const wrap = denoChip.closest(".paid-wrap");
       const paidInput = wrap.querySelector(".paid");
