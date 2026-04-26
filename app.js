@@ -10,6 +10,29 @@ const COUNTRIES = {
     theme: { c1: "#c8102e", c2: "#8a0a1f", gold: "#e4b04a", bg: "#fff7ef", border: "#f1d9b3" },
     marketName: "야시장 (夜市)",
     currency: { code: "TWD", symbol: "NT$", name: "대만 달러", krwRate: 44, defaultService: 10 },
+    presetMenu: {
+      rest: [
+        { name: "牛肉麵", price: 220 },
+        { name: "滷肉飯", price: 80 },
+        { name: "小籠包", price: 200 },
+        { name: "炒飯", price: 150 },
+        { name: "蚵仔煎", price: 90 },
+        { name: "三杯雞", price: 280 },
+        { name: "排骨飯", price: 120 },
+        { name: "珍珠奶茶", price: 60 },
+      ],
+      market: [
+        { name: "胡椒餅", price: 60 },
+        { name: "大腸包小腸", price: 70 },
+        { name: "雞排", price: 80 },
+        { name: "蚵仔麵線", price: 75 },
+        { name: "臭豆腐", price: 70 },
+        { name: "大王カスタード", price: 100 },
+        { name: "烤魷魚", price: 150 },
+        { name: "芒果冰", price: 120 },
+      ],
+    },
+    denominations: { notes: [2000, 1000, 500, 200, 100], coins: [50, 10, 5, 1] },
     data: [
       { id: "greet", title: "기본 인사", icon: "👋", items: [
         { hz: "你好",           py: "nǐ hǎo",                  pr: "니 하오",          ko: "안녕하세요" },
@@ -120,6 +143,29 @@ const COUNTRIES = {
     theme: { c1: "#bc002d", c2: "#7a0020", gold: "#e8a5b5", bg: "#fff5f7", border: "#f5d0d8" },
     marketName: "이자카야 (居酒屋)",
     currency: { code: "JPY", symbol: "¥", name: "일본 엔", krwRate: 9.5, defaultService: 10 },
+    presetMenu: {
+      rest: [
+        { name: "ラーメン", price: 1000 },
+        { name: "寿司セット", price: 2500 },
+        { name: "天ぷら定食", price: 1800 },
+        { name: "うどん", price: 800 },
+        { name: "牛丼", price: 600 },
+        { name: "とんかつ定食", price: 1500 },
+        { name: "カレーライス", price: 900 },
+        { name: "親子丼", price: 1100 },
+      ],
+      market: [
+        { name: "焼き鳥", price: 350 },
+        { name: "唐揚げ", price: 600 },
+        { name: "枝豆", price: 400 },
+        { name: "餃子", price: 550 },
+        { name: "刺身盛り", price: 1500 },
+        { name: "お好み焼き", price: 900 },
+        { name: "だし巻き卵", price: 600 },
+        { name: "生ビール", price: 550 },
+      ],
+    },
+    denominations: { notes: [10000, 5000, 2000, 1000], coins: [500, 100, 50, 10, 5, 1] },
     data: [
       { id: "greet", title: "기본 인사", icon: "👋", items: [
         { hz: "こんにちは",                 py: "konnichiwa",                  pr: "콘니치와",            ko: "안녕하세요" },
@@ -230,6 +276,29 @@ const COUNTRIES = {
     theme: { c1: "#ed8936", c2: "#9c4221", gold: "#fbd38d", bg: "#fffaf0", border: "#fbd38d" },
     marketName: "야시장 (ตลาดกลางคืน)",
     currency: { code: "THB", symbol: "฿", name: "태국 바트", krwRate: 40, defaultService: 17 },
+    presetMenu: {
+      rest: [
+        { name: "ผัดไทย", price: 80 },
+        { name: "ต้มยำกุ้ง", price: 150 },
+        { name: "แกงเขียวหวาน", price: 120 },
+        { name: "ข้าวผัด", price: 70 },
+        { name: "ส้มตำ", price: 60 },
+        { name: "ก๋วยเตี๋ยว", price: 60 },
+        { name: "ผัดกะเพรา", price: 80 },
+        { name: "ข้าวมันไก่", price: 70 },
+      ],
+      market: [
+        { name: "หมูปิ้ง", price: 15 },
+        { name: "มะม่วงข้าวเหนียว", price: 80 },
+        { name: "ปอเปี๊ยะ", price: 30 },
+        { name: "ลูกชิ้นปิ้ง", price: 20 },
+        { name: "ไก่ทอด", price: 60 },
+        { name: "เครป", price: 50 },
+        { name: "น้ำมะพร้าว", price: 40 },
+        { name: "โรตี", price: 40 },
+      ],
+    },
+    denominations: { notes: [1000, 500, 100, 50, 20], coins: [10, 5, 2, 1] },
     data: [
       { id: "greet", title: "기본 인사", icon: "🙏", items: [
         { hz: "สวัสดี",                       py: "sawatdee",                pr: "싸왓디-",              ko: "안녕하세요" },
@@ -339,6 +408,29 @@ const COUNTRIES = {
     theme: { c1: "#da251d", c2: "#8a0a0a", gold: "#ffcd00", bg: "#fffdf2", border: "#fde68a" },
     marketName: "야시장 (Chợ đêm)",
     currency: { code: "VND", symbol: "₫", name: "베트남 동", krwRate: 0.055, defaultService: 15 },
+    presetMenu: {
+      rest: [
+        { name: "Phở bò", price: 50000 },
+        { name: "Bún chả", price: 50000 },
+        { name: "Cơm tấm", price: 45000 },
+        { name: "Bánh mì", price: 25000 },
+        { name: "Bún bò Huế", price: 55000 },
+        { name: "Gỏi cuốn", price: 40000 },
+        { name: "Cơm gà", price: 50000 },
+        { name: "Mì Quảng", price: 50000 },
+      ],
+      market: [
+        { name: "Bánh xèo", price: 40000 },
+        { name: "Chả giò", price: 30000 },
+        { name: "Nem nướng", price: 60000 },
+        { name: "Xôi", price: 25000 },
+        { name: "Cà phê sữa đá", price: 25000 },
+        { name: "Sinh tố", price: 35000 },
+        { name: "Bánh tráng nướng", price: 25000 },
+        { name: "Chè", price: 20000 },
+      ],
+    },
+    denominations: { notes: [500000, 200000, 100000, 50000, 20000, 10000, 5000, 2000, 1000], coins: [] },
     data: [
       { id: "greet", title: "기본 인사", icon: "👋", items: [
         { hz: "Xin chào",                          py: "Xin chao",                       pr: "신 짜오",              ko: "안녕하세요" },
@@ -682,7 +774,31 @@ function renderCalcSection(c) {
 
 function calcFormHTML(c, key, withService) {
   const cur = c.currency;
+  const preset = (c.presetMenu && c.presetMenu[key]) || [];
+  const deno = c.denominations || { notes: [], coins: [] };
+  const presetChips = preset.length ? `
+    <div class="preset-wrap">
+      <div class="preset-label">🍽️ 자주 먹는 메뉴</div>
+      <div class="preset-chips" data-preset="${key}">
+        ${preset.map(m => `<button type="button" class="preset-chip" data-name="${m.name}" data-price="${m.price}">${m.name}<span class="price">${cur.symbol}${fmtMoney(m.price)}</span></button>`).join("")}
+      </div>
+    </div>` : "";
+  const notesRow = deno.notes && deno.notes.length ? `
+    <div class="deno-row">
+      <div class="label">지폐</div>
+      <div class="deno-chips">
+        ${deno.notes.map(v => `<button type="button" class="deno-chip" data-val="${v}">${fmtMoney(v)}</button>`).join("")}
+      </div>
+    </div>` : "";
+  const coinsRow = deno.coins && deno.coins.length ? `
+    <div class="deno-row">
+      <div class="label">동전</div>
+      <div class="deno-chips">
+        ${deno.coins.map(v => `<button type="button" class="deno-chip" data-val="${v}">${fmtMoney(v)}</button>`).join("")}
+      </div>
+    </div>` : "";
   return `
+    ${presetChips}
     <div class="menu-list" data-list="${key}">
       <div class="menu-item">
         <input type="text" class="name" placeholder="메뉴 이름 (선택)">
@@ -708,6 +824,19 @@ function calcFormHTML(c, key, withService) {
       <div class="row total"><span>총액</span><span class="r-total">${cur.symbol} 0</span></div>
       <div class="row per"><span>1인당</span><span class="r-per">${cur.symbol} 0</span></div>
       <div class="row"><span>원화 환산 (총액)</span><span class="r-krw">₩ 0</span></div>
+    </div>
+    <div class="paid-wrap" data-paid-wrap="${key}">
+      <div class="preset-label" style="margin-top:12px;">💵 받은 돈</div>
+      ${notesRow}
+      ${coinsRow}
+      <div class="paid-row">
+        <label class="paid-label">받은 금액</label>
+        <input type="number" class="paid" inputmode="decimal" step="any" placeholder="0">
+        <button type="button" class="paid-clear" aria-label="초기화">✕</button>
+      </div>
+      <div class="calc-result change-box">
+        <div class="row total"><span>거스름돈</span><span class="r-change">—</span></div>
+      </div>
     </div>
   `;
 }
@@ -737,15 +866,60 @@ function bindCalc(root, c) {
 
   root.addEventListener("click", e => {
     const del = e.target.closest(".del");
-    if (!del) return;
-    const item = del.closest(".menu-item");
-    const list = del.closest(".menu-list");
-    if (list && list.querySelectorAll(".menu-item").length > 1) {
-      item.remove();
-    } else {
-      item.querySelectorAll("input").forEach(i => i.value = "");
+    if (del) {
+      const item = del.closest(".menu-item");
+      const list = del.closest(".menu-list");
+      if (list && list.querySelectorAll(".menu-item").length > 1) {
+        item.remove();
+      } else {
+        item.querySelectorAll("input").forEach(i => i.value = "");
+      }
+      recalc(root, c);
+      return;
     }
-    recalc(root, c);
+    const presetChip = e.target.closest(".preset-chip");
+    if (presetChip) {
+      const chips = presetChip.closest(".preset-chips");
+      const key = chips.dataset.preset;
+      const list = root.querySelector(`[data-list="${key}"]`);
+      const firstItem = list.querySelector(".menu-item");
+      const firstName = firstItem.querySelector(".name");
+      const firstPrice = firstItem.querySelector(".price");
+      let target;
+      if (!firstName.value && !firstPrice.value) {
+        target = firstItem;
+      } else {
+        target = document.createElement("div");
+        target.className = "menu-item";
+        target.innerHTML = `
+          <input type="text" class="name" placeholder="메뉴 이름 (선택)">
+          <input type="number" class="price" placeholder="가격" inputmode="decimal" step="any">
+          <button class="del" type="button" aria-label="삭제">✕</button>
+        `;
+        list.appendChild(target);
+      }
+      target.querySelector(".name").value = presetChip.dataset.name;
+      target.querySelector(".price").value = presetChip.dataset.price;
+      recalc(root, c);
+      return;
+    }
+    const denoChip = e.target.closest(".deno-chip");
+    if (denoChip) {
+      const wrap = denoChip.closest(".paid-wrap");
+      const paidInput = wrap.querySelector(".paid");
+      const cur = parseFloat(paidInput.value) || 0;
+      const add = parseFloat(denoChip.dataset.val) || 0;
+      paidInput.value = cur + add;
+      recalc(root, c);
+      return;
+    }
+    const paidClear = e.target.closest(".paid-clear");
+    if (paidClear) {
+      const wrap = paidClear.closest(".paid-wrap");
+      wrap.querySelector(".paid").value = "";
+      recalc(root, c);
+      return;
+    }
   });
 
   root.addEventListener("input", e => {
@@ -781,6 +955,24 @@ function recalc(root, c) {
     result.querySelector(".r-total").textContent = `${cur.symbol} ${fmtMoney(total)}`;
     result.querySelector(".r-per").textContent = `${cur.symbol} ${fmtMoney(per)}`;
     result.querySelector(".r-krw").textContent = `₩ ${fmtMoney(Math.round(krw))}`;
+
+    const paidWrap = root.querySelector(`[data-paid-wrap="${key}"]`);
+    if (paidWrap) {
+      const paidInput = paidWrap.querySelector(".paid");
+      const paid = parseFloat(paidInput.value) || 0;
+      const change = paid - total;
+      const changeEl = paidWrap.querySelector(".r-change");
+      if (paid === 0) {
+        changeEl.textContent = "—";
+        changeEl.classList.remove("short");
+      } else if (change >= 0) {
+        changeEl.textContent = `${cur.symbol} ${fmtMoney(change)}`;
+        changeEl.classList.remove("short");
+      } else {
+        changeEl.textContent = `부족: ${cur.symbol} ${fmtMoney(-change)}`;
+        changeEl.classList.add("short");
+      }
+    }
   });
 }
 
