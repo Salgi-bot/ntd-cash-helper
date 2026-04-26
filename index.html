@@ -1,3387 +1,516 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="NTD Helper">
-<meta name="theme-color" content="#E88B5A">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-<title>NTD Cash Helper | 대만 현금 도우미</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#c8102e" />
+<title>아시아 4국 여행 회화</title>
 <style>
-:root {
-  --tw-red: #E88B5A;
-  --tw-blue: #2C6E7A;
-  --tw-white: #FFFFFF;
-  --bg: #FAFAF8;
-  --card-bg: #FFFFFF;
-  --card-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  --border: #EAEAEA;
-  --text: #2C2C2C;
-  --text-sub: #717171;
-  --text-light: #A0A0A0;
-  --accent: #E88B5A;
-  --accent-light: #FFF3EC;
-  --success: #4CAF82;
-  --success-light: #EDFBF3;
-  --radius: 12px;
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 16px; -webkit-text-size-adjust: 100%; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  padding-bottom: calc(70px + var(--safe-bottom));
-  -webkit-font-smoothing: antialiased;
-}
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  :root{
+    --c1: #c8102e;
+    --c2: #8a0a1f;
+    --gold: #e4b04a;
+    --ink: #1a1a1a;
+    --muted: #6b6b6b;
+    --bg: #fff7ef;
+    --card: #ffffff;
+    --border: #f1d9b3;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  }
+  html, body { background: var(--bg); color: var(--ink); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+                 "Noto Sans TC", "Noto Sans JP", "Noto Sans Thai", "Noto Sans",
+                 "Noto Sans KR", "PingFang TC", "Microsoft JhengHei",
+                 "맑은 고딕", sans-serif;
+    min-height: 100vh;
+    padding-bottom: 80px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* 헤더 */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: linear-gradient(180deg, var(--c1) 0%, var(--c2) 100%);
+    color: #fff;
+    padding: 14px 16px 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px;
+  }
+  header .title-wrap { flex: 1; min-width: 0; }
+  header h1 {
+    font-size: 18px; font-weight: 800; letter-spacing: 0.3px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  header h1 .flag { font-size: 20px; }
+  header .sub { font-size: 12px; opacity: 0.92; margin-top: 2px; }
+  .home-btn {
+    flex: 0 0 auto;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 18px;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer;
+    display: none;
+    align-items: center; gap: 4px;
+    transition: background 0.15s;
+  }
+  .home-btn:active { background: rgba(255,255,255,0.32); }
+  .home-btn.show { display: inline-flex; }
+  /* 검색 */
+  .search-wrap { padding: 10px 12px 6px; background: var(--c2); }
+  .search-wrap input {
+    width: 100%;
+    border: none; outline: none;
+    padding: 10px 14px;
+    font-size: 15px;
+    border-radius: 22px;
+    background: #fff;
+    color: var(--ink);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.08);
+  }
+  /* 탭 */
+  nav.tabs {
+    display: flex; overflow-x: auto;
+    background: #fff;
+    border-bottom: 2px solid var(--gold);
+    position: sticky; top: 0; z-index: 9;
+    scrollbar-width: none;
+  }
+  nav.tabs::-webkit-scrollbar { display: none; }
+  nav.tabs button {
+    flex: 1 1 0;
+    padding: 13px 10px;
+    border: none; background: transparent;
+    font-size: 14px; font-weight: 700;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    text-align: center;
+    transition: all 0.18s;
+  }
+  nav.tabs button.active {
+    color: var(--c1);
+    border-bottom-color: var(--c1);
+    background: linear-gradient(180deg, #fff 0%, #fff4e8 100%);
+  }
+  /* 회화 sub-tab (카테고리 칩) */
+  .sub-tabs {
+    display: flex; overflow-x: auto;
+    gap: 6px;
+    padding: 10px 4px 12px;
+    scrollbar-width: none;
+    margin-bottom: 4px;
+  }
+  .sub-tabs::-webkit-scrollbar { display: none; }
+  .sub-tab {
+    flex: 0 0 auto;
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    background: #fff;
+    border-radius: 18px;
+    font-size: 13px; font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .sub-tab.active {
+    background: var(--c1);
+    color: #fff;
+    border-color: var(--c1);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  }
+  .sub-section { display: none; animation: fadeIn 0.22s ease; }
+  .sub-section.active { display: block; }
+  /* 본문 */
+  main { padding: 14px 12px 16px; }
+  .tab-section { display: none; animation: fadeIn 0.22s ease; }
+  .tab-section.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .section-title {
+    font-size: 13px; font-weight: 700;
+    color: var(--c2);
+    margin: 4px 2px 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .section-title::before {
+    content: ""; display: inline-block;
+    width: 4px; height: 14px; background: var(--gold);
+    border-radius: 2px;
+  }
+  /* 카드 */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 14px 12px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    position: relative;
+  }
+  .card .hanzi {
+    font-size: 24px; font-weight: 700;
+    color: var(--ink);
+    line-height: 1.3;
+    letter-spacing: 0.3px;
+    padding-right: 54px;
+    word-break: keep-all;
+  }
+  .card .pinyin {
+    font-size: 12px; color: var(--muted);
+    margin-top: 4px; font-style: italic;
+  }
+  .card .pron {
+    font-size: 18px; font-weight: 700;
+    color: var(--c1);
+    margin-top: 6px;
+  }
+  .card .meaning {
+    font-size: 14px; color: #333;
+    margin-top: 4px;
+    padding-top: 8px;
+    border-top: 1px dashed #eee;
+  }
+  .speak-btn {
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, var(--gold), #d89a2a);
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(228, 176, 74, 0.4);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.12s;
+  }
+  .speak-btn:active { transform: scale(0.92); }
+  .speak-btn.playing {
+    background: linear-gradient(135deg, var(--c1), var(--c2));
+    animation: pulse 0.9s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(200,16,46,0.4); }
+    50%     { box-shadow: 0 0 0 8px rgba(200,16,46,0); }
+  }
+  .empty {
+    text-align: center; color: var(--muted);
+    padding: 40px 16px; font-size: 14px;
+  }
 
-/* -- HEADER -- */
-.header {
-  background: linear-gradient(135deg, #E88B5A, #D4764A);
-  color: var(--tw-white);
-  padding: 16px 20px;
-  padding-top: calc(16px + env(safe-area-inset-top, 0px));
-  text-align: center;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-.header h1 {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.3px;
-}
-.header .subtitle {
-  font-size: 12px;
-  opacity: 0.85;
-  margin-top: 2px;
-}
-.rate-bar {
-  background: rgba(0,0,0,0.18);
-  border-radius: 8px;
-  padding: 8px 12px;
-  margin-top: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-size: 13px;
-}
-.rate-bar .rate-value {
-  font-weight: 700;
-  font-size: 16px;
-}
-.rate-bar .rate-label {
-  font-size: 11px;
-  opacity: 0.8;
-}
-.rate-bar button {
-  background: rgba(255,255,255,0.25);
-  border: none;
-  color: white;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 12px;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.rate-bar button:active { background: rgba(255,255,255,0.4); }
+  /* ===== 계산·환율 공통 ===== */
+  .accordion {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .acc-head {
+    width: 100%;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px;
+    background: linear-gradient(180deg, #fff 0%, #fff4e8 100%);
+    border: none;
+    font-size: 16px; font-weight: 800;
+    color: var(--c2);
+    cursor: pointer;
+    text-align: left;
+  }
+  .acc-head .arrow { transition: transform 0.25s; font-size: 14px; opacity: 0.7; }
+  .accordion.open .acc-head .arrow { transform: rotate(180deg); }
+  .acc-body {
+    display: none;
+    padding: 14px 16px 18px;
+    border-top: 1px solid var(--border);
+  }
+  .accordion.open .acc-body { display: block; animation: fadeIn 0.22s ease; }
+  .calc-row {
+    display: flex; gap: 8px; align-items: center; margin-top: 8px;
+  }
+  .calc-row label {
+    flex: 0 0 90px; font-size: 13px; color: var(--muted); font-weight: 600;
+  }
+  .calc-row input {
+    flex: 1;
+    padding: 9px 11px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    background: #fff;
+    color: var(--ink);
+    outline: none;
+  }
+  .calc-row input:focus { border-color: var(--c1); }
+  .calc-row .suffix {
+    flex: 0 0 auto; font-size: 13px; color: var(--muted);
+  }
+  .menu-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+  .menu-item {
+    display: flex; gap: 6px; align-items: center;
+  }
+  .menu-item input.name {
+    flex: 1; min-width: 0;
+    padding: 8px 10px; border: 1px solid var(--border);
+    border-radius: 8px; font-size: 14px; outline: none;
+  }
+  .menu-item input.price {
+    flex: 0 0 100px;
+    padding: 8px 10px; border: 1px solid var(--border);
+    border-radius: 8px; font-size: 14px; text-align: right; outline: none;
+  }
+  .menu-item .del {
+    flex: 0 0 32px; height: 34px;
+    border: none;
+    background: #fde0e0;
+    color: var(--c1);
+    border-radius: 8px;
+    font-size: 16px; cursor: pointer;
+  }
+  .add-menu {
+    background: var(--gold);
+    color: #fff; border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .calc-result {
+    margin-top: 14px;
+    background: linear-gradient(135deg, var(--c1), var(--c2));
+    color: #fff;
+    padding: 14px 16px;
+    border-radius: 12px;
+  }
+  .calc-result .row {
+    display: flex; justify-content: space-between;
+    margin: 3px 0; font-size: 13px; opacity: 0.95;
+  }
+  .calc-result .row.total {
+    font-size: 18px; font-weight: 800; opacity: 1;
+    margin-top: 8px; padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.3);
+  }
+  .calc-result .row.per {
+    font-size: 20px; font-weight: 800; opacity: 1; margin-top: 6px;
+  }
+  /* 환율 */
+  .fx-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+  .fx-title {
+    font-size: 13px; font-weight: 700; color: var(--c2);
+    margin-bottom: 10px;
+  }
+  .fx-rate-edit {
+    display: flex; gap: 8px; align-items: center;
+    font-size: 12px; color: var(--muted);
+    background: #fff7ef; padding: 10px 12px;
+    border-radius: 10px; margin-bottom: 12px;
+  }
+  .fx-rate-edit input {
+    flex: 0 0 110px;
+    padding: 5px 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+    text-align: right;
+    outline: none;
+  }
+  .fx-row {
+    display: flex; gap: 10px; align-items: center;
+    background: #fffaf0;
+    padding: 14px 14px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+  }
+  .fx-row .ccy {
+    font-size: 13px; font-weight: 800;
+    color: var(--c2);
+    min-width: 70px;
+  }
+  .fx-row .ccy small { display: block; font-size: 10px; font-weight: 600; color: var(--muted); margin-top: 2px; }
+  .fx-row input.amount {
+    flex: 1;
+    border: none; outline: none;
+    background: transparent;
+    font-size: 22px; font-weight: 700;
+    color: var(--ink);
+    text-align: right;
+    min-width: 0;
+  }
+  .fx-quick {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;
+  }
+  .fx-quick button {
+    flex: 1 1 60px;
+    padding: 8px 6px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    font-size: 12px; font-weight: 600;
+    color: var(--c2);
+    cursor: pointer;
+  }
+  .fx-quick button:active { background: var(--bg); }
 
-/* -- TAB NAV -- */
-.tab-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--card-bg);
-  border-top: 1px solid rgba(0,0,0,0.10);
-  box-shadow: 0 -3px 10px rgba(0,0,0,0.07);
-  display: flex;
-  padding-bottom: var(--safe-bottom);
-  z-index: 100;
-}
-.tab-nav button {
-  flex: 1;
-  border: none;
-  background: none;
-  padding: 10px 4px 8px;
-  font-size: 11px;
-  color: var(--text-light);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: color 0.2s;
-  font-weight: 600;
-}
-.tab-nav button.active {
-  color: var(--accent);
-}
-.tab-nav button .tab-icon {
-  font-size: 22px;
-  line-height: 1;
-}
+  /* 푸터 */
+  footer {
+    text-align: center;
+    padding: 16px;
+    font-size: 11px; color: var(--muted);
+  }
+  footer .tw { color: var(--c1); font-weight: 700; }
 
-/* -- CONTENT -- */
-.content {
-  padding: 12px;
-  max-width: 480px;
-  margin: 0 auto;
-}
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
+  /* ===== 메인(국가 선택) 화면 ===== */
+  #home {
+    min-height: calc(100vh - 0px);
+    background: linear-gradient(180deg, #fff7ef 0%, #ffe8d4 100%);
+    padding: 28px 18px 60px;
+    display: flex; flex-direction: column;
+  }
+  #home.hide { display: none; }
+  .home-header {
+    text-align: center; margin-bottom: 26px;
+  }
+  .home-header .logo {
+    font-size: 36px; margin-bottom: 6px;
+  }
+  .home-header h2 {
+    font-size: 22px; font-weight: 800;
+    color: #1a1a1a;
+  }
+  .home-header p {
+    font-size: 13px; color: var(--muted); margin-top: 6px;
+  }
+  .country-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 520px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .country-btn {
+    background: #fff;
+    border: 2px solid transparent;
+    border-radius: 18px;
+    padding: 22px 14px 18px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    display: flex; flex-direction: column;
+    align-items: center; gap: 8px;
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+  }
+  .country-btn:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .country-btn .c-flag {
+    font-size: 48px; line-height: 1;
+  }
+  .country-btn .c-name {
+    font-size: 17px; font-weight: 800;
+    color: var(--ink);
+  }
+  .country-btn .c-sub {
+    font-size: 11px; color: var(--muted);
+  }
+  .country-btn[data-country="tw"]:hover { border-color: #c8102e; }
+  .country-btn[data-country="jp"]:hover { border-color: #bc002d; }
+  .country-btn[data-country="th"]:hover { border-color: #ed8936; }
+  .country-btn[data-country="vn"]:hover { border-color: #da251d; }
 
-/* -- PHRASE (대만여행회화) -- */
-.phrase-cat-tabs {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 4px;
-  scrollbar-width: none;
-}
-.phrase-cat-tabs::-webkit-scrollbar { display: none; }
-.phrase-cat-btn {
-  flex: 0 0 auto;
-  padding: 7px 14px;
-  border-radius: 18px;
-  border: 1.5px solid var(--tw-blue);
-  background: transparent;
-  color: var(--tw-blue);
-  font-size: 13px;
-  font-weight: 700;
-  white-space: nowrap;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: background 0.15s, color 0.15s;
-}
-.phrase-cat-btn.active {
-  background: var(--tw-blue);
-  color: #fff;
-}
-.phrase-search {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  font-size: 14px;
-  background: var(--bg);
-  -webkit-appearance: none;
-  outline: none;
-}
-.phrase-search:focus { border-color: var(--tw-blue); }
-.phrase-card {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  box-shadow: var(--card-shadow);
-  padding: 16px 18px;
-  margin-bottom: 12px;
-  border-left: 4px solid var(--tw-blue);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
-}
-.phrase-card:hover {
-  background: rgba(0, 102, 204, 0.06);
-  box-shadow: 0 4px 14px rgba(0,0,0,0.10);
-}
-.phrase-card:active {
-  transform: scale(0.985);
-  background: rgba(0, 102, 204, 0.12);
-}
-.phrase-card.speaking {
-  background: rgba(0, 102, 204, 0.15);
-  border-left-color: var(--accent, #ff7043);
-}
-.phrase-ko {
-  font-size: 19px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 8px;
-  line-height: 1.3;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.phrase-zh {
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--tw-blue);
-  letter-spacing: 0.3px;
-  line-height: 1.3;
-  margin-bottom: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.phrase-pinyin {
-  font-size: 15px;
-  color: var(--text-sub);
-  font-style: italic;
-  margin-bottom: 4px;
-  line-height: 1.3;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.phrase-hangul {
-  font-size: 17px;
-  color: var(--accent);
-  font-weight: 600;
-  line-height: 1.3;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.phrase-empty {
-  text-align: center;
-  padding: 30px 10px;
-  color: var(--text-light);
-  font-size: 13px;
-}
+  .home-foot {
+    margin-top: auto; text-align: center;
+    padding-top: 30px;
+    font-size: 11px; color: var(--muted);
+  }
 
-/* -- CARD -- */
-.card {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  box-shadow: var(--card-shadow);
-  padding: 12px;
-  margin-bottom: 14px;
-}
-.card-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--tw-blue);
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.card-title .icon { font-size: 16px; }
-
-/* -- SECTION DIVIDER -- */
-.section-divider {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 20px 0 14px;
-}
-.section-divider::before,
-.section-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
-.section-divider span {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-sub);
-  white-space: nowrap;
-}
-
-/* -- FORM -- */
-.input-group {
-  margin-bottom: 12px;
-}
-.input-group label {
-  display: block;
-  font-size: 12px;
-  color: var(--text-sub);
-  margin-bottom: 4px;
-  font-weight: 600;
-}
-.input-group input, .input-group select {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  font-size: 16px;
-  font-family: inherit;
-  background: #FAFAFA;
-  -webkit-appearance: none;
-  transition: border-color 0.2s;
-}
-.input-group input:focus, .input-group select:focus {
-  border-color: var(--accent);
-  outline: none;
-  background: #FFF;
-}
-.input-row {
-  display: flex;
-  gap: 10px;
-}
-.input-row .input-group { flex: 1; }
-
-/* -- BUTTONS -- */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: all 0.2s;
-}
-.btn-primary {
-  background: var(--accent);
-  color: white;
-  width: 100%;
-}
-.btn-primary:active { background: #A00E26; }
-.btn-outline {
-  background: transparent;
-  color: var(--accent);
-  border: 1.5px solid var(--accent);
-}
-.btn-outline:active { background: var(--accent-light); }
-.btn-sm {
-  padding: 6px 12px;
-  font-size: 12px;
-}
-.btn-danger {
-  background: #F5F5F5;
-  color: #CC0000;
-  border: none;
-}
-
-/* -- CONVERTER -- */
-.converter-display {
-  text-align: center;
-  padding: 20px 0;
-}
-.converter-display .amount-ntd {
-  font-size: 36px;
-  font-weight: 800;
-  color: var(--tw-red);
-  line-height: 1.1;
-}
-.converter-display .amount-krw {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--tw-blue);
-  margin-top: 4px;
-}
-.converter-display .unit {
-  font-size: 14px;
-  font-weight: 400;
-  opacity: 0.6;
-}
-.swap-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 8px auto;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 2px solid var(--border);
-  background: white;
-  cursor: pointer;
-  font-size: 18px;
-  color: var(--text-sub);
-  -webkit-tap-highlight-color: transparent;
-}
-.swap-btn:active { background: var(--bg); }
-
-/* -- ORDER LIST -- */
-.order-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid #F0F0F0;
-}
-.order-item:last-child { border-bottom: none; }
-.order-info { flex: 1; min-width: 0; }
-.order-name {
-  font-size: 13px;
-  font-weight: 600;
-  white-space: normal;
-  word-break: break-word;
-}
-.order-name-input {
-  border: none;
-  background: transparent;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 2px 4px;
-  width: 100%;
-  border-radius: 4px;
-  font-family: inherit;
-}
-.order-name-input:focus {
-  background: #F0F0F0;
-  outline: none;
-}
-.order-kor {
-  font-size: 11px;
-  color: #EA580C;
-  margin: 2px 0 2px 4px;
-  font-weight: 500;
-}
-.order-price {
-  font-size: 12px;
-  color: var(--text-sub);
-}
-.order-price-input {
-  border: none;
-  background: transparent;
-  font-size: 12px;
-  color: var(--text-sub);
-  width: 70px;
-  padding: 2px 4px;
-  border-radius: 4px;
-  font-family: inherit;
-}
-.order-price-input:focus {
-  background: #F0F0F0;
-  outline: none;
-}
-.order-krw-sub {
-  font-size: 11px;
-  color: var(--text-light);
-}
-.order-qty {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.order-qty button {
-  width: 28px;
-  height: 28px;
-  border: 1.5px solid var(--border);
-  border-radius: 6px;
-  background: white;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.order-qty button:active { background: var(--bg); }
-.order-qty .qty-num {
-  width: 28px;
-  text-align: center;
-  font-weight: 700;
-  font-size: 14px;
-}
-.order-subtotal {
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--tw-red);
-  min-width: 70px;
-  text-align: right;
-}
-.order-delete {
-  width: 24px;
-  height: 24px;
-  border: none;
-  background: none;
-  color: #CCC;
-  font-size: 18px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  -webkit-tap-highlight-color: transparent;
-}
-.order-delete:active { color: #CC0000; }
-
-/* -- TOTAL BAR -- */
-.total-bar {
-  background: var(--tw-blue);
-  color: white;
-  border-radius: 10px;
-  padding: 14px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
-}
-.total-bar .total-label {
-  font-size: 13px;
-  opacity: 0.8;
-}
-.total-bar .total-amount {
-  font-size: 22px;
-  font-weight: 800;
-}
-.total-bar .total-krw {
-  font-size: 12px;
-  opacity: 0.7;
-  margin-top: 2px;
-  text-align: right;
-}
-
-/* -- CURRENCY BILLS/COINS (Realistic NTD Design) -- */
-.bills-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 12px;
-  overflow: hidden;
-}
-.bill-card {
-  border-radius: 6px;
-  padding: 10px 8px 8px 16px;
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 2.4 / 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 64px;
-  min-width: 0;
-  border: 1.5px solid rgba(0,0,0,0.12);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), inset 0 0 0 1px rgba(255,255,255,0.08);
-}
-/* 기요셰 무늬 (지폐 세밀 곡선 패턴) */
-.bill-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background:
-    repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(255,255,255,0.03) 3px, rgba(255,255,255,0.03) 4px),
-    repeating-linear-gradient(0deg, transparent, transparent 5px, rgba(255,255,255,0.02) 5px, rgba(255,255,255,0.02) 6px),
-    repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(255,255,255,0.015) 8px, rgba(255,255,255,0.015) 9px),
-    repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(255,255,255,0.01) 10px, rgba(255,255,255,0.01) 11px),
-    radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 75% 40%, rgba(255,255,255,0.04) 0%, transparent 45%);
-  pointer-events: none;
-  z-index: 1;
-}
-/* 초상 원형 프레임 */
-.bill-card::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 14px;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(255,255,255,0.3);
-  box-shadow: 0 0 0 3px rgba(255,255,255,0.06), inset 0 0 6px rgba(255,255,255,0.08), inset 0 0 12px rgba(0,0,0,0.05);
-  transform: translateY(-50%);
-  pointer-events: none;
-  z-index: 1;
-  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 60%, transparent 100%);
-}
-/* 한자 인물 표현 (초상 원형 안) */
-.bill-card .bill-portrait-text {
-  position: absolute;
-  top: 50%;
-  left: 14px;
-  width: 34px;
-  height: 34px;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  opacity: 0.25;
-  z-index: 2;
-  pointer-events: none;
-  line-height: 1;
-}
-/* 보안 홀로그램 스트라이프 (좌측 세로) */
-.bill-card .bill-security {
-  position: absolute;
-  left: 5px;
-  top: 6px;
-  bottom: 6px;
-  width: 4px;
-  background: linear-gradient(
-    180deg,
-    rgba(255,0,0,0.3) 0%,
-    rgba(255,165,0,0.3) 15%,
-    rgba(255,255,0,0.3) 30%,
-    rgba(0,255,0,0.3) 45%,
-    rgba(0,100,255,0.3) 60%,
-    rgba(128,0,255,0.3) 75%,
-    rgba(255,0,128,0.3) 90%,
-    rgba(255,0,0,0.3) 100%
-  );
-  border-radius: 2px;
-  z-index: 3;
-  opacity: 0.7;
-}
-/* 中央銀行 표시 */
-.bill-card .bill-bank {
-  position: absolute;
-  top: 5px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 7px;
-  letter-spacing: 3px;
-  opacity: 0.4;
-  font-weight: 600;
-  z-index: 2;
-  white-space: nowrap;
-}
-/* 한자 금액 */
-.bill-card .bill-hanzi {
-  position: absolute;
-  bottom: 6px;
-  left: 52px;
-  font-size: 8px;
-  letter-spacing: 1px;
-  opacity: 0.5;
-  font-weight: 600;
-  z-index: 2;
-}
-/* 큰 숫자 워터마크 */
-.bill-card .bill-watermark {
-  position: absolute;
-  right: 6px;
-  bottom: 4px;
-  font-size: 36px;
-  font-weight: 900;
-  opacity: 0.07;
-  letter-spacing: -2px;
-  z-index: 0;
-  font-family: 'Georgia', 'Times New Roman', serif;
-  line-height: 1;
-}
-/* 용지 질감 오버레이 */
-.bill-card .bill-texture {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-image:
-    radial-gradient(circle at 20% 80%, rgba(0,0,0,0.02) 1px, transparent 1px),
-    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.02) 1px, transparent 1px),
-    radial-gradient(circle at 50% 50%, rgba(0,0,0,0.01) 1px, transparent 1px);
-  background-size: 7px 7px, 11px 11px, 5px 5px;
-  pointer-events: none;
-  z-index: 1;
-}
-/* 테두리 장식 (내부 프레임) */
-.bill-card .bill-inner-frame {
-  position: absolute;
-  top: 3px; left: 10px; right: 3px; bottom: 3px;
-  border: 0.5px solid rgba(255,255,255,0.1);
-  border-radius: 3px;
-  pointer-events: none;
-  z-index: 1;
-}
-.bill-top-row {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
-  position: relative;
-  z-index: 2;
-}
-.bill-card .bill-denom-area {
-  text-align: right;
-}
-.bill-card .bill-denom {
-  font-size: 16px;
-  font-weight: 800;
-  line-height: 1;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.15);
-}
-.bill-card .bill-ntd-mark {
-  font-size: 7px;
-  font-weight: 600;
-  opacity: 0.6;
-  letter-spacing: 0.5px;
-  text-align: right;
-}
-.bill-bottom-row {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-  position: relative;
-  z-index: 2;
-}
-.bill-card .bill-figure {
-  font-size: 8px;
-  opacity: 0.6;
-  font-weight: 500;
-  max-width: 50%;
-  line-height: 1.2;
-  text-align: right;
-}
-.bill-card .bill-count-badge {
-  background: rgba(0,0,0,0.4);
-  color: white;
-  padding: 2px 6px;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 800;
-  white-space: nowrap;
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  position: absolute;
-  top: 50%;
-  right: 4px;
-  transform: translateY(-50%);
-  z-index: 4;
-}
-.bill-card .bill-krw-tiny {
-  font-size: 7px;
-  opacity: 0.5;
-  margin-top: 1px;
-}
-.bill-card .bill-rare {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  background: rgba(0,0,0,0.35);
-  padding: 1px 5px;
-  border-radius: 4px;
-  font-size: 7px;
-  font-weight: 700;
-  z-index: 5;
-  letter-spacing: 0.5px;
-}
-
-/* Bill realistic colors */
-.bill-1000 {
-  background: linear-gradient(135deg, #1A3C7A 0%, #1B4F8A 25%, #2968B0 50%, #3B5998 75%, #1A3C7A 100%);
-  color: #E8EDFF;
-  border-color: rgba(27,79,138,0.4);
-}
-.bill-500 {
-  background: linear-gradient(135deg, #6B3A10 0%, #7A4A1E 25%, #8B6914 50%, #A0522D 75%, #6B3A10 100%);
-  color: #FFF3E0;
-  border-color: rgba(107,58,16,0.4);
-}
-.bill-100 {
-  background: linear-gradient(135deg, #B71C1C 0%, #C62828 25%, #D32F2F 50%, #C62828 75%, #B71C1C 100%);
-  color: #FFEBEE;
-  border-color: rgba(183,28,28,0.4);
-}
-
-.coins-row {
-  display: flex;
-  gap: 12px;
-  margin-top: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding-bottom: 16px;
-}
-.coin-card {
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-/* 동전 메탈 광택 */
-.coin-card::before {
-  content: '';
-  position: absolute;
-  top: 15%;
-  left: 20%;
-  width: 35%;
-  height: 25%;
-  background: radial-gradient(ellipse, rgba(255,255,255,0.4) 0%, transparent 70%);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 1;
-}
-.coin-card .coin-denom {
-  font-weight: 800;
-  line-height: 1;
-  position: relative;
-  z-index: 2;
-}
-.coin-card .coin-hanzi {
-  font-weight: 600;
-  opacity: 0.5;
-  position: relative;
-  z-index: 2;
-  line-height: 1;
-}
-.coin-card .coin-figure {
-  opacity: 0.5;
-  position: relative;
-  z-index: 2;
-}
-.coin-card .coin-count {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background: var(--accent);
-  color: white;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  font-size: 11px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 5;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-}
-.coin-card .coin-krw-tiny {
-  position: absolute;
-  bottom: -14px;
-  font-size: 9px;
-  color: var(--text-light);
-  white-space: nowrap;
-}
-/* 50원: 황동(금색), 톱니 가장자리, 가장 큼 */
-.coin-50 {
-  width: 56px;
-  height: 56px;
-  background: radial-gradient(circle at 35% 35%, #FFE082, #D4AF37 40%, #C19A2E 70%, #B8860B 100%);
-  color: #5D3A00;
-  border: 3px dashed #B8860B;
-  box-shadow: inset 0 2px 4px rgba(255,255,255,0.3), inset 0 -2px 4px rgba(0,0,0,0.15), 0 2px 6px rgba(0,0,0,0.2);
-}
-.coin-50 .coin-denom { font-size: 16px; }
-.coin-50 .coin-hanzi { font-size: 6px; margin-top: 1px; }
-.coin-50 .coin-figure { font-size: 6px; margin-top: 1px; }
-/* 10원: 바이메탈 (은색 외곽 + 금색 중앙) */
-.coin-10 {
-  width: 52px;
-  height: 52px;
-  background: radial-gradient(circle at 50% 50%, #D4AF37 0%, #C19A2E 38%, #A0A0A0 42%, #C8C8C8 50%, #E0E0E0 60%, #B8B8B8 100%);
-  color: #333;
-  border: 2.5px solid #A0A0A0;
-  box-shadow: inset 0 2px 4px rgba(255,255,255,0.3), inset 0 -2px 4px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.2);
-}
-.coin-10::after {
-  content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 38px; height: 38px;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  border: 1px solid rgba(0,0,0,0.08);
-  pointer-events: none;
-}
-.coin-10 .coin-denom { font-size: 14px; }
-.coin-10 .coin-hanzi { font-size: 6px; margin-top: 1px; }
-.coin-10 .coin-figure { font-size: 6px; margin-top: 1px; }
-/* 5원: 구리색, 작은 크기 */
-.coin-5 {
-  width: 46px;
-  height: 46px;
-  background: radial-gradient(circle at 35% 35%, #E8A850, #CD7F32 40%, #B8722E 70%, #A0602A 100%);
-  color: #3E2000;
-  border: 2.5px solid #A0602A;
-  box-shadow: inset 0 2px 3px rgba(255,255,255,0.3), inset 0 -2px 3px rgba(0,0,0,0.15), 0 2px 5px rgba(0,0,0,0.2);
-}
-.coin-5 .coin-denom { font-size: 12px; }
-.coin-5 .coin-hanzi { font-size: 5px; margin-top: 1px; }
-.coin-5 .coin-figure { font-size: 5px; margin-top: 1px; }
-/* 1원: 은색(알루미늄), 가장 작고 가벼움 */
-.coin-1 {
-  width: 40px;
-  height: 40px;
-  background: radial-gradient(circle at 35% 35%, #F0F0F0, #D8D8D8 40%, #C0C0C0 70%, #A8A8A8 100%);
-  color: #444;
-  border: 2px solid #A0A0A0;
-  box-shadow: inset 0 1px 3px rgba(255,255,255,0.5), inset 0 -1px 3px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.15);
-}
-.coin-1 .coin-denom { font-size: 11px; }
-.coin-1 .coin-hanzi { font-size: 5px; margin-top: 1px; }
-.coin-1 .coin-figure { font-size: 5px; margin-top: 1px; }
-
-.bill-card.zero, .coin-card.zero {
-  opacity: 0.15;
-  filter: grayscale(0.5);
-}
-
-/* -- INLINE BILLS SUMMARY (in order tab) -- */
-.order-bills-summary {
-  background: #F8F9FA;
-  border-radius: 8px;
-  padding: 10px 14px;
-  margin-top: 10px;
-  border: 1px solid #E8E8E8;
-}
-.order-bills-summary .obs-title {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--tw-blue);
-  margin-bottom: 6px;
-}
-.obs-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-.obs-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  padding: 3px 8px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 700;
-}
-.obs-chip.bill { background: rgba(0,42,107,0.1); color: var(--tw-blue); }
-.obs-chip.coin { background: rgba(196,18,47,0.08); color: var(--accent); }
-.obs-chip-icon {
-  width: 14px;
-  height: 8px;
-  border-radius: 2px;
-  display: inline-block;
-}
-.obs-chip-icon.coin-icon {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-.obs-chip-icon.c1000 { background: #1B4F8A; }
-.obs-chip-icon.c500 { background: #8B4513; }
-.obs-chip-icon.c100 { background: #C62828; }
-.obs-chip-icon.c50 { background: #D4AF37; }
-.obs-chip-icon.c10 { background: linear-gradient(#C0C0C0, #E0E0E0); border: 1px solid #DAA520; }
-.obs-chip-icon.c5 { background: #CD7F32; }
-.obs-chip-icon.c1 { background: #C0C0C0; }
-
-/* -- PRESET CHIPS -- */
-.preset-cat-tabs {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-.preset-cat-btn {
-  flex: 1;
-  padding: 7px 0;
-  border-radius: 10px;
-  border: 1.5px solid var(--accent);
-  background: transparent;
-  color: var(--accent);
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: background 0.15s, color 0.15s;
-}
-.preset-cat-btn.active {
-  background: var(--accent);
-  color: #fff;
-}
-.preset-section {
-  margin-bottom: 14px;
-}
-.preset-section .preset-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-sub);
-  margin-bottom: 6px;
-}
-.preset-chips {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-#presetChips {
-  flex-direction: column;
-  gap: 0;
-}
-.preset-chip {
-  padding: 6px 12px;
-  border: 1.5px solid var(--accent);
-  border-radius: 20px;
-  background: var(--accent-light);
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1px;
-}
-.preset-chip:active { background: var(--bg); border-color: var(--accent); }
-.preset-chip .preset-name {
-  font-size: 11px;
-  color: var(--text-sub);
-}
-.preset-chip .preset-price {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--accent);
-}
-.preset-manage-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 10px;
-  border: 1px dashed var(--border);
-  border-radius: 20px;
-  background: transparent;
-  font-size: 11px;
-  color: var(--text-light);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.preset-manage-btn:active { background: var(--bg); }
-
-/* -- PRICE REFERENCE TABLE -- */
-.collapsible {
-  margin-top: 14px;
-}
-.collapsible-toggle {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  box-shadow: var(--card-shadow);
-  border: none;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--tw-blue);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.collapsible-toggle .arrow {
-  transition: transform 0.3s;
-  font-size: 12px;
-  color: var(--text-light);
-}
-.collapsible-toggle.open .arrow {
-  transform: rotate(180deg);
-}
-.collapsible-body {
-  display: none;
-  background: var(--card-bg);
-  border-radius: 0 0 var(--radius) var(--radius);
-  box-shadow: var(--card-shadow);
-  margin-top: -8px;
-  padding: 8px 0;
-}
-.collapsible-body.open {
-  display: block;
-}
-.ref-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
-}
-.ref-table th {
-  background: #F5F7FA;
-  padding: 8px 12px;
-  text-align: left;
-  font-weight: 700;
-  color: var(--tw-blue);
-  font-size: 11px;
-  border-bottom: 1px solid var(--border);
-}
-.ref-table th:nth-child(2),
-.ref-table th:nth-child(3) {
-  text-align: right;
-}
-.ref-table td {
-  padding: 7px 12px;
-  border-bottom: 1px solid #F5F5F5;
-}
-.ref-table td:nth-child(2),
-.ref-table td:nth-child(3) {
-  text-align: right;
-  font-weight: 600;
-}
-.ref-table td:nth-child(3) {
-  color: var(--text-light);
-  font-size: 11px;
-}
-.ref-table tr:last-child td {
-  border-bottom: none;
-}
-.ref-table tr:active {
-  background: var(--accent-light);
-}
-
-/* -- CHANGE CALC -- */
-.change-result {
-  text-align: center;
-  padding: 16px;
-}
-.change-result .change-amount {
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--success);
-}
-.change-result .change-krw {
-  font-size: 14px;
-  color: var(--text-sub);
-}
-.exact-badge {
-  display: inline-block;
-  background: var(--success-light);
-  color: var(--success);
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 700;
-  margin-top: 8px;
-}
-.overpay-badge {
-  display: inline-block;
-  background: #FFF3E0;
-  color: #E65100;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 700;
-  margin-top: 8px;
-}
-.shortage-badge {
-  display: inline-block;
-  background: #FFEBEE;
-  color: #C62828;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 700;
-  margin-top: 8px;
-}
-
-/* -- QUICK AMOUNTS -- */
-.quick-amounts {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-top: 8px;
-}
-.quick-amounts button {
-  padding: 6px 12px;
-  border: 1.5px solid var(--border);
-  border-radius: 20px;
-  background: white;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.quick-amounts button:active { background: var(--bg); }
-.quick-amounts button.selected {
-  border-color: var(--accent);
-  background: var(--accent-light);
-  color: var(--accent);
-}
-
-/* -- PAY SUGGEST CHIPS -- */
-.pay-suggest-chips {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-top: 8px;
-}
-.pay-chip {
-  padding: 8px 14px;
-  border: 1.5px solid var(--border);
-  border-radius: 20px;
-  background: white;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-.pay-chip:active { background: var(--bg); border-color: var(--accent); }
-.pay-chip .pay-chip-label {
-  font-size: 9px;
-  color: var(--text-light);
-  font-weight: 500;
-}
-.pay-chip .pay-chip-amount {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--tw-blue);
-}
-.pay-chip.exact-chip {
-  border-color: var(--success);
-  background: var(--success-light);
-}
-.pay-chip.exact-chip .pay-chip-amount {
-  color: var(--success);
-}
-
-/* -- EMPTY STATE -- */
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: var(--text-light);
-}
-.empty-state .empty-icon {
-  font-size: 48px;
-  margin-bottom: 12px;
-  opacity: 0.4;
-}
-.empty-state p {
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-/* -- RATE MODAL -- */
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 200;
-  display: none;
-  align-items: flex-end;
-  justify-content: center;
-}
-.modal-overlay.show { display: flex; }
-.modal-sheet {
-  background: white;
-  border-radius: 16px 16px 0 0;
-  padding: 24px 20px;
-  padding-bottom: calc(24px + var(--safe-bottom));
-  width: 100%;
-  max-width: 480px;
-  animation: slideUp 0.3s ease;
-}
-@keyframes slideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-.modal-sheet h3 {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 16px;
-}
-.modal-sheet .modal-close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  border: none;
-  background: none;
-  font-size: 24px;
-  color: var(--text-sub);
-  cursor: pointer;
-}
-
-/* -- PRESET MODAL -- */
-.preset-modal-body {
-  max-height: 300px;
-  overflow-y: auto;
-}
-.preset-modal-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 0;
-  border-bottom: 1px solid #F0F0F0;
-}
-.preset-modal-item:last-child { border-bottom: none; }
-.preset-modal-item .pmi-name {
-  flex: 1;
-  font-size: 13px;
-  font-weight: 600;
-}
-.preset-modal-item .pmi-price {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--accent);
-}
-.preset-modal-item .pmi-del {
-  width: 24px;
-  height: 24px;
-  border: none;
-  background: none;
-  color: #CCC;
-  font-size: 18px;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-.preset-modal-item .pmi-del:active { color: #CC0000; }
-.preset-modal-item .pmi-edit-name,
-.preset-modal-item .pmi-edit-price {
-  padding: 4px 8px;
-  border: 1.5px solid var(--border);
-  border-radius: 6px;
-  font-size: 13px;
-  font-family: inherit;
-  background: #FAFAFA;
-  -webkit-appearance: none;
-}
-.preset-modal-item .pmi-edit-name {
-  flex: 1;
-  min-width: 0;
-  font-weight: 600;
-}
-.preset-modal-item .pmi-edit-price {
-  width: 70px;
-  font-weight: 700;
-  color: var(--accent);
-  text-align: right;
-}
-.preset-modal-item .pmi-edit-name:focus,
-.preset-modal-item .pmi-edit-price:focus {
-  border-color: var(--accent);
-  outline: none;
-  background: #FFF;
-}
-.preset-add-row {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-}
-.preset-add-row input {
-  flex: 1;
-  padding: 8px 10px;
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  font-size: 14px;
-  font-family: inherit;
-}
-
-/* -- PRESET ACCORDION / MODAL REDESIGN -- */
-.preset-label-row {
-  display: flex;
-  cursor: pointer;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 0;
-  -webkit-tap-highlight-color: transparent;
-}
-.preset-collapse-arrow {
-  font-size: 10px;
-  color: var(--text-sub);
-}
-.preset-label-text {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-sub);
-}
-.pmi-modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.pmi-modal-header h3 {
-  font-size: 16px;
-  font-weight: 700;
-}
-.pmi-close-btn {
-  width: 28px;
-  height: 28px;
-  border: none;
-  background: #F0F0F0;
-  border-radius: 50%;
-  font-size: 16px;
-  color: var(--text-sub);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  -webkit-tap-highlight-color: transparent;
-}
-.pmi-cat-tabs {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 14px;
-}
-.pmi-cat-btn {
-  flex: 1;
-  padding: 7px 0;
-  border-radius: 10px;
-  border: 1.5px solid var(--accent);
-  background: transparent;
-  color: var(--accent);
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: background 0.15s, color 0.15s;
-}
-.pmi-cat-btn.active {
-  background: var(--accent);
-  color: #fff;
-}
-.pmi-section {
-  border-bottom: 1px solid #eee;
-  padding-bottom: 12px;
-  margin-bottom: 14px;
-}
-.pmi-section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-.pmi-section-name {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
-}
-.pmi-section-hidden .pmi-section-name {
-  opacity: 0.4;
-}
-.pmi-del-btn {
-  padding: 3px 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: #F5F5F5;
-  font-size: 11px;
-  color: var(--text-sub);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.pmi-del-btn:active { background: #e0e0e0; }
-.pmi-restore-btn {
-  padding: 3px 8px;
-  border: 1px solid var(--accent);
-  border-radius: 6px;
-  background: var(--accent-light);
-  font-size: 11px;
-  color: var(--accent);
-  cursor: pointer;
-  font-weight: 600;
-  -webkit-tap-highlight-color: transparent;
-}
-.pmi-restore-btn:active { background: var(--accent); color: #fff; }
-.pmi-item {
-  display: flex;
-  gap: 6px;
-  padding: 5px 0;
-  align-items: center;
-}
-.pmi-item-hidden {
-  opacity: 0.5;
-}
-.pmi-hidden-name {
-  flex: 1;
-  font-size: 13px;
-  color: var(--text-sub);
-  text-decoration: line-through;
-}
-.pmi-hidden-price {
-  font-size: 12px;
-  color: var(--text-sub);
-}
-.pmi-add-item-row {
-  display: flex;
-  gap: 6px;
-  margin-top: 6px;
-}
-.pmi-add-item-row input {
-  padding: 5px 8px;
-  border: 1px dashed var(--border);
-  border-radius: 6px;
-  font-size: 12px;
-  font-family: inherit;
-  background: #FAFAFA;
-}
-.pmi-add-item-row input:focus {
-  border-color: var(--accent);
-  outline: none;
-  background: #fff;
-}
-.pmi-add-item-name { flex: 1; }
-.pmi-add-item-price { width: 64px; }
-.pmi-add-btn {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 6px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.pmi-add-btn:active { opacity: 0.8; }
-.pmi-new-section-row {
-  display: flex;
-  gap: 6px;
-  margin-top: 12px;
-  border-top: 2px dashed var(--accent-light);
-  padding-top: 12px;
-}
-.pmi-new-section-row input {
-  flex: 1;
-  padding: 7px 10px;
-  border: 1.5px dashed var(--border);
-  border-radius: 8px;
-  font-size: 13px;
-  font-family: inherit;
-  background: #FAFAFA;
-}
-.pmi-new-section-row input:focus {
-  border-color: var(--accent);
-  outline: none;
-  background: #fff;
-}
-.pmi-add-sec-btn {
-  padding: 7px 12px;
-  border: none;
-  border-radius: 8px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  white-space: nowrap;
-}
-.pmi-add-sec-btn:active { opacity: 0.8; }
-.pmi-show-hidden-btn {
-  width: 100%;
-  margin-top: 10px;
-  padding: 8px 0;
-  border: 1px dashed var(--border);
-  border-radius: 8px;
-  background: transparent;
-  font-size: 12px;
-  color: var(--text-sub);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.pmi-show-hidden-btn:active { background: var(--bg); }
-.pmi-hidden-area {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #eee;
-}
-.pmi-hidden-area-title {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-sub);
-  margin-bottom: 8px;
-}
-.pmi-hard-del-btn {
-  padding: 3px 7px;
-  border: 1px solid #FFCDD2;
-  border-radius: 6px;
-  background: #FFF5F5;
-  font-size: 11px;
-  color: #CC0000;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  margin-left: 4px;
-}
-.pmi-hard-del-btn:active { background: #FFCDD2; }
-
-/* -- HISTORY -- */
-.history-item {
-  padding: 12px 0;
-  border-bottom: 1px solid #F0F0F0;
-}
-.history-item:last-child { border-bottom: none; }
-.history-time {
-  font-size: 11px;
-  color: var(--text-light);
-}
-.history-detail {
-  font-size: 13px;
-  margin-top: 2px;
-}
-.history-amount {
-  font-weight: 700;
-  color: var(--tw-red);
-}
-
-/* -- UTILITIES -- */
-.mt-8 { margin-top: 8px; }
-.mt-12 { margin-top: 12px; }
-.text-center { text-align: center; }
-.text-sm { font-size: 12px; }
-.text-sub { color: var(--text-sub); }
-.flex-between { display: flex; justify-content: space-between; align-items: center; }
-.divider { height: 1px; background: #F0F0F0; margin: 12px 0; }
-.hidden { display: none !important; }
-
-/* -- OCR CAMERA -- */
-.ocr-btn-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-.ocr-camera-btn {
-  flex: 1;
-  background: #C96A3A;
-  color: white;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  transition: all 0.2s;
-  font-family: inherit;
-}
-.ocr-camera-btn.gallery { background: var(--accent); }
-.ocr-camera-btn:active { background: #A0532E; }
-.ocr-camera-btn.gallery:active { background: #C96A3A; }
-.ocr-camera-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-.ocr-camera-btn .ocr-spinner {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: ocrSpin 0.6s linear infinite;
-}
-@keyframes ocrSpin {
-  to { transform: rotate(360deg); }
-}
-.ocr-toast {
-  position: fixed;
-  bottom: calc(80px + var(--safe-bottom));
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.85);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
-  z-index: 300;
-  pointer-events: none;
-  animation: ocrToastIn 0.3s ease, ocrToastOut 0.3s ease 2.7s forwards;
-  max-width: 90%;
-  text-align: center;
-}
-@keyframes ocrToastIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-@keyframes ocrToastOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-/* Haptic feedback simulation */
-@media (hover: none) {
-  button:active, .btn:active { transform: scale(0.97); }
-}
+  /* 앱 컨테이너(국가 진입 후) */
+  #app { display: none; }
+  #app.show { display: block; }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="header">
-  <h1>NTD Cash Helper</h1>
-  <div class="subtitle">대만 현금 도우미</div>
+<!-- ============== 메인(국가 선택) ============== -->
+<section id="home">
+  <div class="home-header">
+    <div class="logo">🌏</div>
+    <h2>아시아 여행 회화</h2>
+    <p>여행할 국가를 선택하세요</p>
+  </div>
+
+  <div class="country-grid">
+    <button class="country-btn" data-country="tw">
+      <div class="c-flag">🇹🇼</div>
+      <div class="c-name">대만</div>
+      <div class="c-sub">中文 · 번체자</div>
+    </button>
+    <button class="country-btn" data-country="jp">
+      <div class="c-flag">🇯🇵</div>
+      <div class="c-name">일본</div>
+      <div class="c-sub">日本語</div>
+    </button>
+    <button class="country-btn" data-country="th">
+      <div class="c-flag">🇹🇭</div>
+      <div class="c-name">태국</div>
+      <div class="c-sub">ภาษาไทย</div>
+    </button>
+    <button class="country-btn" data-country="vn">
+      <div class="c-flag">🇻🇳</div>
+      <div class="c-name">베트남</div>
+      <div class="c-sub">Tiếng Việt</div>
+    </button>
+  </div>
+
+  <div class="home-foot">
+    Web Speech TTS · 번체자/현지표기 · 한글발음 · 한국어뜻
+  </div>
+</section>
+
+<!-- ============== 앱(국가 진입 후) ============== -->
+<div id="app">
+  <header>
+    <div class="title-wrap">
+      <h1><span class="flag" id="hdr-flag">🇹🇼</span> <span id="hdr-title">대만 여행 회화</span></h1>
+      <div class="sub" id="hdr-sub">번체자 · 한글발음 · 한국어뜻 (Web Speech TTS)</div>
+    </div>
+    <button class="home-btn show" id="home-btn">🏠 메인</button>
+  </header>
+
+  <div class="search-wrap">
+    <input id="search" type="search" placeholder="검색: 표기 / 한글발음 / 뜻 (예: 얼마)" autocomplete="off" />
+  </div>
+
+  <nav class="tabs" id="tabs"></nav>
+
+  <main id="main"></main>
+
+  <footer>
+    <span class="tw" id="ft-name">Taiwan</span> Phrasebook · 2026
+  </footer>
 </div>
 
-<!-- TAB PANELS -->
-<div class="content">
-
-  <!-- ============================== -->
-  <!-- TAB 1: 주문/결제 (통합 스크롤) -->
-  <!-- ============================== -->
-  <div class="tab-panel active" id="panelOrder">
-
-    <!-- 섹션 1: 주문 입력 -->
-    <div class="card" id="presetCard">
-      <div class="flex-between">
-        <div class="card-title" style="margin-bottom:0"><span class="icon">&#9889;</span> 빠른 추가</div>
-        <button class="preset-manage-btn" onclick="openPresetModal()">+ 편집</button>
-      </div>
-      <div class="preset-chips mt-8" id="presetChips"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="icon">&#128722;</span> 주문 입력</div>
-      <div class="ocr-btn-row">
-        <button class="ocr-camera-btn" id="ocrCameraBtn" onclick="document.getElementById('cameraInput').click()">&#128247; 촬영</button>
-        <button class="ocr-camera-btn gallery" id="ocrGalleryBtn" onclick="document.getElementById('galleryInput').click()">&#128444;&#65039; 사진첩</button>
-      </div>
-      <div class="input-row">
-        <div class="input-group" style="flex:2">
-          <label>품목명</label>
-          <input type="text" id="itemName" placeholder="미입력 시 자동 번호">
-        </div>
-        <div class="input-group" style="flex:1">
-          <label>가격 (NTD)</label>
-          <input type="number" id="itemPrice" inputmode="decimal" placeholder="0" onkeydown="if(event.key==='Enter'){addItem()}">
-        </div>
-      </div>
-      <button class="btn btn-primary" onclick="addItem()">+ 품목 추가</button>
-    </div>
-
-    <div class="card" id="orderListCard">
-      <div class="flex-between">
-        <div class="card-title" style="margin-bottom:0"><span class="icon">&#128203;</span> 주문 목록</div>
-        <button class="btn btn-sm btn-danger" onclick="clearOrder()" id="clearOrderBtn" style="display:none">전체 삭제</button>
-      </div>
-      <div id="orderList">
-        <div class="empty-state">
-          <div class="empty-icon">&#128722;</div>
-          <p>품목을 추가하면 여기에 표시됩니다</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- 섹션 2: 합계 + 화폐 조합 (주문 1개 이상일 때만 표시) -->
-    <div id="orderSummarySection" class="hidden">
-      <div class="card">
-        <div class="card-title"><span class="icon">&#128181;</span> 합계</div>
-        <div class="total-bar" style="margin-top:0">
-          <div>
-            <div class="total-label">총 합계</div>
-          </div>
-          <div style="text-align:right">
-            <div class="total-amount" id="orderTotalNTD">0 NTD</div>
-            <div class="total-krw" id="orderTotalKRW">= 0 KRW</div>
-          </div>
-        </div>
-
-        <!-- 필요 화폐 조합 시각화 -->
-        <div id="orderBillsVisual" style="margin-top:14px">
-          <div style="font-size:12px;font-weight:700;color:var(--tw-blue);margin-bottom:8px">필요 화폐 조합</div>
-          <div class="bills-grid" id="orderBillsGrid"></div>
-          <div class="coins-row mt-8" id="orderCoinsRow" style="margin-bottom:16px"></div>
-        </div>
-      </div>
-
-      <!-- 섹션 3: 지불 -->
-      <div class="card" id="paySection">
-        <div class="card-title"><span class="icon">&#128176;</span> 얼마 내시나요?</div>
-        <div class="input-group">
-          <label>지불 금액 (NTD)</label>
-          <input type="number" id="payAmount" inputmode="decimal" placeholder="내는 금액 입력" oninput="onPayInput()">
-        </div>
-        <div class="pay-suggest-chips" id="paySuggestChips"></div>
-      </div>
-
-      <!-- 섹션 4: 거스름돈 (지불 금액 입력 시 자동 표시) -->
-      <div id="changeSection" class="hidden">
-        <div class="card">
-          <div class="change-result">
-            <div id="changeBadge"></div>
-            <div class="change-amount" id="changeAmountDisplay">0 NTD</div>
-            <div class="change-krw" id="changeKRWDisplay">= 0 KRW</div>
-          </div>
-          <div id="changeBillsSection">
-            <div class="divider"></div>
-            <div style="font-size:12px;font-weight:700;color:var(--tw-blue);margin-bottom:8px">거스름돈 화폐 조합</div>
-            <div class="bills-grid" id="changeBillsGrid"></div>
-            <div class="coins-row mt-8" id="changeCoinsRow"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ============================== -->
-  <!-- TAB 2: 환율                     -->
-  <!-- ============================== -->
-  <div class="tab-panel" id="panelRate">
-
-    <!-- 환율 변환기 -->
-    <div class="card">
-      <div class="card-title"><span class="icon">&#8361;</span> 환율 변환기</div>
-      <div class="input-group">
-        <label id="convertFromLabel">NTD (대만 달러)</label>
-        <input type="number" id="convertFrom" inputmode="decimal" placeholder="금액 입력" oninput="convert()">
-      </div>
-      <div class="text-center">
-        <button class="swap-btn" onclick="swapCurrency()" title="통화 전환">&#8645;</button>
-      </div>
-      <div class="converter-display">
-        <div class="amount-ntd" id="convertResultTop">0 <span class="unit" id="convertUnitTop">NTD</span></div>
-        <div class="amount-krw" id="convertResultBottom">= 0 <span class="unit" id="convertUnitBottom">KRW</span></div>
-      </div>
-      <div class="quick-amounts" id="quickConvert">
-        <button onclick="quickConvertAmount(100)">100</button>
-        <button onclick="quickConvertAmount(500)">500</button>
-        <button onclick="quickConvertAmount(1000)">1,000</button>
-        <button onclick="quickConvertAmount(5000)">5,000</button>
-        <button onclick="quickConvertAmount(10000)">10,000</button>
-      </div>
-    </div>
-
-    <!-- 물가 참고표 -->
-    <div class="collapsible">
-      <button class="collapsible-toggle" onclick="togglePriceRef(this)">
-        <span>&#128200; 대만 물가 참고표</span>
-        <span class="arrow">&#9660;</span>
-      </button>
-      <div class="collapsible-body" id="priceRefBody">
-        <table class="ref-table">
-          <thead>
-            <tr><th>품목</th><th>NTD</th><th>원화</th></tr>
-          </thead>
-          <tbody id="priceRefRows"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- 환율 설정 카드 -->
-    <div class="card mt-12">
-      <div class="card-title"><span class="icon">&#9881;</span> 환율 설정</div>
-      <div class="input-group">
-        <label>1 NTD = ? KRW</label>
-        <input type="number" id="rateInputInline" inputmode="decimal" step="0.01" placeholder="예: 42.5">
-      </div>
-      <div style="display:flex;gap:10px">
-        <button class="btn btn-outline" style="flex:1" onclick="saveRateInline()">수동 저장</button>
-        <button class="btn btn-primary" style="flex:1;background:var(--tw-blue)" onclick="fetchRate()">실시간 환율</button>
-      </div>
-      <div class="mt-8 text-sm text-sub" id="rateLastUpdateInline"></div>
-    </div>
-  </div>
-
-  <!-- ============================== -->
-  <!-- TAB 3: 대만여행회화             -->
-  <!-- ============================== -->
-  <div class="tab-panel" id="panelPhrase">
-
-    <!-- 카테고리 탭 -->
-    <div class="card" style="padding:10px 10px 6px">
-      <div class="phrase-cat-tabs" id="phraseCatTabs"></div>
-    </div>
-
-    <!-- 검색 -->
-    <div class="card" style="padding:10px">
-      <input type="text" id="phraseSearch" class="phrase-search" placeholder="&#128269; 한국어 / 중국어 검색" oninput="renderPhrases()">
-    </div>
-
-    <!-- 회화 리스트 -->
-    <div id="phraseList"></div>
-
-    <!-- 안내 -->
-    <div class="card mt-12" style="background:#FFF7EF;border:1px solid #F5D7B8">
-      <div class="text-sm text-sub" style="line-height:1.6">
-        &#128161; <b>사용 팁</b><br>
-        &bull; 번체자(&#32321;&#39636;&#23383;)는 대만에서 쓰는 한자입니다.<br>
-        &bull; 한글 발음은 대만 현지 발음에 가깝게 표기했습니다.<br>
-        &bull; 말하기 어려우면 해당 문장을 대만 사람에게 보여주세요.
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- TAB NAV (3 tabs) -->
-<nav class="tab-nav">
-  <button class="active" data-tab="panelOrder" onclick="switchTab(this)">
-    <span class="tab-icon">&#128722;</span>
-    주문/결제
-  </button>
-  <button data-tab="panelRate" onclick="switchTab(this)">
-    <span class="tab-icon">&#8361;</span>
-    환율
-  </button>
-  <button data-tab="panelPhrase" onclick="switchTab(this)">
-    <span class="tab-icon">&#128172;</span>
-    회화
-  </button>
-</nav>
-
-<!-- RATE MODAL -->
-<div class="modal-overlay" id="rateModal" onclick="closeRateModal(event)">
-  <div class="modal-sheet" onclick="event.stopPropagation()">
-    <h3>환율 설정</h3>
-    <div class="input-group">
-      <label>1 NTD = ? KRW</label>
-      <input type="number" id="rateInput" inputmode="decimal" step="0.01" placeholder="예: 42.5">
-    </div>
-    <div class="text-sm text-sub mt-8">
-      수동 입력하거나 "실시간 환율" 버튼으로 자동 업데이트
-    </div>
-    <div class="mt-12" style="display:flex;gap:10px">
-      <button class="btn btn-outline" style="flex:1" onclick="closeRateModal()">취소</button>
-      <button class="btn btn-primary" style="flex:1" onclick="saveRate()">저장</button>
-    </div>
-    <div class="mt-12">
-      <button class="btn btn-primary" style="width:100%;background:var(--tw-blue)" onclick="fetchRate();closeRateModal()">실시간 환율 가져오기</button>
-    </div>
-    <div class="mt-8 text-sm text-sub" id="rateLastUpdate"></div>
-  </div>
-</div>
-
-<!-- PRESET MODAL -->
-<div class="modal-overlay" id="presetModal" onclick="closePresetModal(event)">
-  <div class="modal-sheet" onclick="event.stopPropagation()">
-    <div class="pmi-modal-header">
-      <h3>프리셋 편집</h3>
-      <button class="pmi-close-btn" onclick="closePresetModal()">&#215;</button>
-    </div>
-    <div class="preset-modal-body" id="presetModalList"></div>
-    <div class="mt-12">
-      <button class="btn btn-outline" style="width:100%" onclick="closePresetModal()">닫기</button>
-    </div>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-<input type="file" accept="image/*" capture="environment" id="cameraInput" style="display:none">
-<input type="file" accept="image/*" multiple id="galleryInput" style="display:none">
-
-<script>
-// ======================================
-// STATE
-// ======================================
-let rate = parseFloat(localStorage.getItem('ntd_rate')) || 0;
-let rateSource = localStorage.getItem('ntd_rate_source') || '';
-let rateTime = localStorage.getItem('ntd_rate_time') || '';
-let convertDir = 'NTD_TO_KRW';
-let orders = JSON.parse(localStorage.getItem('ntd_orders') || '[]');
-let history = JSON.parse(localStorage.getItem('ntd_history') || '[]');
-let itemCounter = parseInt(localStorage.getItem('ntd_item_counter') || '0');
-
-const BILLS = [1000, 500, 100];
-const COINS = [50, 10, 5, 1];
-const DENOMS = [...BILLS, ...COINS];
-
-// 대만 메뉴 중→한 사전 (번체자 기준)
-const TW_KOR_DICT = {
-  // 대표 요리
-  '魯肉飯': '루러우판(돼지고기덮밥)', '滷肉飯': '루러우판(돼지고기덮밥)',
-  '肉燥飯': '돼지고기양념덮밥', '控肉飯': '삼겹살덮밥',
-  '排骨飯': '돼지갈비덮밥', '雞腿飯': '닭다리덮밥', '雞排飯': '치킨가스덮밥',
-  '牛肉麵': '우육면(소고기국수)', '牛肉湯麵': '소고기국수',
-  '擔仔麵': '딴자이면', '乾麵': '비빔면', '湯麵': '국물국수',
-  '炸醬麵': '자장면', '麻醬麵': '땅콩장면',
-  '米粉': '쌀국수', '米粉湯': '쌀국수탕', '炒米粉': '볶음쌀국수',
-  '炒飯': '볶음밥', '蝦仁炒飯': '새우볶음밥', '雞肉炒飯': '닭고기볶음밥',
-  '蚵仔煎': '굴전', '蚵仔麵線': '굴국수',
-  '小籠包': '샤오롱바오', '湯包': '탕바오(국물만두)',
-  '水餃': '물만두', '煎餃': '군만두', '蒸餃': '찐만두', '鍋貼': '군만두',
-  '餛飩': '완탕', '餛飩湯': '완탕국', '餛飩麵': '완탕면',
-  '肉圓': '뤄우위안(고기만두)', '刈包': '대만식버거',
-  '鹽酥雞': '대만식치킨', '雞排': '닭튀김', '鹹酥雞': '대만치킨',
-  '滷味': '대만조림', '臭豆腐': '취두부',
-  '蔥抓餅': '대만파전', '蔥油餅': '파전', '胡椒餅': '후추빵',
-  '蛋餅': '대만에그랩', '飯糰': '주먹밥',
-  '豆漿': '두유', '鹹豆漿': '짠두유', '油條': '꽈배기빵', '燒餅': '중국빵',
-  '大腸包小腸': '대만소시지핫도그',
-  '春捲': '춘권', '潤餅': '춘권',
-
-  // 음료·빙수
-  '珍珠奶茶': '버블티', '奶茶': '밀크티', '紅茶': '홍차', '綠茶': '녹차',
-  '烏龍茶': '우롱차', '冬瓜茶': '동과차', '青茶': '청차',
-  '檸檬': '레몬', '檸檬紅茶': '레몬홍차', '檸檬綠茶': '레몬녹차',
-  '咖啡': '커피', '拿鐵': '라떼', '美式': '아메리카노',
-  '豆花': '두화(푸딩)', '愛玉': '아이위젤리', '仙草': '선초젤리',
-  '芒果冰': '망고빙수', '剉冰': '빙수', '雪花冰': '눈꽃빙수',
-  '珍珠': '타피오카', '粉圓': '타피오카',
-
-  // 반찬/야채
-  '青菜': '야채', '燙青菜': '데친야채', '炒青菜': '볶음야채',
-  '高麗菜': '양배추', '空心菜': '공심채', '地瓜葉': '고구마잎',
-  '滷蛋': '장조림계란', '茶葉蛋': '차잎계란', '荷包蛋': '계란후라이',
-  '白飯': '흰밥', '滷豆腐': '두부조림',
-
-  // 재료
-  '豬': '돼지', '豬肉': '돼지고기', '牛': '소', '牛肉': '소고기',
-  '雞': '닭', '雞肉': '닭고기', '鴨': '오리', '鴨肉': '오리고기',
-  '魚': '생선', '蝦': '새우', '蝦仁': '새우살', '花枝': '오징어',
-  '蛋': '계란', '豆腐': '두부', '蔥': '파', '蒜': '마늘',
-  '薑': '생강', '辣椒': '고추', '香菜': '고수',
-
-  // 맛·조리법
-  '辣': '매운', '不辣': '안매움', '微辣': '약간매움', '小辣': '조금매움',
-  '中辣': '보통매움', '大辣': '매움', '鹹': '짠', '甜': '달콤한',
-  '酸': '신맛', '香': '향긋한', '炸': '튀긴', '炒': '볶은',
-  '煎': '부친', '蒸': '찐', '煮': '삶은', '烤': '구운',
-  '冷': '차가운', '熱': '따뜻한', '冰': '얼음',
-
-  // 기타
-  '湯': '국', '粥': '죽', '麵': '면', '飯': '밥', '菜': '요리',
-  '大': '큰', '小': '작은', '中': '중간', '份': '인분', '碗': '그릇',
-  '加': '추가', '免': '빼기',
-
-  // 쓰촨·중국 본토 유명 요리
-  '螞蟻上樹': '마이상수(당면다진고기볶음)', '蒼蠅頭': '창잉터우(부추꽃다진고기볶음)',
-  '老皮嫩肉': '계란두부튀김(매콤달콤)', '麻婆豆腐': '마파두부',
-  '魚香肉絲': '위샹러우쓰(매콤돼지고기볶음)', '宮保雞丁': '궁바오지딩(땅콩닭볶음)',
-  '回鍋肉': '후이궈러우(재볶이 삼겹살)', '水煮牛': '수이주뉴(매운물소고기)',
-  '水煮魚': '수이주위(매운물생선)', '夫妻肺片': '부부페이폔(소고기찬채)',
-  '口水雞': '커우수이지(매운닭냉채)', '紅燒': '홍사오(간장조림)',
-  '糖醋': '탕추(탕수)', '糖醋里脊': '탕수돼지고기', '糖醋排骨': '탕수갈비',
-  '鐵板': '철판', '鐵板牛肉': '철판소고기',
-  '青椒肉絲': '피망고기볶음', '京醬肉絲': '베이징식고기춘장볶음',
-  '三杯雞': '싼베이지(간장마늘닭조림)', '左宗棠雞': '쭤쭝탕지(튀김닭볶음)',
-  '乾煸四季豆': '마른볶음강낭콩', '地三鮮': '디싼셴(감자가지피망볶음)',
-  '酸辣湯': '쏸라탕(매콤새콤국)', '蛋花湯': '계란국', '玉米湯': '옥수수수프',
-  '白切雞': '백숙닭', '叉燒': '차슈', '烤鴨': '오리구이', '北京烤鴨': '베이징오리',
-  '蔥爆': '파볶음', '辣子雞': '라즈지(매운닭볶음)',
-  '香酥': '바삭튀김', '酥炸': '바삭튀김', '清蒸': '찜',
-  '紅燒肉': '홍사오러우(간장조림삼겹살)', '東坡肉': '동파육',
-  '螺絲': '소라', '螺': '소라', '蛤': '조개', '蟹': '게',
-
-  // 대만 특화 추가
-  '滷': '조림', '燉': '찜', '悶': '찜', '拌': '비빔',
-  '涼麵': '냉국수', '涼拌': '무침', '涼拌小黃瓜': '오이무침',
-  '粉絲': '당면', '冬粉': '당면', '粉條': '당면',
-  '韭菜': '부추', '韭菜花': '부추꽃',
-  '木耳': '목이버섯', '香菇': '표고버섯', '金針菇': '팽이버섯',
-  '茄子': '가지', '四季豆': '강낭콩', '玉米': '옥수수',
-  '番茄': '토마토', '蕃茄': '토마토', '蘿蔔': '무', '白蘿蔔': '흰무',
-  '南瓜': '호박', '苦瓜': '여주',
-  '卵': '계란', '蛋豆腐': '계란두부',
-  '豆干': '말린두부', '豆皮': '유부',
-  '推薦': '추천', '招牌': '대표메뉴', '特價': '특가', '限定': '한정'
-};
-
-function translateMenuName(name) {
-  if (!name) return '';
-  // 완전 일치 먼저
-  if (TW_KOR_DICT[name]) return TW_KOR_DICT[name];
-  // 최장 매칭 (긴 단어부터)
-  const keys = Object.keys(TW_KOR_DICT).sort((a, b) => b.length - a.length);
-  const hits = [];
-  let remaining = name;
-  for (const k of keys) {
-    if (remaining.includes(k)) {
-      hits.push(TW_KOR_DICT[k]);
-      remaining = remaining.split(k).join('');
-    }
-  }
-  return hits.length ? hits.join(' + ') : '';
-}
-
-// Bill metadata (실제 대만 지폐 참고)
-const BILL_META = {
-  1000: { figure: '지구본 교육', back: '꿩', hanzi: '壹仟圓', icon: '🔬', portrait: '育' },
-  500:  { figure: '소년야구', back: '매화사슴', hanzi: '伍佰圓', icon: '⚾', portrait: '球' },
-  100:  { figure: '쑨원 초상', back: '중산루', hanzi: '壹佰圓', icon: '🏛', portrait: '孫' }
-};
-const COIN_META = {
-  50: { figure: '쑨원', hanzi: '伍拾圓', desc: '황동, 톱니' },
-  10: { figure: '장개석', hanzi: '拾圓', desc: '바이메탈' },
-  5:  { figure: '장개석', hanzi: '伍圓', desc: '적동' },
-  1:  { figure: '장개석', hanzi: '壹圓', desc: '알루미늄' }
-};
-
-// Default presets
-const DEFAULT_PRESETS = [
-  // 식당
-  { name: '루로우판', price: 60, section: '금봉' },
-  { name: '샤오롱바오', price: 330, section: '딘타이펑' },
-  { name: '새우볶음밥', price: 280, section: '딘타이펑' },
-  { name: '배추만두', price: 230, section: '딘타이펑' },
-  { name: '두꺼운파이', price: 60, section: '부항두장' },
-  { name: '짭짤한두유', price: 40, section: '부항두장' },
-  { name: '홍소우육면', price: 220, section: '린동팡' },
-  { name: '용강우육면', price: 200, section: '용강' },
-  { name: '카페음료', price: 240, section: 'SimpleKaffa' },
-  // 야시장
-  { name: '굴전', price: 70, section: '닝샤' },
-  { name: '족발밥', price: 100, section: '닝샤' },
-  { name: '탕후루', price: 50, section: '닝샤' },
-  { name: '후추빵', price: 55, section: '라오허제' },
-  { name: '약선배', price: 120, section: '라오허제' },
-  { name: '해산물구이', price: 150, section: '라오허제' },
-  { name: '대왕카스테라', price: 120, section: '스린' },
-  { name: '오징어튀김', price: 100, section: '스린' },
-  { name: '지파이', price: 80, section: '스린' },
-  { name: '버블티', price: 55, section: '스린' },
-  { name: '택시기본', price: 85, section: '기타' },
-];
-const YASIZAN_SECTIONS = ['닝샤', '라오허제', '스린', '야시장기타'];
-let collapsedSections = new Set();
-let hiddenSections = new Set(JSON.parse(localStorage.getItem('ntd_hidden_sections') || '[]'));
-let showHiddenPresets = false;
-let customSections = JSON.parse(localStorage.getItem('ntd_custom_sections') || '{}');
-Object.keys(customSections)
-  .filter(s => customSections[s] === 'yasizan' && !YASIZAN_SECTIONS.includes(s))
-  .forEach(s => YASIZAN_SECTIONS.push(s));
-const _stored = JSON.parse(localStorage.getItem('ntd_presets') || 'null');
-let presets = (_stored && _stored.length > 0 && _stored[0].section) ? _stored : [...DEFAULT_PRESETS];
-
-// Price reference data
-const PRICE_REF = [
-  { item: 'MRT 기본요금', price: '20', ntd: 20 },
-  { item: 'MRT 1일권', price: '180', ntd: 180 },
-  { item: '택시 기본요금', price: '85', ntd: 85 },
-  { item: '편의점 도시락', price: '60~80', ntd: 70 },
-  { item: '버블티 (공차 등)', price: '45~65', ntd: 55 },
-  { item: '샤오롱바오 (딘타이펑)', price: '250', ntd: 250 },
-  { item: '지파이 (야시장)', price: '55~75', ntd: 65 },
-  { item: '망고빙수', price: '120~180', ntd: 150 },
-  { item: '루로우판', price: '40~60', ntd: 50 },
-  { item: '우육면', price: '100~180', ntd: 140 },
-  { item: '생맥주 500ml', price: '100~150', ntd: 125 },
-  { item: '편의점 음료', price: '25~45', ntd: 35 }
-];
-
-// ======================================
-// INIT
-// ======================================
-document.addEventListener('DOMContentLoaded', () => {
-  updateRateDisplay();
-  renderOrders();
-  renderPresets();
-  renderPriceRef();
-  renderPhraseCats();
-  renderPhrases();
-  if (!rate) {
-    fetchRate();
-  }
-});
-
-// ======================================
-// RATE
-// ======================================
-async function fetchRate() {
-  const btns = document.querySelectorAll('button[onclick*="fetchRate"]');
-  btns.forEach(b => {
-    if (!b.dataset.origText) b.dataset.origText = b.textContent;
-    b.textContent = '...';
-    b.disabled = true;
-  });
-  try {
-    try {
-      const res = await fetch('https://api.exchangerate-api.com/v4/latest/TWD', { cache: 'no-store' });
-      const data = await res.json();
-      if (data && data.rates && data.rates.KRW) {
-        rate = Math.round(data.rates.KRW * 100) / 100;
-        rateSource = 'ExchangeRate-API';
-        rateTime = new Date().toLocaleString('ko-KR');
-        saveRateToStorage();
-        updateRateDisplay();
-        renderPriceRef();
-        renderOrders();
-        return;
-      }
-      throw new Error('invalid response');
-    } catch (e) {
-      try {
-        const res2 = await fetch('https://open.er-api.com/v6/latest/TWD', { cache: 'no-store' });
-        const data2 = await res2.json();
-        if (data2 && data2.rates && data2.rates.KRW) {
-          rate = Math.round(data2.rates.KRW * 100) / 100;
-          rateSource = 'open.er-api (fallback)';
-          rateTime = new Date().toLocaleString('ko-KR');
-          saveRateToStorage();
-          updateRateDisplay();
-          renderPriceRef();
-          renderOrders();
-          return;
-        }
-        throw new Error('invalid fallback response');
-      } catch (e2) {
-        if (!rate) {
-          rate = 42.5;
-          rateSource = '오프라인 기본값';
-          rateTime = new Date().toLocaleString('ko-KR');
-          saveRateToStorage();
-          updateRateDisplay();
-          renderPriceRef();
-          renderOrders();
-        }
-        alert('환율 API 접속 실패. ' + (rate ? '캐시된 환율 사용 중.' : '기본값(42.5) 사용 중.'));
-      }
-    }
-  } finally {
-    btns.forEach(b => {
-      b.textContent = b.dataset.origText || '실시간 환율';
-      b.disabled = false;
-    });
-  }
-}
-
-function saveRateToStorage() {
-  localStorage.setItem('ntd_rate', rate);
-  localStorage.setItem('ntd_rate_source', rateSource);
-  localStorage.setItem('ntd_rate_time', rateTime);
-}
-
-function updateRateDisplay() {
-  const lastUpdate = document.getElementById('rateLastUpdate');
-  if (lastUpdate && rateTime) {
-    lastUpdate.textContent = '마지막 업데이트: ' + rateTime + ' (' + rateSource + ')';
-  }
-  // Update inline rate display in tab 2
-  const inlineUpdate = document.getElementById('rateLastUpdateInline');
-  if (inlineUpdate && rateTime) {
-    inlineUpdate.textContent = '마지막 업데이트: ' + rateTime + ' (' + rateSource + ')';
-  }
-  const inlineInput = document.getElementById('rateInputInline');
-  if (inlineInput) {
-    inlineInput.value = rate || '';
-  }
-}
-
-function openRateModal() {
-  document.getElementById('rateInput').value = rate || '';
-  document.getElementById('rateModal').classList.add('show');
-}
-
-function closeRateModal(e) {
-  if (e && e.target !== document.getElementById('rateModal')) return;
-  document.getElementById('rateModal').classList.remove('show');
-}
-
-function saveRate() {
-  const v = parseFloat(document.getElementById('rateInput').value);
-  if (!v || v <= 0) { alert('올바른 환율을 입력하세요'); return; }
-  rate = v;
-  rateSource = '수동 입력';
-  rateTime = new Date().toLocaleString('ko-KR');
-  saveRateToStorage();
-  updateRateDisplay();
-  convert();
-  renderPriceRef();
-  renderOrders();
-  closeRateModal();
-}
-
-function saveRateInline() {
-  const v = parseFloat(document.getElementById('rateInputInline').value);
-  if (!v || v <= 0) { alert('올바른 환율을 입력하세요'); return; }
-  rate = v;
-  rateSource = '수동 입력';
-  rateTime = new Date().toLocaleString('ko-KR');
-  saveRateToStorage();
-  updateRateDisplay();
-  convert();
-  renderPriceRef();
-  renderOrders();
-}
-
-function ntdToKrw(ntd) { return Math.round(ntd * rate); }
-function krwToNtd(krw) { return rate > 0 ? Math.round(krw / rate) : 0; }
-function fmt(n) { return n.toLocaleString('ko-KR'); }
-function fmtKrw(ntd) { return rate > 0 ? '(' + String.fromCharCode(8776) + ' ' + String.fromCharCode(8361) + fmt(ntdToKrw(ntd)) + ')' : ''; }
-
-// ======================================
-// CONVERTER (Tab 2)
-// ======================================
-function convert() {
-  const input = parseFloat(document.getElementById('convertFrom').value) || 0;
-  const topEl = document.getElementById('convertResultTop');
-  const bottomEl = document.getElementById('convertResultBottom');
-
-  if (convertDir === 'NTD_TO_KRW') {
-    topEl.innerHTML = fmt(input) + ' <span class="unit">NTD</span>';
-    bottomEl.innerHTML = '= ' + fmt(ntdToKrw(input)) + ' <span class="unit">KRW</span>';
-  } else {
-    topEl.innerHTML = fmt(input) + ' <span class="unit">KRW</span>';
-    bottomEl.innerHTML = '= ' + fmt(krwToNtd(input)) + ' <span class="unit">NTD</span>';
-  }
-}
-
-function swapCurrency() {
-  convertDir = convertDir === 'NTD_TO_KRW' ? 'KRW_TO_NTD' : 'NTD_TO_KRW';
-  const label = document.getElementById('convertFromLabel');
-  label.textContent = convertDir === 'NTD_TO_KRW' ? 'NTD (대만 달러)' : 'KRW (한국 원)';
-  convert();
-}
-
-function quickConvertAmount(n) {
-  document.getElementById('convertFrom').value = n;
-  convert();
-}
-
-// ======================================
-// ORDER (Tab 1 - Section 1)
-// ======================================
-function addItem() {
-  const nameEl = document.getElementById('itemName');
-  const priceEl = document.getElementById('itemPrice');
-  let name = nameEl.value.trim();
-  const price = parseFloat(priceEl.value);
-
-  if (!price || price <= 0) { priceEl.focus(); return; }
-
-  if (!name) {
-    itemCounter++;
-    name = '품목 ' + itemCounter;
-    localStorage.setItem('ntd_item_counter', itemCounter);
-  }
-
-  orders.push({ name, price, qty: 1, id: Date.now() });
-  saveOrders();
-  renderOrders();
-  nameEl.value = '';
-  priceEl.value = '';
-  nameEl.focus();
-}
-
-function addPresetItem(name, price) {
-  const existing = orders.find(o => o.name === name && o.price === price);
-  if (existing) {
-    existing.qty += 1;
-  } else {
-    orders.push({ name, price, qty: 1, id: Date.now() });
-  }
-  saveOrders();
-  renderOrders();
-}
-
-function removeItem(id) {
-  orders = orders.filter(o => o.id !== id);
-  saveOrders();
-  renderOrders();
-}
-
-function changeQty(id, delta) {
-  const item = orders.find(o => o.id === id);
-  if (!item) return;
-  item.qty = Math.max(1, item.qty + delta);
-  saveOrders();
-  renderOrders();
-}
-
-function updateItemName(id, newName) {
-  const item = orders.find(o => o.id === id);
-  if (item) { item.name = newName.trim() || '품목'; saveOrders(); }
-}
-
-function updateItemPrice(id, newPrice) {
-  const item = orders.find(o => o.id === id);
-  if (item) {
-    const p = parseFloat(newPrice) || 0;
-    if (p !== item.price) { item.price = p; saveOrders(); renderOrders(); }
-  }
-}
-
-function clearOrder() {
-  if (!confirm('주문 목록을 전체 삭제하시겠습니까?')) return;
-  orders = [];
-  saveOrders();
-  renderOrders();
-}
-
-function saveOrders() {
-  localStorage.setItem('ntd_orders', JSON.stringify(orders));
-}
-
-function renderOrders() {
-  const list = document.getElementById('orderList');
-  const summarySection = document.getElementById('orderSummarySection');
-  const clearBtn = document.getElementById('clearOrderBtn');
-
-  if (orders.length === 0) {
-    list.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128722;</div><p>품목을 추가하면 여기에 표시됩니다</p></div>';
-    summarySection.classList.add('hidden');
-    clearBtn.style.display = 'none';
-    // Clear change section
-    document.getElementById('changeSection').classList.add('hidden');
-    document.getElementById('payAmount').value = '';
-    return;
-  }
-
-  clearBtn.style.display = '';
-  let html = '';
-  let total = 0;
-
-  orders.forEach(o => {
-    const sub = o.price * o.qty;
-    total += sub;
-    const kor = translateMenuName(o.name);
-    const korHtml = kor ? `<div class="order-kor">↳ ${escAttr(kor)}</div>` : '';
-    html += `
-      <div class="order-item">
-        <div class="order-info">
-          <div class="order-name"><input class="order-name-input" value="${escAttr(o.name)}" onchange="updateItemName(${o.id},this.value)" onblur="updateItemName(${o.id},this.value)"></div>
-          ${korHtml}
-          <div class="order-price"><input class="order-price-input" type="number" inputmode="decimal" value="${o.price}" onchange="updateItemPrice(${o.id},this.value)" onblur="updateItemPrice(${o.id},this.value)"> NTD <span class="order-krw-sub">${fmtKrw(o.price)}</span></div>
-        </div>
-        <div class="order-qty">
-          <button onclick="changeQty(${o.id},-1)">-</button>
-          <span class="qty-num">${o.qty}</span>
-          <button onclick="changeQty(${o.id},1)">+</button>
-        </div>
-        <div class="order-subtotal">${fmt(sub)}<br><span class="order-krw-sub">${fmtKrw(sub)}</span></div>
-        <button class="order-delete" onclick="removeItem(${o.id})" title="삭제">&#215;</button>
-      </div>`;
-  });
-
-  list.innerHTML = html;
-
-  // Show summary section
-  summarySection.classList.remove('hidden');
-  document.getElementById('orderTotalNTD').textContent = fmt(total) + ' NTD';
-  document.getElementById('orderTotalKRW').textContent = '= ' + fmt(ntdToKrw(total)) + ' KRW';
-
-  // Render bill/coin visual breakdown for the total
-  const breakdown = getBillBreakdown(total);
-  renderBillBreakdown(breakdown, 'orderBillsGrid', 'orderCoinsRow');
-
-  // Render pay suggestion chips
-  renderPaySuggestions(total);
-
-  // Re-calc change if pay amount exists
-  const payVal = parseInt(document.getElementById('payAmount').value) || 0;
-  if (payVal > 0) {
-    calcChange(total, payVal);
-  }
-}
-
-// ======================================
-// PAY SUGGESTIONS (Tab 1 - Section 3)
-// ======================================
-function renderPaySuggestions(total) {
-  const el = document.getElementById('paySuggestChips');
-  if (!total || total <= 0) { el.innerHTML = ''; return; }
-
-  const suggestions = [];
-
-  // Exact amount
-  suggestions.push({ amount: total, label: '정확히' });
-
-  // Round up to 100
-  const r100 = Math.ceil(total / 100) * 100;
-  if (r100 > total) suggestions.push({ amount: r100, label: '100 올림' });
-
-  // Round up to 500
-  const r500 = Math.ceil(total / 500) * 500;
-  if (r500 > total && r500 !== r100) suggestions.push({ amount: r500, label: '500 올림' });
-
-  // Round up to 1000
-  const r1000 = Math.ceil(total / 1000) * 1000;
-  if (r1000 > total && r1000 !== r500 && r1000 !== r100) suggestions.push({ amount: r1000, label: '1000 올림' });
-
-  el.innerHTML = suggestions.map((s, i) =>
-    `<button class="pay-chip ${i === 0 ? 'exact-chip' : ''}" onclick="setPayAmount(${s.amount})">
-      <span class="pay-chip-label">${s.label}</span>
-      <span class="pay-chip-amount">${fmt(s.amount)}</span>
-    </button>`
-  ).join('');
-}
-
-function setPayAmount(amount) {
-  document.getElementById('payAmount').value = amount;
-  onPayInput();
-}
-
-function onPayInput() {
-  const total = orders.reduce((s, o) => s + o.price * o.qty, 0);
-  const pay = parseInt(document.getElementById('payAmount').value) || 0;
-
-  if (pay > 0 && total > 0) {
-    calcChange(total, pay);
-  } else {
-    document.getElementById('changeSection').classList.add('hidden');
-  }
-}
-
-// ======================================
-// CHANGE CALCULATION (Tab 1 - Section 4)
-// ======================================
-function calcChange(purchase, pay) {
-  const changeSection = document.getElementById('changeSection');
-  const changeBillsSection = document.getElementById('changeBillsSection');
-
-  if (!purchase || purchase <= 0 || !pay || pay <= 0) {
-    changeSection.classList.add('hidden');
-    return;
-  }
-
-  changeSection.classList.remove('hidden');
-  const change = pay - purchase;
-  const badgeEl = document.getElementById('changeBadge');
-
-  if (change < 0) {
-    document.getElementById('changeAmountDisplay').textContent = fmt(Math.abs(change)) + ' NTD 부족';
-    document.getElementById('changeAmountDisplay').style.color = '#CC0000';
-    document.getElementById('changeKRWDisplay').textContent = fmtKrw(Math.abs(change));
-    badgeEl.innerHTML = '<span class="shortage-badge">금액 부족</span>';
-    changeBillsSection.style.display = 'none';
-    return;
-  }
-
-  document.getElementById('changeAmountDisplay').style.color = 'var(--success)';
-  changeBillsSection.style.display = '';
-
-  if (change === 0) {
-    document.getElementById('changeAmountDisplay').textContent = '딱 맞음!';
-    document.getElementById('changeKRWDisplay').textContent = '';
-    badgeEl.innerHTML = '<span class="exact-badge">정확한 금액</span>';
-    changeBillsSection.style.display = 'none';
-    return;
-  }
-
-  document.getElementById('changeAmountDisplay').textContent = fmt(change) + ' NTD';
-  document.getElementById('changeKRWDisplay').textContent = '= ' + fmt(ntdToKrw(change)) + ' KRW ' + fmtKrw(change);
-  badgeEl.innerHTML = '<span class="overpay-badge">거스름돈</span>';
-
-  const breakdown = getBillBreakdown(change);
-  renderBillBreakdown(breakdown, 'changeBillsGrid', 'changeCoinsRow');
-
-  addHistory(purchase, pay, change);
-}
-
-// ======================================
-// PRESETS
-// ======================================
-let presetCategory = '식당';
-
-function selectPresetCategory(cat) {
-  if (presetCategory === cat) {
-    const sectionOrder = [];
-    const seen = new Set();
-    presets.forEach(p => {
-      const sec = p.section || '기타';
-      if (!seen.has(sec)) { seen.add(sec); sectionOrder.push(sec); }
-    });
-    const restaurantSecs = sectionOrder.filter(s => !YASIZAN_SECTIONS.includes(s) && s !== '기타');
-    const marketSecs = sectionOrder.filter(s => YASIZAN_SECTIONS.includes(s));
-    const etcSecs = sectionOrder.filter(s => s === '기타');
-    const activeSecs = cat === '야시장' ? marketSecs : [...restaurantSecs, ...etcSecs];
-    const allCollapsed = activeSecs.length > 0 && activeSecs.every(s => collapsedSections.has(s));
-    if (allCollapsed) {
-      activeSecs.forEach(s => collapsedSections.delete(s));
-    } else {
-      activeSecs.forEach(s => collapsedSections.add(s));
-    }
-    renderPresets();
-    return;
-  }
-  presetCategory = cat;
-  renderPresets();
-}
-
-function setModalCategory(cat) {
-  presetCategory = cat;
-  renderPresetModalList();
-  renderPresets();
-}
-
-function toggleSectionCollapse(sec) {
-  if (collapsedSections.has(sec)) {
-    collapsedSections.delete(sec);
-  } else {
-    collapsedSections.add(sec);
-  }
-  renderPresets();
-}
-
-function hidePreset(idx) {
-  presets[idx].hidden = true;
-  localStorage.setItem('ntd_presets', JSON.stringify(presets));
-  renderPresetModalList();
-  renderPresets();
-}
-
-function restorePreset(idx) {
-  presets[idx].hidden = false;
-  localStorage.setItem('ntd_presets', JSON.stringify(presets));
-  renderPresetModalList();
-  renderPresets();
-}
-
-function hardDeletePreset(idx) {
-  presets.splice(idx, 1);
-  localStorage.setItem('ntd_presets', JSON.stringify(presets));
-  renderPresetModalList();
-  renderPresets();
-}
-
-function hideSection(sec) {
-  hiddenSections.add(sec);
-  localStorage.setItem('ntd_hidden_sections', JSON.stringify([...hiddenSections]));
-  renderPresetModalList();
-  renderPresets();
-}
-
-function restoreSection(sec) {
-  hiddenSections.delete(sec);
-  localStorage.setItem('ntd_hidden_sections', JSON.stringify([...hiddenSections]));
-  renderPresetModalList();
-  renderPresets();
-}
-
-function addSectionItem(sec, sIdx) {
-  const nameEl = document.getElementById('ni-name-' + sIdx);
-  const priceEl = document.getElementById('ni-price-' + sIdx);
-  if (!nameEl || !priceEl) return;
-  const name = nameEl.value.trim();
-  const price = parseFloat(priceEl.value);
-  if (!name || !price || price <= 0) return;
-  presets.push({ name, price, section: sec });
-  localStorage.setItem('ntd_presets', JSON.stringify(presets));
-  nameEl.value = '';
-  priceEl.value = '';
-  renderPresetModalList();
-  renderPresets();
-}
-
-function addNewSection() {
-  const nameEl = document.getElementById('newSectionName');
-  if (!nameEl) return;
-  const sec = nameEl.value.trim();
-  if (!sec) return;
-  if (customSections[sec]) return;
-  const cat = presetCategory === '야시장' ? 'yasizan' : 'restaurant';
-  customSections[sec] = cat;
-  localStorage.setItem('ntd_custom_sections', JSON.stringify(customSections));
-  if (cat === 'yasizan' && !YASIZAN_SECTIONS.includes(sec)) {
-    YASIZAN_SECTIONS.push(sec);
-  }
-  nameEl.value = '';
-  renderPresetModalList();
-  renderPresets();
-}
-
-function toggleShowHiddenPresets() {
-  showHiddenPresets = !showHiddenPresets;
-  renderPresetModalList();
-}
-
-function renderPresets() {
-  const el = document.getElementById('presetChips');
-  const hasSections = presets.some(p => p.section);
-  if (!hasSections) {
-    el.innerHTML = presets.filter(p => !p.hidden).map(p =>
-      `<button class="preset-chip" onclick="addPresetItem('${escHtml(p.name)}',${p.price})">
-        <span class="preset-name">${escHtml(p.name)}</span>
-        <span class="preset-price">${fmt(p.price)}</span>
-      </button>`
-    ).join('');
-    return;
-  }
-  const sectionOrder = [], sectionMap = {};
-  presets.forEach(p => {
-    const sec = p.section || '기타';
-    if (!sectionMap[sec]) { sectionMap[sec] = []; sectionOrder.push(sec); }
-    sectionMap[sec].push(p);
-  });
-  function chipBtn(p) {
-    return `<button class="preset-chip" onclick="addPresetItem('${escHtml(p.name)}',${p.price})">
-      <span class="preset-name">${escHtml(p.name)}</span>
-      <span class="preset-price">${fmt(p.price)}</span>
-    </button>`;
-  }
-  function secBlock(sec) {
-    if (hiddenSections.has(sec)) return '';
-    const visibleItems = sectionMap[sec].filter(p => !p.hidden);
-    if (visibleItems.length === 0) return '';
-    const collapsed = collapsedSections.has(sec);
-    const arrow = collapsed ? '&#9654;' : '&#9660;';
-    const chipsHtml = collapsed ? '' : `<div class="preset-chips">${visibleItems.map(chipBtn).join('')}</div>`;
-    return `<div class="preset-section">
-      <div class="preset-label-row" onclick="toggleSectionCollapse('${escAttr(sec)}')">
-        <span class="preset-collapse-arrow">${arrow}</span>
-        <span class="preset-label-text">${escHtml(sec)}</span>
-      </div>
-      ${chipsHtml}
-    </div>`;
-  }
-  const restaurantSecs = sectionOrder.filter(s => !YASIZAN_SECTIONS.includes(s) && s !== '기타');
-  const marketSecs = sectionOrder.filter(s => YASIZAN_SECTIONS.includes(s));
-  const etcSecs = sectionOrder.filter(s => s === '기타');
-  const activeSecs = presetCategory === '야시장' ? marketSecs : [...restaurantSecs, ...etcSecs];
-  const tabs = `<div class="preset-cat-tabs">
-    <button class="preset-cat-btn${presetCategory === '식당' ? ' active' : ''}" onclick="selectPresetCategory('식당')">🍜 식당</button>
-    <button class="preset-cat-btn${presetCategory === '야시장' ? ' active' : ''}" onclick="selectPresetCategory('야시장')">🏮 야시장</button>
-  </div>`;
-  el.innerHTML = tabs + activeSecs.map(secBlock).join('');
-}
-
-function openPresetModal() {
-  renderPresetModalList();
-  document.getElementById('presetModal').classList.add('show');
-}
-
-function closePresetModal(e) {
-  if (e && e.target !== document.getElementById('presetModal')) return;
-  document.getElementById('presetModal').classList.remove('show');
-}
-
-function renderPresetModalList() {
-  const el = document.getElementById('presetModalList');
-
-  // Build section order and map
-  const sectionOrder = [], sectionMap = {};
-  presets.forEach((p, idx) => {
-    const sec = p.section || '기타';
-    if (!sectionMap[sec]) { sectionMap[sec] = []; sectionOrder.push(sec); }
-    sectionMap[sec].push({ p, idx });
-  });
-
-  const restaurantSecs = sectionOrder.filter(s => !YASIZAN_SECTIONS.includes(s) && s !== '기타');
-  const marketSecs = sectionOrder.filter(s => YASIZAN_SECTIONS.includes(s));
-  const etcSecs = sectionOrder.filter(s => s === '기타');
-  const activeSecs = presetCategory === '야시장' ? [...marketSecs, ...etcSecs] : [...restaurantSecs, ...etcSecs];
-
-  // Category tabs
-  let html = `<div class="pmi-cat-tabs">
-    <button class="pmi-cat-btn${presetCategory === '식당' ? ' active' : ''}" onclick="setModalCategory('식당')">🍜 식당</button>
-    <button class="pmi-cat-btn${presetCategory === '야시장' ? ' active' : ''}" onclick="setModalCategory('야시장')">🏮 야시장</button>
-  </div>`;
-
-  if (sectionOrder.length === 0) {
-    html += '<div style="padding:20px;text-align:center;color:var(--text-sub);font-size:13px">프리셋이 없습니다</div>';
-  }
-
-  activeSecs.forEach((sec, sIdx) => {
-    const isHidden = hiddenSections.has(sec);
-    const items = sectionMap[sec] || [];
-    const visibleItems = items.filter(({ p }) => !p.hidden);
-    const hiddenItems = items.filter(({ p }) => p.hidden);
-
-    html += `<div class="pmi-section${isHidden ? ' pmi-section-hidden' : ''}">
-      <div class="pmi-section-header">
-        <span class="pmi-section-name">${escHtml(sec)}</span>
-        ${isHidden
-          ? `<button class="pmi-restore-btn" onclick="restoreSection('${escAttr(sec)}')">복원</button>`
-          : `<button class="pmi-del-btn" onclick="hideSection('${escAttr(sec)}')">섹션 숨김</button>`
-        }
-      </div>`;
-
-    if (!isHidden) {
-      visibleItems.forEach(({ p, idx }) => {
-        html += `<div class="pmi-item">
-          <input class="pmi-edit-name" type="text" value="${escAttr(p.name)}" data-idx="${idx}" onchange="updatePreset(${idx})" style="flex:1;min-width:0">
-          <input class="pmi-edit-price" type="number" inputmode="decimal" value="${p.price}" data-idx="${idx}" onchange="updatePreset(${idx})" style="width:64px">
-          <button class="pmi-del-btn" onclick="hidePreset(${idx})" title="숨김">&#215; 숨김</button>
-        </div>`;
-      });
-
-      // Inline add row
-      html += `<div class="pmi-add-item-row">
-        <input class="pmi-add-item-name" type="text" id="ni-name-${sIdx}" placeholder="메뉴명">
-        <input class="pmi-add-item-price" type="number" inputmode="decimal" id="ni-price-${sIdx}" placeholder="NTD">
-        <button class="pmi-add-btn" onclick="addSectionItem('${escAttr(sec)}',${sIdx})">+</button>
-      </div>`;
-    }
-
-    html += '</div>';
-  });
-
-  // New section row
-  const placeholder = presetCategory === '야시장' ? '새 야시장 이름' : '새 식당 이름';
-  html += `<div class="pmi-new-section-row">
-    <input type="text" id="newSectionName" placeholder="${placeholder}">
-    <button class="pmi-add-sec-btn" onclick="addNewSection()">+ 추가</button>
-  </div>`;
-
-  // Hidden items toggle
-  const allHiddenPresets = presets.map((p, idx) => ({ p, idx })).filter(({ p }) => p.hidden);
-  const allHiddenSections = [...hiddenSections];
-  const totalHidden = allHiddenPresets.length + allHiddenSections.length;
-
-  html += `<button class="pmi-show-hidden-btn" onclick="toggleShowHiddenPresets()">
-    ${showHiddenPresets ? '▲ 숨겨진 항목 닫기' : '▼ 숨겨진 항목 보기 (' + totalHidden + '개)'}
-  </button>`;
-
-  if (showHiddenPresets && totalHidden > 0) {
-    html += '<div class="pmi-hidden-area">';
-    if (allHiddenPresets.length > 0) {
-      html += '<div class="pmi-hidden-area-title">숨겨진 메뉴</div>';
-      allHiddenPresets.forEach(({ p, idx }) => {
-        html += `<div class="pmi-item pmi-item-hidden">
-          <span class="pmi-hidden-name">${escHtml(p.name)}</span>
-          <span class="pmi-hidden-price">${fmt(p.price)} NTD</span>
-          <button class="pmi-restore-btn" onclick="restorePreset(${idx})">복원</button>
-          <button class="pmi-hard-del-btn" onclick="hardDeletePreset(${idx})">삭제</button>
-        </div>`;
-      });
-    }
-    if (allHiddenSections.length > 0) {
-      html += '<div class="pmi-hidden-area-title" style="margin-top:10px">숨겨진 섹션</div>';
-      allHiddenSections.forEach(sec => {
-        html += `<div class="pmi-item pmi-item-hidden">
-          <span class="pmi-hidden-name">${escHtml(sec)}</span>
-          <button class="pmi-restore-btn" onclick="restoreSection('${escAttr(sec)}')">복원</button>
-        </div>`;
-      });
-    }
-    html += '</div>';
-  }
-
-  el.innerHTML = html;
-}
-
-function removePreset(idx) {
-  presets.splice(idx, 1);
-  localStorage.setItem('ntd_presets', JSON.stringify(presets));
-  renderPresetModalList();
-  renderPresets();
-}
-
-function updatePreset(idx) {
-  const el = document.getElementById('presetModalList');
-  const nameInput = el.querySelector(`.pmi-edit-name[data-idx="${idx}"]`);
-  const priceInput = el.querySelector(`.pmi-edit-price[data-idx="${idx}"]`);
-  if (!nameInput || !priceInput) return;
-  const name = nameInput.value.trim();
-  const price = parseFloat(priceInput.value);
-  if (!name || !price || price <= 0) return;
-  presets[idx].name = name;
-  presets[idx].price = price;
-  localStorage.setItem('ntd_presets', JSON.stringify(presets));
-  renderPresets();
-}
-
-// ======================================
-// PRICE REFERENCE TABLE
-// ======================================
-function renderPriceRef() {
-  const tbody = document.getElementById('priceRefRows');
-  tbody.innerHTML = PRICE_REF.map(r =>
-    `<tr onclick="addPresetItem('${escHtml(r.item)}',${r.ntd})">
-      <td>${r.item}</td>
-      <td>${r.price}</td>
-      <td>${rate > 0 ? (String.fromCharCode(8361) + fmt(ntdToKrw(r.ntd))) : '-'}</td>
-    </tr>`
-  ).join('');
-}
-
-function togglePriceRef(btn) {
-  btn.classList.toggle('open');
-  document.getElementById('priceRefBody').classList.toggle('open');
-}
-
-// ======================================
-// BILL BREAKDOWN
-// ======================================
-function getBillBreakdown(amount) {
-  let remaining = amount;
-  const result = {};
-  DENOMS.forEach(d => {
-    result[d] = Math.floor(remaining / d);
-    remaining = remaining % d;
-  });
-  return result;
-}
-
-function renderBillBreakdown(breakdown, billsId, coinsId) {
-  const billsEl = document.getElementById(billsId);
-  const coinsEl = document.getElementById(coinsId);
-
-  billsEl.innerHTML = BILLS.map(d => {
-    const meta = BILL_META[d];
-    const zeroClass = breakdown[d] === 0 ? 'zero' : '';
-    return `
-    <div class="bill-card bill-${d} ${zeroClass}">
-      <div class="bill-texture"></div>
-      <div class="bill-inner-frame"></div>
-      <div class="bill-security"></div>
-      <div class="bill-bank">中央銀行</div>
-      <div class="bill-portrait-text">${meta.portrait}</div>
-      <div class="bill-hanzi">${meta.hanzi}</div>
-      <div class="bill-watermark">${d}</div>
-      <div class="bill-count-badge">${breakdown[d]}장</div>
-      <div class="bill-top-row">
-        <div class="bill-denom-area">
-          <div class="bill-denom">${fmt(d)}</div>
-          <div class="bill-ntd-mark">NT$</div>
-        </div>
-      </div>
-      <div class="bill-bottom-row">
-        <div class="bill-figure">${meta.figure} / ${meta.back}</div>
-      </div>
-      ${meta.rare ? '<div class="bill-rare">희귀</div>' : ''}
-    </div>`;
-  }).join('');
-
-  coinsEl.innerHTML = COINS.map(d => {
-    const meta = COIN_META[d];
-    const zeroClass = breakdown[d] === 0 ? 'zero' : '';
-    return `
-    <div class="coin-card coin-${d} ${zeroClass}">
-      <div class="coin-denom">${d}</div>
-      <div class="coin-hanzi">${meta.hanzi}</div>
-      <div class="coin-figure">${meta.figure}</div>
-      ${breakdown[d] > 0 ? `<div class="coin-count">${breakdown[d]}</div>` : ''}
-      <div class="coin-krw-tiny">${fmtKrw(d)}</div>
-    </div>`;
-  }).join('');
-}
-
-// ======================================
-// HISTORY
-// ======================================
-function addHistory(purchase, pay, change) {
-  history.unshift({
-    time: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
-    purchase, pay, change
-  });
-  if (history.length > 20) history.pop();
-  localStorage.setItem('ntd_history', JSON.stringify(history));
-}
-
-// ======================================
-// TAB SWITCH
-// ======================================
-function switchTab(btn) {
-  document.querySelectorAll('.tab-nav button').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById(btn.dataset.tab).classList.add('active');
-}
-
-// ======================================
-// 대만여행회화 (번체자 · 대만식 표현)
-// ======================================
-// 카테고리별 회화 데이터: [한국어, 번체중국어, 병음, 한글발음]
-const PHRASE_DATA = {
-  '인사/기본': [
-    ['안녕하세요', '你好', 'Nǐ hǎo', '니 하오'],
-    ['안녕하세요 (아침)', '早安', 'Zǎo ān', '자오 안'],
-    ['안녕히 가세요', '再見', 'Zài jiàn', '짜이 찌엔'],
-    ['감사합니다', '謝謝', 'Xièxie', '씨에씨에'],
-    ['정말 감사합니다', '非常感謝', 'Fēicháng gǎnxiè', '페이창 간씨에'],
-    ['죄송합니다 / 실례합니다', '不好意思', 'Bù hǎoyìsi', '뿌 하오이스'],
-    ['미안합니다', '對不起', 'Duìbùqǐ', '뚜이부치'],
-    ['괜찮아요', '沒關係', 'Méi guānxi', '메이 꽌시'],
-    ['네 / 맞아요', '對', 'Duì', '뚜이'],
-    ['아니에요', '不是', 'Bú shì', '부 스'],
-    ['있어요', '有', 'Yǒu', '여우'],
-    ['없어요', '沒有', 'Méi yǒu', '메이 여우'],
-    ['저는 한국 사람이에요', '我是韓國人', 'Wǒ shì Hánguó rén', '워 스 한구어 런'],
-    ['중국어 못해요', '我不會說中文', 'Wǒ bú huì shuō Zhōngwén', '워 부 후이 슈오 중원'],
-    ['영어 할 줄 아세요?', '你會說英文嗎?', 'Nǐ huì shuō Yīngwén ma?', '니 후이 슈오 잉원 마?'],
-    ['천천히 말해 주세요', '請說慢一點', 'Qǐng shuō màn yì diǎn', '칭 슈오 만 이디엔'],
-    ['한 번 더 말해 주세요', '請再說一次', 'Qǐng zài shuō yí cì', '칭 짜이 슈오 이츠'],
-    ['이해했어요', '我懂了', 'Wǒ dǒng le', '워 둥 러'],
-    ['모르겠어요', '我不知道', 'Wǒ bù zhīdào', '워 부 즈다오'],
-  ],
-  '공항/교통': [
-    ['이 주소로 가 주세요', '請到這個地址', 'Qǐng dào zhège dìzhǐ', '칭 따오 쩌거 띠즈'],
-    ['얼마예요?', '多少錢?', 'Duōshǎo qián?', '뚜어샤오 치엔?'],
-    ['타이베이역까지 가 주세요', '請到台北車站', 'Qǐng dào Táiběi chēzhàn', '칭 따오 타이베이 처짠'],
-    ['悠遊카드 충전해 주세요', '悠遊卡加值', 'Yōuyóukǎ jiāzhí', '여우여우카 찌아즈'],
-    ['미터기 켜 주세요', '請打表', 'Qǐng dǎ biǎo', '칭 다 뱌오'],
-    ['여기서 세워 주세요', '這裡停車', 'Zhèlǐ tíngchē', '쩌리 팅처'],
-    ['몇 번 출구예요?', '幾號出口?', 'Jǐ hào chūkǒu?', '지 하오 추커우?'],
-    ['이 열차 타이베이 가나요?', '這班車到台北嗎?', 'Zhè bān chē dào Táiběi ma?', '쩌 빤 처 따오 타이베이 마?'],
-    ['표 한 장 주세요', '一張票', 'Yì zhāng piào', '이 짱 퍄오'],
-    ['왕복표', '來回票', 'Láihuí piào', '라이후이 퍄오'],
-    ['택시', '計程車', 'Jìchéngchē', '찌청처'],
-    ['MRT (지하철)', '捷運', 'Jiéyùn', '찌에윈'],
-    ['버스', '公車', 'Gōngchē', '꿍처'],
-    ['고속철도 (HSR)', '高鐵', 'Gāotiě', '까오티에'],
-    ['기차 (일반)', '台鐵', 'Táitiě', '타이티에'],
-    ['공항', '機場', 'Jīchǎng', '찌창'],
-  ],
-  '호텔': [
-    ['체크인하고 싶어요', '我要辦入住', 'Wǒ yào bàn rùzhù', '워 야오 빤 루쭈'],
-    ['예약했습니다', '我有訂房', 'Wǒ yǒu dìngfáng', '워 여우 띵팡'],
-    ['Wi-Fi 비밀번호가 뭐예요?', 'Wi-Fi 密碼是多少?', 'Wi-Fi mìmǎ shì duōshǎo?', '와이파이 미마 스 뚜어샤오?'],
-    ['체크아웃하고 싶어요', '我要退房', 'Wǒ yào tuìfáng', '워 야오 투이팡'],
-    ['제 이름은 김입니다', '我姓金', 'Wǒ xìng Jīn', '워 씽 찐'],
-    ['여권입니다', '這是我的護照', 'Zhè shì wǒ de hùzhào', '쩌 스 워 더 후짜오'],
-    ['아침식사 포함인가요?', '有含早餐嗎?', 'Yǒu hán zǎocān ma?', '여우 한 자오찬 마?'],
-    ['짐 맡길 수 있나요?', '可以寄放行李嗎?', 'Kěyǐ jìfàng xínglǐ ma?', '커이 찌팡 씽리 마?'],
-    ['수건 더 주세요', '請多給我毛巾', 'Qǐng duō gěi wǒ máojīn', '칭 뚜어 게이 워 마오찐'],
-    ['방을 바꾸고 싶어요', '我想換房間', 'Wǒ xiǎng huàn fángjiān', '워 시앙 환 팡찌엔'],
-    ['에어컨이 고장났어요', '冷氣壞了', 'Lěngqì huài le', '렁치 화이 러'],
-    ['몇 시에 체크아웃해야 하나요?', '幾點要退房?', 'Jǐ diǎn yào tuìfáng?', '지 디엔 야오 투이팡?'],
-    ['하루 더 묵고 싶어요', '我想多住一晚', 'Wǒ xiǎng duō zhù yì wǎn', '워 시앙 뚜어 쭈 이 완'],
-  ],
-  '음식점': [
-    ['메뉴 주세요', '請給我菜單', 'Qǐng gěi wǒ càidān', '칭 게이 워 차이딴'],
-    ['이거 주세요 (손가락으로)', '我要這個', 'Wǒ yào zhège', '워 야오 쩌거'],
-    ['계산해 주세요', '買單 / 結帳', 'Mǎidān / Jiézhàng', '마이딴 / 찌에짱'],
-    ['카드 되나요?', '可以刷卡嗎?', 'Kěyǐ shuākǎ ma?', '커이 슈아카 마?'],
-    ['포장해 주세요', '我要外帶', 'Wǒ yào wàidài', '워 야오 와이따이'],
-    ['여기서 먹어요', '內用', 'Nèi yòng', '네이 융'],
-    ['주문할게요', '我要點餐', 'Wǒ yào diǎncān', '워 야오 디엔찬'],
-    ['추천 메뉴가 뭐예요?', '有什麼推薦?', 'Yǒu shénme tuījiàn?', '여우 션머 투이찌엔?'],
-    ['맵게 하지 마세요', '不要辣', 'Bú yào là', '부 야오 라'],
-    ['덜 맵게 해주세요', '小辣', 'Xiǎo là', '샤오 라'],
-    ['고수 빼 주세요', '不要香菜', 'Bú yào xiāngcài', '부 야오 시앙차이'],
-    ['얼음 빼 주세요', '去冰', 'Qù bīng', '취 삥'],
-    ['설탕 반만', '半糖', 'Bàn táng', '빤 탕'],
-    ['설탕 빼 주세요', '無糖', 'Wú táng', '우 탕'],
-    ['물 한 잔 주세요', '請給我一杯水', 'Qǐng gěi wǒ yì bēi shuǐ', '칭 게이 워 이 뻬이 슈이'],
-    ['젓가락 주세요', '請給我筷子', 'Qǐng gěi wǒ kuàizi', '칭 게이 워 콰이즈'],
-    ['영수증 주세요', '請給我發票', 'Qǐng gěi wǒ fāpiào', '칭 게이 워 파퍄오'],
-    ['맛있어요!', '很好吃!', 'Hěn hǎo chī!', '헌 하오 츠!'],
-  ],
-  '쇼핑': [
-    ['얼마예요?', '多少錢?', 'Duōshǎo qián?', '뚜어샤오 치엔?'],
-    ['너무 비싸요', '太貴了', 'Tài guì le', '타이 꾸이 러'],
-    ['카드로 낼게요', '我刷卡', 'Wǒ shuākǎ', '워 슈아카'],
-    ['이거 주세요', '我要這個', 'Wǒ yào zhège', '워 야오 쩌거'],
-    ['좀 깎아 주세요', '可以便宜一點嗎?', 'Kěyǐ piányí yì diǎn ma?', '커이 피엔이 이디엔 마?'],
-    ['할인 되나요?', '有打折嗎?', 'Yǒu dǎzhé ma?', '여우 다저 마?'],
-    ['그냥 구경할게요', '我只是看看', 'Wǒ zhǐshì kànkan', '워 즈스 칸칸'],
-    ['입어 봐도 돼요?', '可以試穿嗎?', 'Kěyǐ shìchuān ma?', '커이 스촨 마?'],
-    ['다른 색 있어요?', '有別的顏色嗎?', 'Yǒu bié de yánsè ma?', '여우 비에 더 옌써 마?'],
-    ['더 큰 사이즈 있어요?', '有大一點的嗎?', 'Yǒu dà yì diǎn de ma?', '여우 따 이디엔 더 마?'],
-    ['더 작은 사이즈 있어요?', '有小一點的嗎?', 'Yǒu xiǎo yì diǎn de ma?', '여우 샤오 이디엔 더 마?'],
-    ['현금으로 낼게요', '我付現金', 'Wǒ fù xiànjīn', '워 푸 시엔찐'],
-    ['봉투 필요해요', '我要袋子', 'Wǒ yào dàizi', '워 야오 따이즈'],
-    ['봉투 필요 없어요', '不用袋子', 'Bú yòng dàizi', '부 융 따이즈'],
-    ['영수증 주세요', '請給我發票', 'Qǐng gěi wǒ fāpiào', '칭 게이 워 파퍄오'],
-  ],
-  '관광': [
-    ['화장실 어디예요?', '廁所在哪裡?', 'Cèsuǒ zài nǎlǐ?', '처수오 짜이 나리?'],
-    ['사진 찍어 주실래요?', '可以幫我拍照嗎?', 'Kěyǐ bāng wǒ pāizhào ma?', '커이 빵 워 파이짜오 마?'],
-    ['입장료가 얼마예요?', '門票多少錢?', 'Ménpiào duōshǎo qián?', '먼퍄오 뚜어샤오 치엔?'],
-    ['길 좀 물을게요', '請問一下', 'Qǐngwèn yíxià', '칭원 이씨아'],
-    ['~이(가) 어디 있어요?', '...在哪裡?', '... zài nǎlǐ?', '... 짜이 나리?'],
-    ['여기가 어디예요?', '這裡是哪裡?', 'Zhèlǐ shì nǎlǐ?', '쩌리 스 나리?'],
-    ['길을 잃었어요', '我迷路了', 'Wǒ mílù le', '워 미루 러'],
-    ['걸어서 얼마나 걸려요?', '走路要多久?', 'Zǒulù yào duōjiǔ?', '저우루 야오 뚜어지우?'],
-    ['같이 사진 찍어도 돼요?', '可以一起拍照嗎?', 'Kěyǐ yìqǐ pāizhào ma?', '커이 이치 파이짜오 마?'],
-    ['여기 찍어도 되나요?', '這裡可以拍照嗎?', 'Zhèlǐ kěyǐ pāizhào ma?', '쩌리 커이 파이짜오 마?'],
-    ['몇 시에 문 여나요?', '幾點開門?', 'Jǐ diǎn kāimén?', '지 디엔 카이먼?'],
-    ['몇 시에 문 닫나요?', '幾點關門?', 'Jǐ diǎn guānmén?', '지 디엔 꽌먼?'],
-    ['야시장', '夜市', 'Yèshì', '예스'],
-    ['예쁘네요!', '好漂亮!', 'Hǎo piàoliang!', '하오 퍄오량!'],
-  ],
-  '응급상황': [
-    ['도와주세요!', '救命!', 'Jiùmìng!', '찌우밍!'],
-    ['경찰 불러 주세요', '請叫警察', 'Qǐng jiào jǐngchá', '칭 찌아오 징차'],
-    ['병원 어디예요?', '醫院在哪裡?', 'Yīyuàn zài nǎlǐ?', '이위엔 짜이 나리?'],
-    ['지갑을 잃어버렸어요', '我的錢包丟了', 'Wǒ de qiánbāo diū le', '워 더 치엔빠오 띠우 러'],
-    ['여권을 잃어버렸어요', '我的護照丟了', 'Wǒ de hùzhào diū le', '워 더 후짜오 띠우 러'],
-    ['도와주실 수 있어요?', '可以幫我嗎?', 'Kěyǐ bāng wǒ ma?', '커이 빵 워 마?'],
-    ['구급차 불러 주세요', '請叫救護車', 'Qǐng jiào jiùhùchē', '칭 찌아오 찌우후처'],
-    ['약국 어디예요?', '藥局在哪裡?', 'Yàojú zài nǎlǐ?', '야오쥐 짜이 나리?'],
-    ['아파요', '我不舒服', 'Wǒ bù shūfu', '워 부 슈푸'],
-    ['배가 아파요', '我肚子痛', 'Wǒ dùzi tòng', '워 뚜즈 퉁'],
-    ['머리가 아파요', '我頭痛', 'Wǒ tóu tòng', '워 터우 퉁'],
-    ['열이 나요', '我發燒', 'Wǒ fāshāo', '워 파샤오'],
-    ['알레르기가 있어요', '我會過敏', 'Wǒ huì guòmǐn', '워 후이 꾸어민'],
-    ['한국 대사관 연락처 아세요?', '韓國代表處電話?', 'Hánguó dàibiǎochù diànhuà?', '한구어 따이뱌오추 띠엔화?'],
-  ],
-  '숫자/시간': [
-    ['1', '一', 'Yī', '이'],
-    ['2', '二 / 兩', 'Èr / Liǎng', '얼 / 량'],
-    ['3', '三', 'Sān', '싼'],
-    ['4', '四', 'Sì', '쓰'],
-    ['5', '五', 'Wǔ', '우'],
-    ['6', '六', 'Liù', '리우'],
-    ['7', '七', 'Qī', '치'],
-    ['8', '八', 'Bā', '빠'],
-    ['9', '九', 'Jiǔ', '지우'],
-    ['10', '十', 'Shí', '스'],
-    ['100', '一百', 'Yì bǎi', '이 바이'],
-    ['1,000', '一千', 'Yì qiān', '이 치엔'],
-    ['10,000', '一萬', 'Yí wàn', '이 완'],
-    ['오늘', '今天', 'Jīntiān', '찐티엔'],
-    ['내일', '明天', 'Míngtiān', '밍티엔'],
-    ['어제', '昨天', 'Zuótiān', '주어티엔'],
-    ['지금', '現在', 'Xiànzài', '시엔짜이'],
-    ['아침', '早上', 'Zǎoshang', '자오샹'],
-    ['점심', '中午', 'Zhōngwǔ', '쭝우'],
-    ['저녁', '晚上', 'Wǎnshang', '완샹'],
-    ['몇 시예요?', '現在幾點?', 'Xiànzài jǐ diǎn?', '시엔짜이 지 디엔?'],
-    ['1시', '一點', 'Yì diǎn', '이 디엔'],
-    ['30분', '三十分', 'Sānshí fēn', '싼스 펀'],
-    ['월요일', '星期一', 'Xīngqí yī', '씽치 이'],
-    ['화요일', '星期二', 'Xīngqí èr', '씽치 얼'],
-    ['수요일', '星期三', 'Xīngqí sān', '씽치 싼'],
-    ['목요일', '星期四', 'Xīngqí sì', '씽치 쓰'],
-    ['금요일', '星期五', 'Xīngqí wǔ', '씽치 우'],
-    ['토요일', '星期六', 'Xīngqí liù', '씽치 리우'],
-    ['일요일', '星期日', 'Xīngqí rì', '씽치 르'],
-  ],
-};
-
-let phraseCategory = '인사/기본';
-const PHRASE_CAT_ICONS = {
-  '인사/기본': '👋',
-  '공항/교통': '🚕',
-  '호텔': '🏨',
-  '음식점': '🍜',
-  '쇼핑': '🛍️',
-  '관광': '📸',
-  '응급상황': '🚑',
-  '숫자/시간': '🔢',
-};
-
-function renderPhraseCats() {
-  const el = document.getElementById('phraseCatTabs');
-  if (!el) return;
-  el.innerHTML = Object.keys(PHRASE_DATA).map(cat =>
-    `<button class="phrase-cat-btn${cat === phraseCategory ? ' active' : ''}" onclick="selectPhraseCategory('${escAttr(cat)}')">${PHRASE_CAT_ICONS[cat] || ''} ${cat}</button>`
-  ).join('');
-}
-
-function selectPhraseCategory(cat) {
-  phraseCategory = cat;
-  renderPhraseCats();
-  renderPhrases();
-  // 선택된 카테고리 탭으로 스크롤
-  setTimeout(() => {
-    const active = document.querySelector('#phraseCatTabs .phrase-cat-btn.active');
-    if (active) active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-  }, 30);
-}
-
-function renderPhrases() {
-  const el = document.getElementById('phraseList');
-  if (!el) return;
-  const searchEl = document.getElementById('phraseSearch');
-  const q = (searchEl && searchEl.value || '').trim().toLowerCase();
-
-  let items;
-  if (q) {
-    // 전체 카테고리에서 검색
-    items = [];
-    Object.entries(PHRASE_DATA).forEach(([cat, list]) => {
-      list.forEach(p => {
-        const [ko, zh, py, han] = p;
-        if (ko.toLowerCase().includes(q) || zh.includes(q) || py.toLowerCase().includes(q) || han.includes(q)) {
-          items.push([ko, zh, py, han, cat]);
-        }
-      });
-    });
-  } else {
-    items = (PHRASE_DATA[phraseCategory] || []).map(p => [...p, phraseCategory]);
-  }
-
-  if (!items.length) {
-    el.innerHTML = '<div class="phrase-empty">검색 결과가 없습니다.</div>';
-    return;
-  }
-
-  el.innerHTML = items.map(([ko, zh, py, han, cat]) => `
-    <div class="phrase-card" onclick="speakZh(this, '${escAttr(zh)}')" role="button" tabindex="0" title="클릭하면 대만 중국어 발음이 재생됩니다">
-      <div class="phrase-ko">${escHtml(ko)}${q ? ` <span style="color:var(--text-light);font-weight:400;font-size:11px">[${escHtml(cat)}]</span>` : ''}</div>
-      <div class="phrase-zh">${escHtml(zh)}</div>
-      <div class="phrase-pinyin">${escHtml(py)}</div>
-      <div class="phrase-hangul">🔊 ${escHtml(han)}</div>
-    </div>
-  `).join('');
-}
-
-// 대만 중국어 TTS 재생 (Web Speech API)
-function speakZh(cardEl, zhText) {
-  try {
-    if (!('speechSynthesis' in window)) {
-      alert('이 브라우저는 음성 재생을 지원하지 않습니다.');
-      return;
-    }
-    // 기존 재생 중단
-    window.speechSynthesis.cancel();
-    document.querySelectorAll('.phrase-card.speaking').forEach(c => c.classList.remove('speaking'));
-
-    const u = new SpeechSynthesisUtterance(zhText);
-    u.lang = 'zh-TW';
-    u.rate = 0.9;
-    u.pitch = 1.0;
-    u.volume = 1.0;
-
-    // zh-TW 음성 우선 선택 (있을 경우)
-    const voices = window.speechSynthesis.getVoices();
-    const twVoice = voices.find(v => v.lang === 'zh-TW') ||
-                    voices.find(v => v.lang && v.lang.toLowerCase().startsWith('zh-tw')) ||
-                    voices.find(v => v.lang && v.lang.toLowerCase().startsWith('zh'));
-    if (twVoice) u.voice = twVoice;
-
-    if (cardEl) {
-      cardEl.classList.add('speaking');
-      u.onend = () => cardEl.classList.remove('speaking');
-      u.onerror = () => cardEl.classList.remove('speaking');
-    }
-    window.speechSynthesis.speak(u);
-  } catch (e) {
-    console.error('TTS error', e);
-  }
-}
-
-// 일부 브라우저는 voices가 비동기로 로드됨 → 미리 트리거
-if ('speechSynthesis' in window) {
-  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-}
-
-// ======================================
-// UTILS
-// ======================================
-function escHtml(s) {
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
-
-function escAttr(s) {
-  return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-// ======================================
-// OCR CAMERA
-// ======================================
-
-function parseMenuText(text) {
-  const lines = text.split('\n').filter(l => l.trim());
-  const items = [];
-
-  // Mark pattern: checkmarks, circles, x-marks, v/V, o/O
-  const markRe = /[✓✔☑√○◯⭕●◉✗✘×☒Vv]/g;
-
-  // Check if any line has marks (order-sheet vs plain menu)
-  const hasMarkedLines = lines.some(l => markRe.test(l));
-
-  for (const line of lines) {
-    const marks = line.match(markRe);
-
-    // If sheet has marked lines, skip unmarked lines (not ordered)
-    if (hasMarkedLines && !marks) continue;
-
-    // Find price (2~5 digit number)
-    const priceMatch = line.match(/(?:NT\$?|＄|\$)\s*(\d{2,5})\s*(?:元|$)/i)
-      || line.match(/(\d{2,5})\s*(?:元)\s*$/i)
-      || line.match(/(\d{2,5})/);
-
-    if (priceMatch) {
-      const price = parseInt(priceMatch[1]);
-      if (price < 10 || price > 9999) continue;
-
-      // Quantity: mark count or trailing number (1~20)
-      let qty = 1;
-      if (marks) qty = marks.length;
-
-      // Explicit trailing quantity after a mark: "✓ 2" or "○3"
-      const qtyMatch = line.match(/[✓✔☑√○◯⭕●◉✗✘×☒Vv]\s*(\d{1,2})\s*$/);
-      if (qtyMatch) {
-        const explicitQty = parseInt(qtyMatch[1]);
-        if (explicitQty >= 1 && explicitQty <= 20) qty = explicitQty;
-      }
-
-      // Item name: remove marks, price, trailing qty digits, punctuation
-      let name = line
-        .replace(markRe, '')
-        .replace(priceMatch[0], '')
-        .replace(/\d{1,2}\s*$/, '')
-        .replace(/[.\-_=:：|/\\$＄元]+/g, '')
-        .trim();
-
-      if (!name) name = '품목';
-      if (name.length > 15) name = name.substring(0, 15);
-
-      items.push({ name, price, qty: Math.min(Math.max(qty, 1), 20) });
-    }
-  }
-  return items;
-}
-
-let ocrScheduler = null;
-const OCR_WORKER_COUNT = 2;
-const OCR_MAX_SIDE = 1600;
-
-async function getOcrScheduler() {
-  if (ocrScheduler) return ocrScheduler;
-  showToast('처음 사용 시 데이터 다운로드 중... (약 15MB)');
-  const sch = Tesseract.createScheduler();
-  const workers = await Promise.all(
-    Array.from({ length: OCR_WORKER_COUNT }, async () => {
-      const w = await Tesseract.createWorker('chi_tra', 1, { logger: () => {} });
-      await w.setParameters({ tessedit_pageseg_mode: '6' });
-      return w;
-    })
-  );
-  for (const w of workers) sch.addWorker(w);
-  ocrScheduler = sch;
-  return ocrScheduler;
-}
-
-function resizeImage(file) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    const url = URL.createObjectURL(file);
-    img.onload = () => {
-      URL.revokeObjectURL(url);
-      const maxSide = Math.max(img.width, img.height);
-      if (maxSide <= OCR_MAX_SIDE) { resolve(file); return; }
-      const scale = OCR_MAX_SIDE / maxSide;
-      const canvas = document.createElement('canvas');
-      canvas.width = Math.round(img.width * scale);
-      canvas.height = Math.round(img.height * scale);
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      canvas.toBlob(blob => resolve(blob || file), 'image/jpeg', 0.85);
-    };
-    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('image load failed')); };
-    img.src = url;
-  });
-}
-
-async function runOcrOnFiles(files, btn, origText) {
-  btn.disabled = true;
-  let totalItems = [];
-  let doneCount = 0;
-  try {
-    const sch = await getOcrScheduler();
-    btn.innerHTML = '<span class="ocr-spinner"></span> ' + files.length + '장 분석 중...';
-    const tasks = files.map(async (f) => {
-      const prepared = await resizeImage(f).catch(() => f);
-      const result = await sch.addJob('recognize', prepared);
-      doneCount++;
-      btn.innerHTML = '<span class="ocr-spinner"></span> ' + doneCount + '/' + files.length + ' 완료';
-      return parseMenuText(result.data.text);
-    });
-    const results = await Promise.all(tasks);
-    for (const arr of results) totalItems = totalItems.concat(arr);
-
-    let addedCount = 0;
-    for (const item of totalItems) {
-      const qty = item.qty || 1;
-      const existing = orders.find(o => o.name === item.name && o.price === item.price);
-      if (existing) {
-        existing.qty += qty;
-      } else {
-        orders.push({ name: item.name, price: item.price, qty: qty, id: Date.now() + addedCount });
-      }
-      addedCount++;
-    }
-
-    if (addedCount > 0) {
-      saveOrders();
-      renderOrders();
-      showToast(addedCount + '개 품목을 추가했습니다');
-    } else {
-      showToast('인식된 품목이 없습니다. 수동으로 입력해주세요.');
-    }
-  } catch (err) {
-    console.error('OCR error:', err);
-    showToast('OCR 처리 실패. 수동으로 입력해주세요.');
-  }
-  btn.innerHTML = origText;
-  btn.disabled = false;
-}
-
-function bindOcrInput(inputId, btnId) {
-  document.getElementById(inputId).addEventListener('change', async function(e) {
-    const files = Array.from(e.target.files);
-    if (!files.length) return;
-    const btn = document.getElementById(btnId);
-    const origText = btn.innerHTML;
-    await runOcrOnFiles(files, btn, origText);
-    e.target.value = '';
-  });
-}
-bindOcrInput('cameraInput', 'ocrCameraBtn');
-bindOcrInput('galleryInput', 'ocrGalleryBtn');
-
-function showToast(msg) {
-  const existing = document.querySelector('.ocr-toast');
-  if (existing) existing.remove();
-  const el = document.createElement('div');
-  el.className = 'ocr-toast';
-  el.textContent = msg;
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), 3000);
-}
-
-// ======================================
-// SERVICE WORKER
-// ======================================
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
-}
-</script>
-
+<script src="app.js" defer></script>
 </body>
 </html>
